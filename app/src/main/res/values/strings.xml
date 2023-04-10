@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">DatingApp</string>
+    <string name="title_activity_messages">MessagesActivity</string>
+    <string name="title_activity_account">AccountActivity</string>
+</resources>
