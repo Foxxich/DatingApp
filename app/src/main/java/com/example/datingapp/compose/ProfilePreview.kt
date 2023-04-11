@@ -25,7 +25,9 @@ import com.github.theapache64.twyper.rememberTwyperController
 fun TwyperPreview() {
     Column(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxHeight(0.9f)
+            .fillMaxWidth()
+            .padding(10.dp)
             .clip(RoundedCornerShape(10.dp))
             .background(color = whiteColor),
         verticalArrangement = Arrangement.Center,
