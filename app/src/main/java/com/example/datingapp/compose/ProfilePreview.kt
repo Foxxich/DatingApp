@@ -22,7 +22,7 @@ import com.github.theapache64.twyper.rememberTwyperController
 
 @Preview
 @Composable
-fun TwyperPreview() {
+fun ProfilePreview() {
     Column(
         modifier = Modifier
             .fillMaxHeight(0.9f)
@@ -41,10 +41,10 @@ fun TwyperPreview() {
                 UserData(userId = 2, userName = "AAAA4"),
             )
         }
-        val twyperController = rememberTwyperController()
+        val profileController = rememberTwyperController()
         Twyper(
             items = items,
-            twyperController = twyperController,
+            twyperController = profileController,
             onItemRemoved = { item, direction ->
                 println("Item removed: $item -> $direction")
                 items.remove(item)
