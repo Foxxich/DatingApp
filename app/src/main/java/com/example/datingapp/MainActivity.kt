@@ -1,6 +1,7 @@
 package com.example.datingapp
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,8 +16,16 @@ import com.example.datingapp.screens.AccountScreen
 import com.example.datingapp.screens.HomeScreen
 import com.example.datingapp.screens.MessagesScreen
 import com.example.datingapp.ui.theme.DatingAppTheme
+import com.example.datingapp.user.UserController
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var userControllerImpl: UserController
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -25,6 +34,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                 ) {
                     NavigationView()
+                    Log.e("XDDD", userControllerImpl.getData())
                 }
             }
         }
