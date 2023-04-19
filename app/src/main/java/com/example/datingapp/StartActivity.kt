@@ -24,10 +24,18 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import com.example.datingapp.firebase.FirebaseController
 import com.example.datingapp.ui.theme.DatingAppTheme
 import com.example.datingapp.ui.theme.backgroundColor
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class StartActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var firebaseController: FirebaseController
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -51,9 +59,15 @@ class StartActivity : ComponentActivity() {
                             image = painterResource(id = R.drawable.heart_icon),
                             contentDescription = stringResource(id = R.string.heart_image_description),
                             onClick = {
-                                val intent = Intent(applicationContext, SignActivity::class.java)
-                                intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
-                                applicationContext.startActivity(intent)
+                                if (firebaseController.isCurrentUserSigned()) {
+                                    val intent = Intent(applicationContext, MainActivity::class.java)
+                                    intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
+                                    applicationContext.startActivity(intent)
+                                } else {
+                                    val intent = Intent(applicationContext, SignActivity::class.java)
+                                    intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
+                                    applicationContext.startActivity(intent)
+                                }
                             }
                         )
                     }

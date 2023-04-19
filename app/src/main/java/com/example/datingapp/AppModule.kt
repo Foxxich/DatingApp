@@ -1,5 +1,7 @@
 package com.example.datingapp
 
+import com.example.datingapp.firebase.FirebaseController
+import com.example.datingapp.firebase.FirebaseControllerImpl
 import com.example.datingapp.user.UserController
 import com.example.datingapp.user.UserControllerImpl
 import dagger.Module
@@ -14,6 +16,11 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideUserControllerService(): UserController = UserControllerImpl()
+    fun provideUserController(): UserController = UserControllerImpl()
+
+
+    @Provides
+    @Singleton
+    fun provideFirebaseController(): FirebaseController = FirebaseControllerImpl()
 
 }

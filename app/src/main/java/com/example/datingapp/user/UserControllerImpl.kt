@@ -8,7 +8,7 @@ class UserControllerImpl @Inject constructor() : UserController {
 
     private lateinit var testVal: String
 
-    override fun addData(test: String) {
+    override fun addStandardUserData(test: String) {
         testVal = test
     }
 

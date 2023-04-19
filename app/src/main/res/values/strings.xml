@@ -7,4 +7,5 @@
 
     <string name="start_app_text">Love time</string>
     <string name="heart_image_description">Heart symbol</string>
+    <string name="title_activity_interests">InterestsActivity</string>
 </resources>

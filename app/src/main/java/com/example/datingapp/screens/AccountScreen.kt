@@ -1,5 +1,7 @@
 package com.example.datingapp.screens
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,14 +17,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import coil.compose.AsyncImage
+import com.example.datingapp.StartActivity
 import com.example.datingapp.compose.BottomBar
+import com.example.datingapp.firebase.FirebaseController
 import com.example.datingapp.ui.theme.backgroundColor
 import com.example.datingapp.ui.theme.whiteColor
 
 class AccountScreen: ScreenController {
 
     @Composable
-    override fun Prepare(navController: NavHostController) {
+    override fun Prepare(
+        navController: NavHostController,
+        firebaseController: FirebaseController,
+        context: Context
+    ) {
         Scaffold(bottomBar = { BottomBar().Prepare(navController) }
         ) {
             Surface(
@@ -61,20 +69,31 @@ class AccountScreen: ScreenController {
                             modifier = Modifier.fillMaxWidth()
                         ) {
                             Button(
-                                onClick = { /* do something */ },
+                                onClick = {
+                                    firebaseController.logout()
+                                    val intent = Intent(context, StartActivity::class.java)
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    context.startActivity(intent)
+                                },
                                 modifier = Modifier
                                     .weight(1f)
                                     .padding(8.dp)
                             ) {
-                                Text("Button 1")
+                                Text("Logout")
                             }
                             Button(
-                                onClick = { /* do something else */ },
+                                onClick = {
+                                    firebaseController.deleteUser()
+                                    firebaseController.logout()
+                                    val intent = Intent(context, StartActivity::class.java)
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    context.startActivity(intent)
+                                },
                                 modifier = Modifier
                                     .weight(1f)
                                     .padding(8.dp)
                             ) {
-                                Text("Button 2")
+                                Text("Delete account")
                             }
                         }
                     }
