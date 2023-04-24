@@ -8,7 +8,10 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -19,6 +22,7 @@ import com.example.datingapp.ui.theme.DatingAppTheme
 import com.example.datingapp.ui.theme.backgroundColor
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import androidx.compose.foundation.layout.Spacer as Spacer1
 
@@ -57,6 +61,7 @@ fun RegistrationScreen(
 ) {
     var password by remember { mutableStateOf("") }
     var email by remember { mutableStateOf("") }
+    val coroutineScope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -93,33 +98,44 @@ fun RegistrationScreen(
 
         Button(
             onClick = {
-//                firebaseAuthService.isCurrentUserRegistered(email = email, password = password)
-//                if (firebaseAuthService.isUserAuthorized) {
-//                    firebaseAuthService.createNewUser(email = email, password = password)
-//                    val intent = Intent(context, InterestsActivity::class.java)
-//                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-//                    context.startActivity(intent)
-//                } else {
-//                    password = ""
-//                    email = ""
-//                }
+                coroutineScope.launch {
+                    try {
+                        firebaseAuthService.isCurrentUserRegistered(
+                            email = email,
+                            password = password
+                        )
+                    } catch (e: Exception) {
+                        Log.i("FIREBASE_AUTHENTICATION", "Success, user do not exist")
+                        firebaseAuthService.createNewUser(email = email, password = password)
+                        val intent = Intent(context, InterestsActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        context.startActivity(intent)
+                    }
+                }
             },
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(text = "Register")
         }
-
         Button(
             onClick = {
-                firebaseAuthService.isCurrentUserRegistered(email = email, password = password)
-                if (firebaseAuthService.isUserAuthorized) {
-                    Log.e("XD", "XD")
-                    val intent = Intent(context, MainActivity::class.java)
-                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                    context.startActivity(intent)
-                } else {
-                    password = ""
-                    email = ""
+                coroutineScope.launch {
+                    try {
+                        if (firebaseAuthService.isCurrentUserRegistered(
+                                email = email,
+                                password = password
+                            )?.user != null
+                        ) {
+                            Log.e("FIREBASE_AUTHENTICATION", "Success")
+                            val intent = Intent(context, MainActivity::class.java)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            context.startActivity(intent)
+                        } else {
+                            Log.e("FIREBASE_AUTHENTICATION", "Fail")
+                        }
+                    } catch (e: Exception) {
+                        Log.e("FIREBASE_AUTHENTICATION", "Exception was thrown")
+                    }
                 }
             },
             modifier = Modifier.fillMaxWidth()

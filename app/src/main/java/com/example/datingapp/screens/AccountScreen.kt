@@ -23,7 +23,7 @@ import com.example.datingapp.firebase.FirebaseController
 import com.example.datingapp.ui.theme.backgroundColor
 import com.example.datingapp.ui.theme.whiteColor
 
-class AccountScreen: ScreenController {
+class AccountScreen : ScreenController {
 
     @Composable
     override fun Prepare(
@@ -38,10 +38,12 @@ class AccountScreen: ScreenController {
                     .fillMaxSize(),
                 color = backgroundColor
             ) {
-                Column(modifier = Modifier
-                    .fillMaxHeight(0.9f)
-                    .fillMaxWidth()
-                    .padding(10.dp)) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxHeight(0.9f)
+                        .fillMaxWidth()
+                        .padding(10.dp)
+                ) {
                     AsyncImage(
                         model = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Person_icon_BLACK-01.svg/1924px-Person_icon_BLACK-01.svg.png",
                         contentDescription = "Translated description of what the image contains",
@@ -61,7 +63,7 @@ class AccountScreen: ScreenController {
                             .background(whiteColor)
                             .fillMaxWidth()
                     ) {
-                        Box() {
+                        Box {
 
                         }
                         Row(

@@ -23,7 +23,7 @@ import com.example.datingapp.firebase.FirebaseController
 import com.example.datingapp.ui.theme.backgroundColor
 import com.example.datingapp.ui.theme.whiteColor
 
-class MessagesScreen: ScreenController {
+class MessagesScreen : ScreenController {
 
     @Composable
     override fun Prepare(
@@ -45,26 +45,32 @@ class MessagesScreen: ScreenController {
                 color = backgroundColor
             ) {
                 Box(modifier = Modifier.padding(bottom = 1.dp)) {
-                    LazyColumn(modifier = Modifier
-                        .padding(10.dp)
-                        .clip(RoundedCornerShape(10.dp))
-                        .fillMaxHeight(0.9f)
-                        .fillMaxWidth()
-                        .background(whiteColor)) {
+                    LazyColumn(
+                        modifier = Modifier
+                            .padding(10.dp)
+                            .clip(RoundedCornerShape(10.dp))
+                            .fillMaxHeight(0.9f)
+                            .fillMaxWidth()
+                            .background(whiteColor)
+                    ) {
                         items(testDataList.size) {
                             Row(modifier = Modifier.fillMaxWidth()) {
-                                Column(modifier = Modifier
-                                    .weight(1f)
-                                    .padding(16.dp)) {
+                                Column(
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .padding(16.dp)
+                                ) {
                                     AsyncImage(
                                         model = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Person_icon_BLACK-01.svg/1924px-Person_icon_BLACK-01.svg.png",
                                         contentDescription = "Translated description of what the image contains"
                                     )
                                 }
-                                Column(modifier = Modifier
-                                    .weight(1f)
-                                    .padding(16.dp)) {
-                                    Column() {
+                                Column(
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .padding(16.dp)
+                                ) {
+                                    Column {
                                         Text(
                                             text = "XD",
                                             style = MaterialTheme.typography.h6,

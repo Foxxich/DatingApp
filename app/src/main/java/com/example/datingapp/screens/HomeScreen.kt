@@ -13,7 +13,7 @@ import com.example.datingapp.compose.ProfilePreview
 import com.example.datingapp.firebase.FirebaseController
 import com.example.datingapp.ui.theme.backgroundColor
 
-class HomeScreen: ScreenController {
+class HomeScreen : ScreenController {
 
     @Composable
     override fun Prepare(

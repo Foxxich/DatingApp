@@ -1,10 +1,12 @@
 package com.example.datingapp.firebase
 
+import com.google.firebase.auth.AuthResult
+
 interface FirebaseController {
 
     var isUserAuthorized: Boolean
 
-    fun isCurrentUserRegistered(email: String, password: String)
+    suspend fun isCurrentUserRegistered(email: String, password: String): AuthResult?
 
     fun isCurrentUserSigned(): Boolean
 

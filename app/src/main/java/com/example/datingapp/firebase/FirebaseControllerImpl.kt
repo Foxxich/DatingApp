@@ -1,21 +1,19 @@
 package com.example.datingapp.firebase
 
 import android.util.Log
+import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
+import kotlinx.coroutines.tasks.await
 
-class FirebaseControllerImpl: FirebaseController {
+class FirebaseControllerImpl : FirebaseController {
 
     private val firebaseAuth: FirebaseAuth = Firebase.auth
     override var isUserAuthorized: Boolean = false
 
-    override fun isCurrentUserRegistered(email: String, password: String) {
-        firebaseAuth.signInWithEmailAndPassword(email, password)
-            .addOnCompleteListener { task ->
-                isUserAuthorized = task.isSuccessful
-                Log.i("IS_USER_REGISTERED", isUserAuthorized.toString())
-            }
+    override suspend fun isCurrentUserRegistered(email: String, password: String): AuthResult? {
+        return firebaseAuth.signInWithEmailAndPassword(email, password).await()
     }
 
     override fun isCurrentUserSigned(): Boolean = firebaseAuth.currentUser != null

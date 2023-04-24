@@ -1,7 +1,5 @@
 package com.example.datingapp.user
 
-import android.media.Image
-
 data class UserData(
     val userId: Int,
     val userName: String,
