@@ -1,5 +1,6 @@
 package com.example.datingapp.firebase
 
+import com.example.datingapp.user.UserData
 import com.google.firebase.auth.AuthResult
 
 interface FirebaseController {
@@ -14,7 +15,9 @@ interface FirebaseController {
 
     fun logout()
 
-    fun uploadUserAccount()
+    fun getUserId(): String?
+
+    fun uploadUserAccount(userData: UserData)
 
     fun uploadMatch()
 

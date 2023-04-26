@@ -16,7 +16,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.datingapp.ui.theme.whiteColor
-import com.example.datingapp.user.UserData
 import com.github.theapache64.twyper.Twyper
 import com.github.theapache64.twyper.rememberTwyperController
 
@@ -35,10 +34,7 @@ fun ProfilePreview() {
     ) {
         val items = remember {
             mutableStateListOf(
-                UserData(userId = 0, userName = "AAAA1"),
-                UserData(userId = 5, userName = "AAAA2"),
-                UserData(userId = 3, userName = "AAAA3"),
-                UserData(userId = 2, userName = "AAAA4"),
+                "XS"
             )
         }
         val profileController = rememberTwyperController()
@@ -53,7 +49,7 @@ fun ProfilePreview() {
                 println("End reached")
             }
         ) { item ->
-            ItemBox(item.userName, item.userId.toString())
+            ItemBox(item, "LLL")
         }
     }
 }

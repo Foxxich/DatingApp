@@ -110,6 +110,7 @@ fun Sign(
                         firebaseAuthService.createNewUser(email = email, password = password)
                         val intent = Intent(context, InterestsActivity::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                         context.startActivity(intent)
                     }
                 }
@@ -130,6 +131,7 @@ fun Sign(
                             Log.e("FIREBASE_AUTHENTICATION", "Success")
                             val intent = Intent(context, MainActivity::class.java)
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                             context.startActivity(intent)
                         } else {
                             Log.e("FIREBASE_AUTHENTICATION", "Fail")

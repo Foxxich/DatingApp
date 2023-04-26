@@ -1,9 +1,17 @@
 package com.example.datingapp.user
 
+import android.net.Uri
+
 interface UserController {
 
-    fun addStandardUserData(test: String)
+    fun addUserName(userName: String)
 
-    fun getData(): String
+    fun addUserPhoto(userPhoto: Uri)
+
+    fun addUserInterests(userInterests: List<Interest>)
+
+    fun getUserData(): UserData
+
+    fun uploadToDatabase()
 
 }

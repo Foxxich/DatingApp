@@ -1,11 +1,12 @@
 package com.example.datingapp.user
 
+import android.net.Uri
+
 data class UserData(
-    val userId: Int,
+    val userId: String,
     val userName: String,
-//    val userAge: Int,
-//    val quantityUserMatchedWith: Int,
-//    val userMatchedWithList: MutableList<Int>,
-//    val interests: MutableList<Interest>,
-//    var userImage: Image?
+    val quantityUserMatchedWith: Int = 0,
+    val userMatchedWithList: List<String> = emptyList(),
+    val interests: MutableList<Interest>,
+    var userPhoto: Uri? = null
 )

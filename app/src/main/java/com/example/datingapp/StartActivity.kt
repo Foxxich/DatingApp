@@ -1,8 +1,10 @@
 package com.example.datingapp
 
 import android.content.Intent
+import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -60,11 +62,14 @@ class StartActivity : ComponentActivity() {
                             contentDescription = stringResource(id = R.string.heart_image_description),
                             onClick = {
                                 if (firebaseController.isCurrentUserSigned()) {
-                                    val intent = Intent(applicationContext, MainActivity::class.java)
+                                    val intent =
+                                        Intent(applicationContext, MainActivity::class.java)
                                     intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
+                                    intent.addFlags(FLAG_ACTIVITY_CLEAR_TASK)
                                     applicationContext.startActivity(intent)
                                 } else {
-                                    val intent = Intent(applicationContext, SignActivity::class.java)
+                                    val intent =
+                                        Intent(applicationContext, SignActivity::class.java)
                                     intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
                                     applicationContext.startActivity(intent)
                                 }

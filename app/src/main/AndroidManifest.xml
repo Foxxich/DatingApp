@@ -39,7 +39,11 @@
         <activity
             android:name=".SignActivity"
             android:exported="false"
-            android:theme="@style/Theme.DatingApp"></activity>
+            android:theme="@style/Theme.DatingApp" />
+        <activity
+            android:name=".PhotoActivity"
+            android:exported="false"
+            android:theme="@style/Theme.DatingApp" />
     </application>
 
 </manifest>

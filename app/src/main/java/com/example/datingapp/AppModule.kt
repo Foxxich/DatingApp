@@ -16,7 +16,7 @@ class AppModule {
 
     @Provides
     @Singleton
-    fun provideUserController(): UserController = UserControllerImpl()
+    fun provideUserController(): UserController = UserControllerImpl(FirebaseControllerImpl())
 
 
     @Provides
