@@ -4,8 +4,6 @@ import com.google.firebase.auth.AuthResult
 
 interface FirebaseController {
 
-    var isUserAuthorized: Boolean
-
     suspend fun isCurrentUserRegistered(email: String, password: String): AuthResult?
 
     fun isCurrentUserSigned(): Boolean
@@ -15,5 +13,9 @@ interface FirebaseController {
     fun deleteUser()
 
     fun logout()
+
+    fun uploadUserAccount()
+
+    fun uploadMatch()
 
 }

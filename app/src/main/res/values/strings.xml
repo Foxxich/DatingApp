@@ -7,5 +7,27 @@
 
     <string name="start_app_text">Love time</string>
     <string name="heart_image_description">Heart symbol</string>
-    <string name="title_activity_interests">InterestsActivity</string>
+    <string name="title_activity_interests">Interests Activity</string>
+
+    <string name="reading">Reading</string>
+    <string name="writing">Writing</string>
+    <string name="playing_sports">Playing Sports</string>
+    <string name="watching_movies">Watching Movies</string>
+    <string name="listening_to_music">Listening to Music</string>
+    <string name="gardening">Gardening</string>
+    <string name="baking">Baking</string>
+    <string name="cooking">Cooking</string>
+    <string name="knitting">Knitting</string>
+    <string name="hiking">Hiking</string>
+    <string name="camping">Camping</string>
+    <string name="photography">Photography</string>
+    <string name="painting">Painting</string>
+    <string name="crocheting">Crocheting</string>
+    <string name="yoga">Yoga</string>
+    <string name="meditation">Meditation</string>
+    <string name="traveling">Traveling</string>
+    <string name="playing_video_games">Playing Video Games</string>
+    <string name="collecting">Collecting</string>
+    <string name="dancing">Dancing</string>
+    <string name="title_activity_photo">PhotoActivity</string>
 </resources>

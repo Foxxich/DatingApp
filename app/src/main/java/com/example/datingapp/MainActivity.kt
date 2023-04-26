@@ -64,12 +64,3 @@ fun NavigationView(firebaseController: FirebaseController, context: Context) {
         }
     }
 }
-
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    DatingAppTheme {
-
-    }
-}

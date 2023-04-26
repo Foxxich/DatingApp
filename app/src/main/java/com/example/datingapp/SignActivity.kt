@@ -46,7 +46,7 @@ class SignActivity : ComponentActivity() {
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center,
                     ) {
-                        RegistrationScreen(context, firebaseAuthService)
+                        Sign(context, firebaseAuthService)
                     }
                 }
             }
@@ -55,7 +55,7 @@ class SignActivity : ComponentActivity() {
 }
 
 @Composable
-fun RegistrationScreen(
+fun Sign(
     context: Context,
     firebaseAuthService: FirebaseController
 ) {
@@ -99,6 +99,7 @@ fun RegistrationScreen(
         Button(
             onClick = {
                 coroutineScope.launch {
+                    firebaseAuthService.logout()
                     try {
                         firebaseAuthService.isCurrentUserRegistered(
                             email = email,
