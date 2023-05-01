@@ -18,6 +18,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
@@ -30,6 +31,7 @@ import com.example.datingapp.firebase.FirebaseController
 import com.example.datingapp.ui.theme.DatingAppTheme
 import com.example.datingapp.ui.theme.backgroundColor
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -46,38 +48,46 @@ class StartActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = backgroundColor
                 ) {
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center,
-                    ) {
-                        Text(
-//                            TODO: Mati - add support of getting multiple texts and change style
-                            text = stringResource(id = R.string.start_app_text),
-                            modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Center,
-                        )
-                        ClickableImage(
-                            image = painterResource(id = R.drawable.heart_icon),
-                            contentDescription = stringResource(id = R.string.heart_image_description),
-                            onClick = {
-                                if (firebaseController.isCurrentUserSigned()) {
-                                    val intent =
-                                        Intent(applicationContext, MainActivity::class.java)
-                                    intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
-                                    intent.addFlags(FLAG_ACTIVITY_CLEAR_TASK)
-                                    applicationContext.startActivity(intent)
-                                } else {
-                                    val intent =
-                                        Intent(applicationContext, SignActivity::class.java)
-                                    intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
-                                    applicationContext.startActivity(intent)
-                                }
-                            }
-                        )
-                    }
+                    MainContentColumn()
                 }
             }
+        }
+    }
+
+    @Composable
+    private fun MainContentColumn() {
+        val coroutineScope = rememberCoroutineScope()
+        Column(
+            modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+        ) {
+            Text(
+    //                            TODO: Mati - add support of getting multiple texts and change style
+                text = stringResource(id = R.string.start_app_text),
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+            )
+            ClickableImage(
+                image = painterResource(id = R.drawable.heart_icon),
+                contentDescription = stringResource(id = R.string.heart_image_description),
+                onClick = {
+                    coroutineScope.launch {
+                        if (firebaseController.isCurrentUserSigned()) {
+                            val intent =
+                                Intent(applicationContext, MainActivity::class.java)
+                            intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
+                            intent.addFlags(FLAG_ACTIVITY_CLEAR_TASK)
+                            applicationContext.startActivity(intent)
+                        } else {
+                            val intent =
+                                Intent(applicationContext, SignActivity::class.java)
+                            intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
+                            applicationContext.startActivity(intent)
+                        }
+                    }
+                }
+            )
         }
     }
 }

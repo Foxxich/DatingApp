@@ -12,7 +12,7 @@ class UserControllerImpl @Inject constructor(
 ) : UserController {
 
     private lateinit var userName: String
-    private lateinit var userPhoto: Uri
+    private var userPhoto: Uri? = null
     private var interests = mutableListOf<Interest>()
 
     override fun addUserName(userName: String) {
@@ -21,6 +21,7 @@ class UserControllerImpl @Inject constructor(
 
     override fun addUserPhoto(userPhoto: Uri) {
         this.userPhoto = userPhoto
+        firebaseControllerImpl.uploadPhoto(userPhoto)
     }
 
     override fun addUserInterests(userInterests: List<Interest>) {
@@ -32,16 +33,15 @@ class UserControllerImpl @Inject constructor(
     }
 
     override fun uploadToDatabase() {
-        var userId = firebaseControllerImpl.getCurrentUser()
+        var userId = firebaseControllerImpl.getCurrentUserId()
         while (userId == null) {
-            userId = firebaseControllerImpl.getCurrentUser()
+            userId = firebaseControllerImpl.getCurrentUserId()
         }
         firebaseControllerImpl.uploadUserAccount(
             UserData(
-                userId = userId.uid,
+                userId = userId,
                 userName = this.userName,
                 interests = this.interests,
-                userPhoto = this.userPhoto
             )
         )
     }

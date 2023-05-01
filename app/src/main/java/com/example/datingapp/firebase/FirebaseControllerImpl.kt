@@ -1,31 +1,48 @@
 package com.example.datingapp.firebase
 
+import android.net.Uri
 import android.util.Log
 import com.example.datingapp.user.UserData
 import com.example.datingapp.utils.CommonSettings.TAG
 import com.example.datingapp.utils.FirebaseException
 import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.tasks.await
 
 class FirebaseControllerImpl : FirebaseController {
 
-    private val firebaseAuth: FirebaseAuth = Firebase.auth
+    private val firebaseAuth = Firebase.auth
     private val database = Firebase.firestore
+    private val storageRef = Firebase.storage.reference
+    private val userSettings = mutableMapOf<String, Boolean>()
 
     override suspend fun isCurrentUserRegistered(email: String, password: String): AuthResult? {
         return firebaseAuth.signInWithEmailAndPassword(email, password).await()
     }
 
-    override fun isCurrentUserSigned(): Boolean = firebaseAuth.currentUser != null
+    override suspend fun isCurrentUserSigned(): Boolean {
+        return firebaseAuth.currentUser != null && database.collection("users_settings")
+            .document(firebaseAuth.currentUser?.uid ?: throw FirebaseException("UID is null"))
+            .get().await().get("isRegistrationFinished") as Boolean
+    }
 
-    override fun createNewUser(email: String, password: String) {
+    override suspend fun createNewUser(email: String, password: String) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener {
                 Log.i("IS_FIREBASE_USER_CREATE_SUCCESS", it.isSuccessful.toString())
+                userSettings["isRegistrationFinished"] = false
+                database.collection("users_settings")
+                    .document(firebaseAuth.currentUser?.uid ?: throw FirebaseException("UID is null"))
+                    .set(userSettings)
+                    .addOnSuccessListener {
+                        Log.e(TAG, "UserSettings successfully uploaded!")
+                    }
+                    .addOnFailureListener { e ->
+                        Log.e(TAG, "Error adding UserSettings", e)
+                    }
             }
     }
 
@@ -37,7 +54,7 @@ class FirebaseControllerImpl : FirebaseController {
         Firebase.auth.signOut()
     }
 
-    override fun getCurrentUser() = firebaseAuth.currentUser
+    override fun getCurrentUserId() = firebaseAuth.currentUser?.uid
 
     override fun uploadUserAccount(userData: UserData) {
         database.collection("users")
@@ -49,6 +66,22 @@ class FirebaseControllerImpl : FirebaseController {
             .addOnFailureListener { e ->
                 Log.e(TAG, "Error adding document", e)
             }
+
+        userSettings["isRegistrationFinished"] = true
+
+        database.collection("users_settings")
+            .document(firebaseAuth.currentUser?.uid ?: throw FirebaseException("UID is null"))
+            .set(userSettings)
+            .addOnSuccessListener {
+                Log.e(TAG, "UserSettings successfully uploaded!")
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "Error adding UserSettings", e)
+            }
+    }
+
+    override fun uploadPhoto(imageUri: Uri) {
+        getCurrentUserId()?.let { storageRef.child(it).putFile(imageUri) }
     }
 
     override fun uploadMatch() {

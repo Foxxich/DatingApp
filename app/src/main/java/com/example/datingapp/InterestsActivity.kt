@@ -1,12 +1,15 @@
 package com.example.datingapp
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.provider.OpenableColumns
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
+import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -58,13 +61,13 @@ class InterestsActivity : ComponentActivity() {
 
     @Composable
     private fun InterestsColumn(mapOfInterests: ArrayList<Interest>) {
+        val chosenInterests by remember { mutableStateOf(mutableListOf<Interest>()) }
+        var userName by remember { mutableStateOf("") }
         Column(
             modifier = Modifier
                 .padding(10.dp)
                 .background(whiteColor)
         ) {
-            var userName by remember { mutableStateOf("") }
-            val chosenInterests = mutableListOf<Interest>()
             var i = 0
             Column(modifier = Modifier.padding(16.dp)) {
                 while (i < mapOfInterests.size) {
@@ -111,17 +114,22 @@ class InterestsActivity : ComponentActivity() {
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    var selectedImageUri: Uri
-
-                    GalleryImagePicker(onImageSelected = { uri ->
-                        selectedImageUri = uri
-                    })
+                    Button(onClick = {
+                        val galleryIntent = Intent(Intent.ACTION_PICK)
+                        galleryIntent.type = "image/*"
+                        imagePickerActivityResult.launch(galleryIntent)
+                    }) {
+                        Text(text = "Choose photo")
+                    }
 
                     Button(onClick = {
-                        Log.e(TAG,  chosenInterests.size.toString())
                         userControllerImpl.addUserName(userName)
                         userControllerImpl.addUserInterests(chosenInterests)
                         userControllerImpl.uploadToDatabase()
+                        val intent =
+                            Intent(applicationContext, VideoActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        applicationContext.startActivity(intent)
                     }) {
                         Text(text = "Finish")
                     }
@@ -129,19 +137,13 @@ class InterestsActivity : ComponentActivity() {
             }
         }
     }
-}
 
-@Composable
-fun GalleryImagePicker(onImageSelected: (Uri) -> Unit) {
-    val launcher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.GetContent(),
-        onResult = { uri: Uri? ->
-            uri?.let {
-                onImageSelected(it)
+
+    private var imagePickerActivityResult: ActivityResultLauncher<Intent> =
+        registerForActivityResult( ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result != null) {
+                val imageUri: Uri? = result.data?.data
+                userControllerImpl.addUserPhoto(imageUri!!)
             }
         }
-    )
-    Button(onClick = { launcher.launch("image/*") }) {
-        Text("Select Image")
-    }
 }
