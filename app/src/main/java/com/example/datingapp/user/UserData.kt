@@ -8,5 +8,5 @@ data class UserData(
     val quantityUserMatchedWith: Int = 0,
     val userMatchedWithList: List<String> = emptyList(),
     val interests: MutableList<Interest>,
-    var userPhoto: Uri? = null
+    var userPhoto: Uri
 )

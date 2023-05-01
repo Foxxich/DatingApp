@@ -34,11 +34,10 @@ class FirebaseControllerImpl : FirebaseController {
     }
 
     override fun logout() {
-        firebaseAuth.currentUser
         Firebase.auth.signOut()
     }
 
-    override fun getUserId() = firebaseAuth.currentUser?.uid
+    override fun getCurrentUser() = firebaseAuth.currentUser
 
     override fun uploadUserAccount(userData: UserData) {
         database.collection("users")

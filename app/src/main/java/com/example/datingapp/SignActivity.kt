@@ -98,8 +98,8 @@ fun Sign(
 
         Button(
             onClick = {
+                firebaseAuthService.logout()
                 coroutineScope.launch {
-                    firebaseAuthService.logout()
                     try {
                         firebaseAuthService.isCurrentUserRegistered(
                             email = email,

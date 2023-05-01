@@ -32,12 +32,16 @@ class UserControllerImpl @Inject constructor(
     }
 
     override fun uploadToDatabase() {
-        val userId = firebaseControllerImpl.getUserId() ?: throw FirebaseException("UID do not exist!")
+        var userId = firebaseControllerImpl.getCurrentUser()
+        while (userId == null) {
+            userId = firebaseControllerImpl.getCurrentUser()
+        }
         firebaseControllerImpl.uploadUserAccount(
             UserData(
-                userId = userId,
+                userId = userId.uid,
                 userName = this.userName,
                 interests = this.interests,
+                userPhoto = this.userPhoto
             )
         )
     }

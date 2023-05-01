@@ -3,28 +3,27 @@ package com.example.datingapp
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.widget.VideoView
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
-import coil.compose.rememberAsyncImagePainter
 import com.example.datingapp.ui.theme.DatingAppTheme
 import com.example.datingapp.ui.theme.backgroundColor
 import com.example.datingapp.ui.theme.whiteColor
 import com.example.datingapp.user.Interest
 import com.example.datingapp.user.UserController
+import com.example.datingapp.utils.CommonSettings.TAG
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -75,9 +74,13 @@ class InterestsActivity : ComponentActivity() {
                     ) {
                         for (j in i until i + 3) {
                             if (j < mapOfInterests.size) {
+                                var clicked by remember { mutableStateOf(false) }
                                 OutlinedButton(onClick = {
                                     chosenInterests.add(mapOfInterests[j])
-                                }) {
+                                    clicked = true
+                                },
+                                    border = BorderStroke(2.dp, if (clicked) Color.Red else Color.Blue)
+                                ) {
                                     Text(
                                         text = mapOfInterests[j].name, maxLines = 1,
                                         overflow = TextOverflow.Clip, fontSize = 12.sp
@@ -108,20 +111,14 @@ class InterestsActivity : ComponentActivity() {
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     modifier = Modifier.fillMaxWidth()
                 ) {
-                    var selectedImageUri by remember { mutableStateOf<Uri?>(null) }
+                    var selectedImageUri: Uri
 
                     GalleryImagePicker(onImageSelected = { uri ->
                         selectedImageUri = uri
                     })
 
-                    if (selectedImageUri != null) {
-                        Image(
-                            painter = rememberAsyncImagePainter(selectedImageUri),
-                            contentDescription = "Selected Image"
-                        )
-                    }
-
                     Button(onClick = {
+                        Log.e(TAG,  chosenInterests.size.toString())
                         userControllerImpl.addUserName(userName)
                         userControllerImpl.addUserInterests(chosenInterests)
                         userControllerImpl.uploadToDatabase()
@@ -147,23 +144,4 @@ fun GalleryImagePicker(onImageSelected: (Uri) -> Unit) {
     Button(onClick = { launcher.launch("image/*") }) {
         Text("Select Image")
     }
-}
-
-@Composable
-fun VideoPlayerDemo() {
-    val context = LocalContext.current
-    val videoUri = "your_video_uri_here"
-
-    AndroidView(
-        modifier = Modifier.fillMaxSize(),
-        factory = {
-            VideoView(context).apply {
-                setVideoURI(Uri.parse(videoUri))
-                start()
-            }
-        },
-        update = {
-            // Do nothing for now
-        }
-    )
 }
