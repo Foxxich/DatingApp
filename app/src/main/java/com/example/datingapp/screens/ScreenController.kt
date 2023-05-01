@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import com.example.datingapp.firebase.FirebaseController
+import com.example.datingapp.user.UserController
 
 interface ScreenController {
 
@@ -11,7 +12,8 @@ interface ScreenController {
     fun Prepare(
         navController: NavHostController,
         firebaseController: FirebaseController,
-        context: Context
+        context: Context,
+        userControllerImpl: UserController
     )
 
 }

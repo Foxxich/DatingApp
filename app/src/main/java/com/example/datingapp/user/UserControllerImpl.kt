@@ -2,7 +2,7 @@ package com.example.datingapp.user
 
 import android.net.Uri
 import com.example.datingapp.firebase.FirebaseController
-import com.example.datingapp.utils.FirebaseException
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -28,8 +28,16 @@ class UserControllerImpl @Inject constructor(
         this.interests = userInterests as MutableList<Interest>
     }
 
-    override fun getUserData(): UserData {
-        TODO("Not yet implemented")
+    override fun getUserData(): UserData? {
+        return runBlocking {
+            return@runBlocking firebaseControllerImpl.getFirebaseUserData()
+        }
+    }
+
+    override fun getUserPhoto(): Uri? {
+        return runBlocking {
+            return@runBlocking firebaseControllerImpl.getFirebaseUserPhoto()
+        }
     }
 
     override fun uploadToDatabase() {

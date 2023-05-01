@@ -4,7 +4,6 @@ import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -63,7 +62,7 @@ class StartActivity : ComponentActivity() {
             verticalArrangement = Arrangement.Center,
         ) {
             Text(
-    //                            TODO: Mati - add support of getting multiple texts and change style
+                //                            TODO: Mati - add support of getting multiple texts and change style
                 text = stringResource(id = R.string.start_app_text),
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,

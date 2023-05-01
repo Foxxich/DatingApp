@@ -22,6 +22,7 @@ import com.example.datingapp.compose.BottomBar
 import com.example.datingapp.firebase.FirebaseController
 import com.example.datingapp.ui.theme.backgroundColor
 import com.example.datingapp.ui.theme.whiteColor
+import com.example.datingapp.user.UserController
 
 class AccountScreen : ScreenController {
 
@@ -29,7 +30,8 @@ class AccountScreen : ScreenController {
     override fun Prepare(
         navController: NavHostController,
         firebaseController: FirebaseController,
-        context: Context
+        context: Context,
+        userControllerImpl: UserController
     ) {
         Scaffold(bottomBar = { BottomBar().Prepare(navController) }
         ) {
@@ -45,7 +47,7 @@ class AccountScreen : ScreenController {
                         .padding(10.dp)
                 ) {
                     AsyncImage(
-                        model = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Person_icon_BLACK-01.svg/1924px-Person_icon_BLACK-01.svg.png",
+                        model = userControllerImpl.getUserPhoto().toString(),
                         contentDescription = "Translated description of what the image contains",
                         modifier = Modifier
                             .background(whiteColor)

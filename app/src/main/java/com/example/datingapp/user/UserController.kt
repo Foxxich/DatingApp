@@ -10,7 +10,9 @@ interface UserController {
 
     fun addUserInterests(userInterests: List<Interest>)
 
-    fun getUserData(): UserData
+    fun getUserData(): UserData?
+
+    fun getUserPhoto(): Uri?
 
     fun uploadToDatabase()
 

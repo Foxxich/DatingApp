@@ -8,6 +8,7 @@ import com.example.datingapp.utils.FirebaseException
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.tasks.await
@@ -35,7 +36,9 @@ class FirebaseControllerImpl : FirebaseController {
                 Log.i("IS_FIREBASE_USER_CREATE_SUCCESS", it.isSuccessful.toString())
                 userSettings["isRegistrationFinished"] = false
                 database.collection("users_settings")
-                    .document(firebaseAuth.currentUser?.uid ?: throw FirebaseException("UID is null"))
+                    .document(
+                        firebaseAuth.currentUser?.uid ?: throw FirebaseException("UID is null")
+                    )
                     .set(userSettings)
                     .addOnSuccessListener {
                         Log.e(TAG, "UserSettings successfully uploaded!")
@@ -82,6 +85,17 @@ class FirebaseControllerImpl : FirebaseController {
 
     override fun uploadPhoto(imageUri: Uri) {
         getCurrentUserId()?.let { storageRef.child(it).putFile(imageUri) }
+    }
+
+    override suspend fun getFirebaseUserData(): UserData? {
+        return database.collection("users")
+            .document(firebaseAuth.currentUser?.uid ?: throw FirebaseException("UID is null"))
+            .get()
+            .await().toObject<UserData>()
+    }
+
+    override suspend fun getFirebaseUserPhoto(): Uri? {
+        return firebaseAuth.currentUser?.let { storageRef.child(it.uid).downloadUrl.await() }
     }
 
     override fun uploadMatch() {

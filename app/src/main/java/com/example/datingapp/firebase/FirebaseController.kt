@@ -3,7 +3,6 @@ package com.example.datingapp.firebase
 import android.net.Uri
 import com.example.datingapp.user.UserData
 import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseUser
 
 interface FirebaseController {
 
@@ -24,5 +23,9 @@ interface FirebaseController {
     fun uploadMatch()
 
     fun uploadPhoto(imageUri: Uri)
+
+    suspend fun getFirebaseUserData(): UserData?
+
+    suspend fun getFirebaseUserPhoto(): Uri?
 
 }

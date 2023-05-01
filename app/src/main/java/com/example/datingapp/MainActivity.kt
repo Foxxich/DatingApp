@@ -41,7 +41,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    NavigationView(firebaseController, context)
+                    NavigationView(firebaseController, context, userControllerImpl)
                 }
             }
         }
@@ -49,17 +49,21 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun NavigationView(firebaseController: FirebaseController, context: Context) {
+fun NavigationView(
+    firebaseController: FirebaseController,
+    context: Context,
+    userControllerImpl: UserController
+) {
     val navController = rememberNavController()
     NavHost(navController = navController, startDestination = "home") {
         composable("home") {
-            HomeScreen().Prepare(navController, firebaseController, context)
+            HomeScreen().Prepare(navController, firebaseController, context, userControllerImpl)
         }
         composable("messages") {
-            MessagesScreen().Prepare(navController, firebaseController, context)
+            MessagesScreen().Prepare(navController, firebaseController, context, userControllerImpl)
         }
         composable("account") {
-            AccountScreen().Prepare(navController, firebaseController, context)
+            AccountScreen().Prepare(navController, firebaseController, context, userControllerImpl)
         }
     }
 }

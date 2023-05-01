@@ -4,10 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.provider.OpenableColumns
-import android.util.Log
 import androidx.activity.ComponentActivity
-import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -26,7 +23,6 @@ import com.example.datingapp.ui.theme.backgroundColor
 import com.example.datingapp.ui.theme.whiteColor
 import com.example.datingapp.user.Interest
 import com.example.datingapp.user.UserController
-import com.example.datingapp.utils.CommonSettings.TAG
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -78,11 +74,15 @@ class InterestsActivity : ComponentActivity() {
                         for (j in i until i + 3) {
                             if (j < mapOfInterests.size) {
                                 var clicked by remember { mutableStateOf(false) }
-                                OutlinedButton(onClick = {
-                                    chosenInterests.add(mapOfInterests[j])
-                                    clicked = true
-                                },
-                                    border = BorderStroke(2.dp, if (clicked) Color.Red else Color.Blue)
+                                OutlinedButton(
+                                    onClick = {
+                                        chosenInterests.add(mapOfInterests[j])
+                                        clicked = true
+                                    },
+                                    border = BorderStroke(
+                                        2.dp,
+                                        if (clicked) Color.Red else Color.Blue
+                                    )
                                 ) {
                                     Text(
                                         text = mapOfInterests[j].name, maxLines = 1,
@@ -138,9 +138,8 @@ class InterestsActivity : ComponentActivity() {
         }
     }
 
-
     private var imagePickerActivityResult: ActivityResultLauncher<Intent> =
-        registerForActivityResult( ActivityResultContracts.StartActivityForResult()) { result ->
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result != null) {
                 val imageUri: Uri? = result.data?.data
                 userControllerImpl.addUserPhoto(imageUri!!)

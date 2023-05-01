@@ -22,6 +22,7 @@ import com.example.datingapp.compose.BottomBar
 import com.example.datingapp.firebase.FirebaseController
 import com.example.datingapp.ui.theme.backgroundColor
 import com.example.datingapp.ui.theme.whiteColor
+import com.example.datingapp.user.UserController
 
 class MessagesScreen : ScreenController {
 
@@ -29,7 +30,8 @@ class MessagesScreen : ScreenController {
     override fun Prepare(
         navController: NavHostController,
         firebaseController: FirebaseController,
-        context: Context
+        context: Context,
+        userControllerImpl: UserController
     ) {
         val testDataList = mutableListOf<String>()
         testDataList.add("S1")
