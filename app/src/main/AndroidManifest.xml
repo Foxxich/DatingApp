@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <application
         android:name=".HiltApplication"
         android:allowBackup="true"
@@ -28,7 +30,6 @@
         <activity
             android:name=".StartActivity"
             android:exported="true"
-            android:label="@string/title_activity_start"
             android:theme="@style/Theme.DatingApp">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
