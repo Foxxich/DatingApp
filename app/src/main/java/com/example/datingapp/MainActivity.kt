@@ -6,15 +6,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
-import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
 import com.example.datingapp.firebase.FirebaseController
-import com.example.datingapp.screens.AccountScreen
-import com.example.datingapp.screens.HomeScreen
-import com.example.datingapp.screens.MessagesScreen
+import com.example.datingapp.navigation.BottomNav
 import com.example.datingapp.ui.theme.DatingAppTheme
 import com.example.datingapp.user.UserController
 import dagger.hilt.android.AndroidEntryPoint
@@ -41,29 +35,9 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    NavigationView(firebaseController, context, userControllerImpl)
+                    BottomNav(userControllerImpl, firebaseController, context)
                 }
             }
-        }
-    }
-}
-
-@Composable
-fun NavigationView(
-    firebaseController: FirebaseController,
-    context: Context,
-    userControllerImpl: UserController
-) {
-    val navController = rememberNavController()
-    NavHost(navController = navController, startDestination = "home") {
-        composable("home") {
-            HomeScreen().Prepare(navController, firebaseController, context, userControllerImpl)
-        }
-        composable("messages") {
-            MessagesScreen().Prepare(navController, firebaseController, context, userControllerImpl)
-        }
-        composable("account") {
-            AccountScreen().Prepare(navController, firebaseController, context, userControllerImpl)
         }
     }
 }
