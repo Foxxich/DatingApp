@@ -39,5 +39,6 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+        userControllerImpl.getUserPhoto()
     }
 }

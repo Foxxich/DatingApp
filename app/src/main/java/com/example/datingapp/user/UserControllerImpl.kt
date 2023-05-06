@@ -12,7 +12,8 @@ class UserControllerImpl @Inject constructor(
 ) : UserController {
 
     private lateinit var userName: String
-    private var userPhoto: Uri? = null
+    override var userPhoto: Uri? = null
+    override lateinit var userData: UserData
     private var interests = mutableListOf<Interest>()
 
     override fun addUserName(userName: String) {
@@ -28,15 +29,15 @@ class UserControllerImpl @Inject constructor(
         this.interests = userInterests as MutableList<Interest>
     }
 
-    override fun getUserData(): UserData? {
-        return runBlocking {
-            return@runBlocking firebaseControllerImpl.getFirebaseUserData()
+    override fun getUserData() {
+        runBlocking {
+            userData = firebaseControllerImpl.getFirebaseUserData()!!
         }
     }
 
-    override fun getUserPhoto(): Uri? {
-        return runBlocking {
-            return@runBlocking firebaseControllerImpl.getFirebaseUserPhoto()
+    override fun getUserPhoto() {
+        runBlocking {
+            userPhoto = firebaseControllerImpl.getFirebaseUserPhoto()
         }
     }
 

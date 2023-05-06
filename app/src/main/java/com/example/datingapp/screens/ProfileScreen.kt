@@ -40,7 +40,7 @@ fun ProfileScreen(
             .background(backgroundColor)
     ) {
         GlideImage(
-            model = userControllerImpl.getUserPhoto().toString(),
+            model = userControllerImpl.userPhoto,
             contentDescription = "Translated description of what the image contains",
             modifier = Modifier
                 .background(whiteColor)
