@@ -15,6 +15,7 @@ class UserControllerImpl @Inject constructor(
     override var userPhoto: Uri? = null
     override lateinit var userData: UserData
     override var notSwipedUsers: MutableMap<UserData, Uri> = mutableMapOf()
+    override var matchedWithUsers: MutableMap<UserData, Uri> = mutableMapOf()
     private var interests = mutableListOf<Interest>()
 
     override fun addUserName(userName: String) {
@@ -71,6 +72,19 @@ class UserControllerImpl @Inject constructor(
             }
                 .forEach {
                     notSwipedUsers[it] = it.userId.getPhotoUri()
+                }
+        }
+    }
+
+    override fun setMatchedWithUsersData() {
+        matchedWithUsers.clear()
+        runBlocking {
+            firebaseControllerImpl.getUsersDataList().filter {
+                it.userId != firebaseControllerImpl.getCurrentUserId() &&
+                        userData.matchedWith.contains(it.userId)
+            }
+                .forEach {
+                    matchedWithUsers[it] = it.userId.getPhotoUri()
                 }
         }
     }

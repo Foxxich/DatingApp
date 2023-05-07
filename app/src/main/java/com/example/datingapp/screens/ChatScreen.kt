@@ -1,6 +1,9 @@
 package com.example.datingapp.screens
 
+import android.content.Context
+import android.content.Intent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -20,23 +23,20 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import com.example.datingapp.ChatActivity
 import com.example.datingapp.ui.theme.backgroundColor
 import com.example.datingapp.ui.theme.whiteColor
+import com.example.datingapp.user.UserController
 
 @Composable
-fun ChatScreen() {
-
+fun ChatScreen(context: Context, userControllerImpl: UserController) {
+    userControllerImpl.setMatchedWithUsersData()
+    val matchedUsers = userControllerImpl.matchedWithUsers
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(backgroundColor)
     ) {
-        val testDataList = mutableListOf<String>()
-        testDataList.add("S1")
-        testDataList.add("S12")
-        testDataList.add("S13")
-        testDataList.add("S14")
-        testDataList.add("S15")
         Box(modifier = Modifier.padding(bottom = 1.dp)) {
             LazyColumn(
                 modifier = Modifier
@@ -46,8 +46,14 @@ fun ChatScreen() {
                     .fillMaxWidth()
                     .background(whiteColor)
             ) {
-                items(testDataList.size) {
-                    Row(modifier = Modifier.fillMaxWidth()) {
+                items(matchedUsers.size) {
+                    Row(modifier = Modifier.fillMaxWidth().clickable {
+                        val intent =
+                            Intent(context, ChatActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        context.startActivity(intent)
+                    }) {
                         Column(
                             modifier = Modifier
                                 .weight(1f)
@@ -65,13 +71,13 @@ fun ChatScreen() {
                         ) {
                             Column {
                                 Text(
-                                    text = "XD",
+                                    text = matchedUsers.keys.toMutableList()[it].userName,
                                     style = MaterialTheme.typography.h6,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis
                                 )
                                 Text(
-                                    text = "SS",
+                                    text = matchedUsers.keys.toMutableList()[it].userId,
                                     style = MaterialTheme.typography.body2,
                                     maxLines = 2,
                                     overflow = TextOverflow.Ellipsis

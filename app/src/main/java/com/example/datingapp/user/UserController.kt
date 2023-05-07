@@ -7,6 +7,7 @@ interface UserController {
     var userPhoto: Uri?
     var userData: UserData
     var notSwipedUsers: MutableMap<UserData, Uri>
+    var matchedWithUsers: MutableMap<UserData, Uri>
 
     fun addUserName(userName: String)
 
@@ -19,6 +20,8 @@ interface UserController {
     fun setUserPhoto()
 
     fun setNotSwipedUsersData()
+
+    fun setMatchedWithUsersData()
 
     fun uploadToDatabase()
 

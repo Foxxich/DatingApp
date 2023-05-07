@@ -20,7 +20,7 @@
         android:theme="@style/Theme.DatingApp"
         tools:targetApi="tiramisu">
         <activity
-            android:name=".MessagesActivity"
+            android:name=".ChatActivity"
             android:exported="false"
             android:label="@string/title_activity_messages"
             android:theme="@style/Theme.DatingApp" />
