@@ -4,6 +4,7 @@ data class UserData(
     val userId: String = "",
     val userName: String = "",
     val quantityUserMatchedWith: Int = 0,
-    val userMatchedWithList: List<String> = emptyList(),
+    val matchedWith: List<String> = emptyList(),
+    val swiped: MutableMap<String, Boolean> = mutableMapOf(),
     val interests: List<Interest> = emptyList(),
 )

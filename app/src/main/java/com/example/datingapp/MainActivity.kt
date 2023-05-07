@@ -39,6 +39,8 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-        userControllerImpl.getUserPhoto()
+        userControllerImpl.setUserPhoto()
+        userControllerImpl.setUserData()
+        userControllerImpl.setNotSwipedUsersData()
     }
 }

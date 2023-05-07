@@ -27,7 +27,8 @@ import com.example.datingapp.ui.theme.whiteColor
 fun ChatScreen() {
 
     Column(
-        modifier = Modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
             .background(backgroundColor)
     ) {
         val testDataList = mutableListOf<String>()

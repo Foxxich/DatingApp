@@ -3,7 +3,6 @@ package com.example.datingapp
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
-import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -27,7 +26,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.core.content.ContextCompat
 import com.example.datingapp.firebase.FirebaseController
 import com.example.datingapp.ui.theme.DatingAppTheme
 import com.example.datingapp.ui.theme.backgroundColor

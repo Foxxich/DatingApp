@@ -1,4 +1,5 @@
 package com.example.datingapp.navigation
+
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Favorite
@@ -11,19 +12,19 @@ sealed class BottomBarScreen(
 ) {
 
     // for home
-    object Home: BottomBarScreen(
+    object Home : BottomBarScreen(
         route = "home",
         icon = Icons.Default.Favorite
     )
 
     // for report
-    object Report: BottomBarScreen(
+    object Report : BottomBarScreen(
         route = "report",
         icon = Icons.Default.Email
     )
 
     // for report
-    object Profile: BottomBarScreen(
+    object Profile : BottomBarScreen(
         route = "profile",
         icon = Icons.Default.Person
     )

@@ -20,12 +20,16 @@ interface FirebaseController {
 
     fun uploadUserAccount(userData: UserData)
 
-    fun uploadMatch()
-
     fun uploadPhoto(imageUri: Uri)
 
     suspend fun getFirebaseUserData(): UserData?
 
     suspend fun getFirebaseUserPhoto(): Uri?
+
+    suspend fun getFirebaseOtherUserPhoto(userId: String): Uri
+
+    suspend fun getUsersDataList(): List<UserData>
+
+    fun updateFirebaseUserData(userData: UserData)
 
 }

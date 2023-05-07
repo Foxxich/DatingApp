@@ -6,9 +6,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.datingapp.firebase.FirebaseController
+import com.example.datingapp.screens.ChatScreen
 import com.example.datingapp.screens.HomeScreen
 import com.example.datingapp.screens.ProfileScreen
-import com.example.datingapp.screens.ChatScreen
 import com.example.datingapp.user.UserController
 
 @Composable

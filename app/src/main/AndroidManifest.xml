@@ -19,9 +19,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DatingApp"
         tools:targetApi="tiramisu">
-        <service
-            android:name=".InternetCheckService"
-            />
+        <activity
+            android:name=".MessagesActivity"
+            android:exported="false"
+            android:label="@string/title_activity_messages"
+            android:theme="@style/Theme.DatingApp" />
+
+        <service android:name=".InternetCheckService" />
+
         <activity
             android:name=".VideoActivity"
             android:exported="false"

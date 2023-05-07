@@ -9,6 +9,7 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
+import com.google.firebase.firestore.ktx.toObjects
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.tasks.await
@@ -98,8 +99,24 @@ class FirebaseControllerImpl : FirebaseController {
         return firebaseAuth.currentUser?.let { storageRef.child(it.uid).downloadUrl.await() }
     }
 
-    override fun uploadMatch() {
-        TODO("Not yet implemented")
+    override suspend fun getFirebaseOtherUserPhoto(userId: String): Uri {
+        return storageRef.child(userId).downloadUrl.await()
+    }
+
+    override suspend fun getUsersDataList(): List<UserData> {
+        return database.collection("users").get().await().toObjects()
+    }
+
+    override fun updateFirebaseUserData(userData: UserData) {
+        database.collection("users")
+            .document(firebaseAuth.currentUser?.uid ?: throw FirebaseException("UID is null"))
+            .set(userData)
+            .addOnSuccessListener {
+                Log.e(TAG, "UserData successfully uploaded!")
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "Error adding document", e)
+            }
     }
 
 }
