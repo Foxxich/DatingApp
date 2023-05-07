@@ -25,7 +25,7 @@
             android:label="@string/title_activity_messages"
             android:theme="@style/Theme.DatingApp" />
 
-        <service android:name=".InternetCheckService" />
+        <service android:name=".utils.InternetCheckService" />
 
         <activity
             android:name=".VideoActivity"

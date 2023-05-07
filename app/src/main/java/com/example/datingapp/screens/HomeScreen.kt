@@ -12,7 +12,7 @@ import com.example.datingapp.user.UserController
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun HomeScreen(userControllerImpl: UserController) {
-
+    userControllerImpl.setNotSwipedUsersData()
     Column(
         modifier = Modifier
             .fillMaxSize()

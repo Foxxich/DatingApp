@@ -36,7 +36,6 @@ fun BottomNav(
     context: Context
 ) {
     val navController = rememberNavController()
-
     Scaffold(
         bottomBar = { BottomBar(navController = navController) }
     ) {

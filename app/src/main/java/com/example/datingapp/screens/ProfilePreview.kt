@@ -13,7 +13,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,7 +23,6 @@ import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.datingapp.ui.theme.whiteColor
 import com.example.datingapp.user.UserController
-import com.example.datingapp.user.UserData
 import com.github.theapache64.twyper.Twyper
 import com.github.theapache64.twyper.rememberTwyperController
 
@@ -41,8 +39,7 @@ fun ProfilePreview(userController: UserController) {
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         val profileController = rememberTwyperController()
-        val notSwipedUsersList = remember { mutableStateListOf<UserData>() }
-        notSwipedUsersList.addAll(userController.notSwipedUsers.keys.toMutableList())
+        val notSwipedUsersList = remember { userController.notSwipedUsers.keys.toMutableList() }
         Twyper(
             items = notSwipedUsersList,
             twyperController = profileController,

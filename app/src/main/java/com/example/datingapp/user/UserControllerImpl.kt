@@ -1,7 +1,6 @@
 package com.example.datingapp.user
 
 import android.net.Uri
-import android.util.Log
 import com.example.datingapp.firebase.FirebaseController
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -63,6 +62,7 @@ class UserControllerImpl @Inject constructor(
     }
 
     override fun setNotSwipedUsersData() {
+        notSwipedUsers.clear()
         runBlocking {
             firebaseControllerImpl.getUsersDataList().filter {
                 it.userId != firebaseControllerImpl.getCurrentUserId() &&

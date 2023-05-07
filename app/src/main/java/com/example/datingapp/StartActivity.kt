@@ -29,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import com.example.datingapp.firebase.FirebaseController
 import com.example.datingapp.ui.theme.DatingAppTheme
 import com.example.datingapp.ui.theme.backgroundColor
+import com.example.datingapp.utils.InternetCheckService
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
