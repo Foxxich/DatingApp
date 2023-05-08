@@ -2,7 +2,6 @@ package com.example.datingapp
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -52,14 +51,14 @@ class ChatActivity : ComponentActivity() {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     @Composable
     fun ChatScreen() {
-        val chat = userControllerImpl.userData.chats.first { it.userId == userControllerImpl.chatId }
+        val chat =
+            userControllerImpl.userData.chats.first { it.userId == userControllerImpl.chatId }
         var messageText by remember { mutableStateOf(TextFieldValue()) }
         var sentMessage by remember { mutableStateOf<String?>(null) }
-        val exampleMessages = mutableListOf<Message>()
+        var exampleMessages = mutableListOf<Message>()
         chat.messagesList.forEach {
             exampleMessages.add(it)
         }
-
         Scaffold {
             Column(
                 modifier = Modifier.padding(16.dp)
@@ -101,12 +100,7 @@ class ChatActivity : ComponentActivity() {
                         onClick = {
                             sentMessage = messageText.text
                             messageText = TextFieldValue()
-                            val message =  Message(sentMessage.toString(), "Me")
-                            exampleMessages.add(message)
-                            userControllerImpl.userData.chats.first { it.userId == userControllerImpl.chatId }.messagesList.add(
-                                message
-                            )
-                            userControllerImpl.updateChats()
+                            exampleMessages.add(userControllerImpl.updateChats(textMessage = sentMessage!!).messagesList.last())
                         }
                     ) {
                         Text("Send")

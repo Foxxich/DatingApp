@@ -2,6 +2,8 @@ package com.example.datingapp.firebase
 
 import android.net.Uri
 import android.util.Log
+import com.example.datingapp.user.Chat
+import com.example.datingapp.user.Message
 import com.example.datingapp.user.UserData
 import com.example.datingapp.utils.CommonSettings.TAG
 import com.example.datingapp.utils.FirebaseException
@@ -12,6 +14,7 @@ import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.firestore.ktx.toObjects
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 
 class FirebaseControllerImpl : FirebaseController {
@@ -109,7 +112,7 @@ class FirebaseControllerImpl : FirebaseController {
 
     override fun updateFirebaseUserData(userData: UserData) {
         database.collection("users")
-            .document(firebaseAuth.currentUser?.uid ?: throw FirebaseException("UID is null"))
+            .document(userData.userId)
             .set(userData)
             .addOnSuccessListener {
                 Log.e(TAG, "UserData successfully uploaded!")

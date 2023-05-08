@@ -29,10 +29,9 @@ interface UserController {
 
     fun uploadToDatabase()
 
-    fun updateChats()
-
     fun updateSwipes(userId: String, b: Boolean)
 
     fun getUserDataFromId(userId: String): UserData?
+    fun updateChats(textMessage: String): Chat
 
 }

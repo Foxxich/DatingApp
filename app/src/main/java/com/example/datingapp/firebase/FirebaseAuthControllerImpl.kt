@@ -1,0 +1,3 @@
+package com.example.datingapp.firebase
+
+class FirebaseAuthControllerImpl

@@ -11,19 +11,16 @@ sealed class BottomBarScreen(
     val icon: ImageVector
 ) {
 
-    // for home
     object Home : BottomBarScreen(
         route = "home",
         icon = Icons.Default.Favorite
     )
 
-    // for report
     object Report : BottomBarScreen(
         route = "report",
         icon = Icons.Default.Email
     )
 
-    // for report
     object Profile : BottomBarScreen(
         route = "profile",
         icon = Icons.Default.Person
