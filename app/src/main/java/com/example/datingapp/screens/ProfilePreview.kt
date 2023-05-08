@@ -46,9 +46,9 @@ fun ProfilePreview(userController: UserController) {
             onItemRemoved = { item, direction ->
                 println("Item removed: $item -> $direction")
                 if (direction.toString() == "RIGHT") {
-                    userController.update(item.userId, true)
+                    userController.updateSwipes(item.userId, true)
                 } else {
-                    userController.update(item.userId, false)
+                    userController.updateSwipes(item.userId, false)
                 }
             },
             onEmpty = {

@@ -41,5 +41,7 @@ class MainActivity : ComponentActivity() {
         }
         userControllerImpl.setUserPhoto()
         userControllerImpl.setUserData()
+        userControllerImpl.setMatchedWithUsersData()
+        userControllerImpl.setChats()
     }
 }

@@ -2,9 +2,12 @@ package com.example.datingapp
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,97 +15,102 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.datingapp.ui.theme.DatingAppTheme
 import com.example.datingapp.user.Message
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import com.example.datingapp.user.UserController
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class ChatActivity : ComponentActivity() {
+
+    @Inject
+    lateinit var userControllerImpl: UserController
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
             DatingAppTheme {
-                MessagingApp()
+                ChatScreen()
             }
         }
     }
-}
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun MessagingApp() {
-    val db = FirebaseFirestore.getInstance()
-    val auth = FirebaseAuth.getInstance()
-    val currentUser = auth.currentUser
+    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+    @Composable
+    fun ChatScreen() {
+        val chat = userControllerImpl.userData.chats.first { it.userId == userControllerImpl.chatId }
+        var messageText by remember { mutableStateOf(TextFieldValue()) }
+        var sentMessage by remember { mutableStateOf<String?>(null) }
+        val exampleMessages = mutableListOf<Message>()
+        chat.messagesList.forEach {
+            exampleMessages.add(it)
+        }
 
-    var messageText by remember { mutableStateOf(TextFieldValue()) }
-
-    val messages = remember { mutableStateListOf<Message>() }
-
-//    db.collection("messages").document(currentUser!!.uid)
-//        .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-//            if (firebaseFirestoreException != null) {
-//                return@addSnapshotListener
-//            }
-//            querySnapshot?.let { snapshot ->
-//                messages.clear()
-//                snapshot.documents.forEach { document ->
-//                    val message = document.toObject(Message::class.java)
-//                    message?.let {
-//                        messages.add(it)
-//                    }
-//                }
-//            }
-//        }
-
-    Scaffold(
-        topBar = { TopAppBar(title = { Text("Messaging App") }) }
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
-            LazyColumn(
-                modifier = Modifier.weight(1f)
+        Scaffold {
+            Column(
+                modifier = Modifier.padding(16.dp)
             ) {
-                items(messages) { message ->
-                    Text("${message.senderId}: ${message.text}")
-                }
-            }
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                OutlinedTextField(
-                    value = messageText,
-                    onValueChange = { messageText = it },
-                    label = { Text("Message") },
+                LazyColumn(
                     modifier = Modifier.weight(1f)
-                )
-                Button(
-                    onClick = {
-                        val timestamp = System.currentTimeMillis()
-                        val message = Message(messageText.text, currentUser?.uid ?: "", timestamp)
-//                        db.push().setValue(message)
-                        messageText = TextFieldValue()
-                    }
                 ) {
-                    Text("Send")
+                    items(exampleMessages) { message ->
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = 8.dp),
+                            horizontalArrangement = if (message.sender == "Me") Arrangement.End else Arrangement.Start
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .background(if (message.sender == "Me") Color.Blue else Color.LightGray)
+                                    .padding(8.dp)
+                            ) {
+                                Text(
+                                    text = message.text,
+                                    color = if (message.sender == "Me") Color.White else Color.Black
+                                )
+                            }
+                        }
+                    }
+                }
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    OutlinedTextField(
+                        value = messageText,
+                        onValueChange = { messageText = it },
+                        label = { Text("Message") },
+                        modifier = Modifier.weight(1f)
+                    )
+                    Button(
+                        onClick = {
+                            sentMessage = messageText.text
+                            messageText = TextFieldValue()
+                            val message =  Message(sentMessage.toString(), "Me")
+                            exampleMessages.add(message)
+                            userControllerImpl.userData.chats.first { it.userId == userControllerImpl.chatId }.messagesList.add(
+                                message
+                            )
+                            userControllerImpl.updateChats()
+                        }
+                    ) {
+                        Text("Send")
+                    }
                 }
             }
         }

@@ -119,4 +119,11 @@ class FirebaseControllerImpl : FirebaseController {
             }
     }
 
+    override suspend fun getUserDataFromIdFirebase(userId: String): UserData? {
+        return database.collection("users")
+            .document(userId)
+            .get()
+            .await().toObject<UserData>()
+    }
+
 }

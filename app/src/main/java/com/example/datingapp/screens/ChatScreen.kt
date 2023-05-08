@@ -22,15 +22,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
 import com.example.datingapp.ChatActivity
 import com.example.datingapp.ui.theme.backgroundColor
 import com.example.datingapp.ui.theme.whiteColor
 import com.example.datingapp.user.UserController
 
+@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun ChatScreen(context: Context, userControllerImpl: UserController) {
-    userControllerImpl.setMatchedWithUsersData()
+    userControllerImpl.setUserData()
+    userControllerImpl.userData.chats
     val matchedUsers = userControllerImpl.matchedWithUsers
     Column(
         modifier = Modifier
@@ -48,10 +51,10 @@ fun ChatScreen(context: Context, userControllerImpl: UserController) {
             ) {
                 items(matchedUsers.size) {
                     Row(modifier = Modifier.fillMaxWidth().clickable {
+                        userControllerImpl.chatId = matchedUsers.keys.toMutableList()[it].userId
                         val intent =
                             Intent(context, ChatActivity::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
                         context.startActivity(intent)
                     }) {
                         Column(
@@ -59,8 +62,8 @@ fun ChatScreen(context: Context, userControllerImpl: UserController) {
                                 .weight(1f)
                                 .padding(16.dp)
                         ) {
-                            AsyncImage(
-                                model = "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d8/Person_icon_BLACK-01.svg/1924px-Person_icon_BLACK-01.svg.png",
+                            GlideImage(
+                                model = matchedUsers.getValue(matchedUsers.keys.toMutableList()[it]),
                                 contentDescription = "Translated description of what the image contains"
                             )
                         }

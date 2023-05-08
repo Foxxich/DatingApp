@@ -8,6 +8,8 @@ interface UserController {
     var userData: UserData
     var notSwipedUsers: MutableMap<UserData, Uri>
     var matchedWithUsers: MutableMap<UserData, Uri>
+    var chatId: String
+    var chatUserData: UserData
 
     fun addUserName(userName: String)
 
@@ -19,12 +21,18 @@ interface UserController {
 
     fun setUserPhoto()
 
+    fun setChats()
+
     fun setNotSwipedUsersData()
 
     fun setMatchedWithUsersData()
 
     fun uploadToDatabase()
 
-    fun update(userId: String, b: Boolean)
+    fun updateChats()
+
+    fun updateSwipes(userId: String, b: Boolean)
+
+    fun getUserDataFromId(userId: String): UserData?
 
 }

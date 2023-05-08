@@ -1,6 +1,7 @@
 package com.example.datingapp.user
 
 import android.net.Uri
+import android.util.Log
 import com.example.datingapp.firebase.FirebaseController
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -14,6 +15,8 @@ class UserControllerImpl @Inject constructor(
     private lateinit var userName: String
     override var userPhoto: Uri? = null
     override lateinit var userData: UserData
+    override var chatId: String = ""
+    override lateinit var chatUserData: UserData
     override var notSwipedUsers: MutableMap<UserData, Uri> = mutableMapOf()
     override var matchedWithUsers: MutableMap<UserData, Uri> = mutableMapOf()
     private var interests = mutableListOf<Interest>()
@@ -45,9 +48,29 @@ class UserControllerImpl @Inject constructor(
         )
     }
 
-    override fun update(userId: String, b: Boolean) {
+    override fun updateChats() {
+        userData.upload()
+    }
+
+    override fun updateSwipes(userId: String, b: Boolean) {
         userData.swiped[userId] = b
-        firebaseControllerImpl.updateFirebaseUserData(userData = userData)
+        userData.upload()
+    }
+
+    override fun setChats() {
+        matchedWithUsers.keys.forEach {
+            if (!userData.chats.map { chats -> chats.userId }.contains(it.userId)) {
+                userData.chats.add(Chat(userId = it.userId))
+                userData.upload()
+            }
+        }
+    }
+
+    override fun getUserDataFromId(userId: String): UserData {
+        runBlocking {
+            chatUserData = firebaseControllerImpl.getUserDataFromIdFirebase(userId)!!
+        }
+        return chatUserData
     }
 
     override fun setUserData() {
@@ -91,5 +114,9 @@ class UserControllerImpl @Inject constructor(
 
     private suspend fun String.getPhotoUri(): Uri {
         return firebaseControllerImpl.getFirebaseOtherUserPhoto(this)
+    }
+
+    private fun UserData.upload() {
+        firebaseControllerImpl.updateFirebaseUserData(this)
     }
 }
