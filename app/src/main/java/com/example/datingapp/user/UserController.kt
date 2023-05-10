@@ -11,20 +11,17 @@ interface UserController {
     var chatId: String
     var chatUserData: UserData
 
-    fun setUserData()
-
-    fun setUserPhoto()
-
     fun setChats()
 
-    fun setNotSwipedUsersData()
+    fun setNecessaryData()
 
-    fun setMatchedWithUsersData()
-
-    fun updateSwipes(userId: String, b: Boolean)
+    fun updateSwipes(userId: String, liked: Boolean)
 
     fun getUserDataFromId(userId: String): UserData?
+
     fun updateChats(textMessage: String): Chat
+
+    fun updateProfile(userData: UserData)
 
     fun uploadToDatabase(userName: String, interests: List<Interest>)
 }

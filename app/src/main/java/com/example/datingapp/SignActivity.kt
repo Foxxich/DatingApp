@@ -31,6 +31,7 @@ import com.example.datingapp.firebase.FirebaseAuthController
 import com.example.datingapp.firebase.FirebaseDataController
 import com.example.datingapp.ui.theme.DatingAppTheme
 import com.example.datingapp.ui.theme.backgroundColor
+import com.example.datingapp.user.UserController
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
@@ -45,10 +46,13 @@ class SignActivity : ComponentActivity() {
     lateinit var context: Context
 
     @Inject
-    lateinit var firebaseAuthService: FirebaseDataController
+    lateinit var firebaseDataController: FirebaseDataController
 
     @Inject
     lateinit var firebaseAuthController: FirebaseAuthController
+
+    @Inject
+    lateinit var userController: UserController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -112,13 +116,13 @@ class SignActivity : ComponentActivity() {
                     firebaseAuthController.logout()
                     coroutineScope.launch {
                         try {
-                            firebaseAuthService.isCurrentUserRegistered(
+                            firebaseAuthController.isCurrentUserRegistered(
                                 email = email,
                                 password = password
                             )
                         } catch (e: Exception) {
                             Log.i("FIREBASE_AUTHENTICATION", "Success, user do not exist")
-                            firebaseAuthService.createNewUser(email = email, password = password)
+                            firebaseDataController.createNewUser(email = email, password = password)
                             val intent = Intent(context, InterestsActivity::class.java)
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -134,7 +138,7 @@ class SignActivity : ComponentActivity() {
                 onClick = {
                     coroutineScope.launch {
                         try {
-                            if (firebaseAuthService.isCurrentUserRegistered(
+                            if (firebaseAuthController.isCurrentUserRegistered(
                                     email = email,
                                     password = password
                                 )?.user != null

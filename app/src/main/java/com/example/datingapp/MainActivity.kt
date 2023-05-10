@@ -14,13 +14,14 @@ import com.example.datingapp.ui.theme.DatingAppTheme
 import com.example.datingapp.user.UserController
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     @Inject
-    lateinit var userControllerImpl: UserController
+    lateinit var userController: UserController
 
     @Inject
     lateinit var firebaseDataController: FirebaseDataController
@@ -34,16 +35,16 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        userController.setNecessaryData()
+
         setContent {
             DatingAppTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    BottomNav(userControllerImpl, firebaseDataController, context, firebaseAuthController)
+                    BottomNav(userController, firebaseDataController, context, firebaseAuthController)
                 }
             }
         }
-        userControllerImpl.setUserData()
-        userControllerImpl.setMatchedWithUsersData()
     }
 }

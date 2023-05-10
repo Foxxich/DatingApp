@@ -20,12 +20,7 @@ class FirebaseDataControllerImpl : FirebaseDataController {
     private val database = Firebase.firestore
     private val storageRef = Firebase.storage.reference
 
-    override suspend fun isCurrentUserRegistered(email: String, password: String): AuthResult? {
-        return firebaseAuth.signInWithEmailAndPassword(email, password).await()
-    }
-
     override suspend fun isProfileSetUp(): Boolean {
-        Log.e("XDDD", firebaseAuth.currentUser?.uid.toString())
         return database.collection("users_settings")
             .document(firebaseAuth.currentUser?.uid ?: throw FirebaseException("UID is null"))
             .get().await().get("isRegistrationFinished") as Boolean

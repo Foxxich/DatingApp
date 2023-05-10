@@ -27,7 +27,7 @@ fun BottomNavGraph(
         composable(route = BottomBarScreen.Home.route) {
             HomeScreen(userControllerImpl)
         }
-        composable(route = BottomBarScreen.Report.route) {
+        composable(route = BottomBarScreen.Chat.route) {
             ChatScreen(context, userControllerImpl)
         }
         composable(route = BottomBarScreen.Profile.route) {

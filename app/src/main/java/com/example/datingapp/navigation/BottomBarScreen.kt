@@ -16,8 +16,8 @@ sealed class BottomBarScreen(
         icon = Icons.Default.Favorite
     )
 
-    object Report : BottomBarScreen(
-        route = "report",
+    object Chat : BottomBarScreen(
+        route = "chat",
         icon = Icons.Default.Email
     )
 

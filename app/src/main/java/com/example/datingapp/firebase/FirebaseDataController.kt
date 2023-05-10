@@ -6,8 +6,6 @@ import com.google.firebase.auth.AuthResult
 
 interface FirebaseDataController {
 
-    suspend fun isCurrentUserRegistered(email: String, password: String): AuthResult?
-
     suspend fun isProfileSetUp(): Boolean
 
     fun getCurrentUserId(): String?

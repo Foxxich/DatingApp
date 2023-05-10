@@ -36,7 +36,6 @@ fun ProfileScreen(
     firebaseDataController: FirebaseDataController,
     firebaseAuthController: FirebaseAuthController
 ) {
-    userControllerImpl.setUserPhoto()
     Column(
         modifier = Modifier
             .fillMaxSize()
