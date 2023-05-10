@@ -34,4 +34,6 @@ interface FirebaseController {
     fun updateFirebaseUserData(userData: UserData)
 
     suspend fun getUserDataFromIdFirebase(userId: String): UserData?
+
+    suspend fun getSpecificUsersDataList(notShowUsers: MutableList<String>): List<UserData>
 }

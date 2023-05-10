@@ -129,4 +129,13 @@ class FirebaseControllerImpl : FirebaseController {
             .await().toObject<UserData>()
     }
 
+    override suspend fun getSpecificUsersDataList(notShowUsers: MutableList<String>): List<UserData> {
+        return database
+            .collection("users")
+            .whereNotIn("userId", notShowUsers)
+            .get()
+            .await()
+            .toObjects()
+    }
+
 }

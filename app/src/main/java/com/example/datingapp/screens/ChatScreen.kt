@@ -33,6 +33,7 @@ import com.example.datingapp.user.UserController
 @Composable
 fun ChatScreen(context: Context, userControllerImpl: UserController) {
     userControllerImpl.setUserData()
+    userControllerImpl.setChats()
     userControllerImpl.userData.chats
     val matchedUsers = userControllerImpl.matchedWithUsers
     Column(

@@ -88,11 +88,15 @@ class UserControllerImpl @Inject constructor(
     override fun setNotSwipedUsersData() {
         notSwipedUsers.clear()
         runBlocking {
-            firebaseControllerImpl.getUsersDataList().filter {
-                it.userId != firebaseControllerImpl.getCurrentUserId() &&
-                        !userData.swiped.keys.contains(it.userId) &&
-                        !userData.matchedWith.contains(it.userId)
+            val notShowUsers = mutableListOf<String>()
+            notShowUsers.add(userData.userId)
+            userData.swiped.keys.forEach {
+                notShowUsers.add(it)
             }
+            userData.matchedWith.forEach {
+                notShowUsers.add(it)
+            }
+            firebaseControllerImpl.getSpecificUsersDataList(notShowUsers)
                 .forEach {
                     notSwipedUsers[it] = it.userId.getPhotoUri()
                 }
