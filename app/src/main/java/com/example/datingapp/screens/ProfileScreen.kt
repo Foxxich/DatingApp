@@ -22,7 +22,8 @@ import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.datingapp.StartActivity
-import com.example.datingapp.firebase.FirebaseController
+import com.example.datingapp.firebase.FirebaseAuthController
+import com.example.datingapp.firebase.FirebaseDataController
 import com.example.datingapp.ui.theme.backgroundColor
 import com.example.datingapp.ui.theme.whiteColor
 import com.example.datingapp.user.UserController
@@ -32,7 +33,8 @@ import com.example.datingapp.user.UserController
 fun ProfileScreen(
     context: Context,
     userControllerImpl: UserController,
-    firebaseController: FirebaseController
+    firebaseDataController: FirebaseDataController,
+    firebaseAuthController: FirebaseAuthController
 ) {
     userControllerImpl.setUserPhoto()
     Column(
@@ -68,7 +70,7 @@ fun ProfileScreen(
             ) {
                 Button(
                     onClick = {
-                        firebaseController.logout()
+                        firebaseAuthController.logout()
                         val intent = Intent(context, StartActivity::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         context.startActivity(intent)
@@ -81,8 +83,8 @@ fun ProfileScreen(
                 }
                 Button(
                     onClick = {
-                        firebaseController.deleteUser()
-                        firebaseController.logout()
+                        firebaseAuthController.deleteUser()
+                        firebaseAuthController.logout()
                         val intent = Intent(context, StartActivity::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                         context.startActivity(intent)

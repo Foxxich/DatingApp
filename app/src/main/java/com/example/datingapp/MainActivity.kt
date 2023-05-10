@@ -7,7 +7,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.example.datingapp.firebase.FirebaseController
+import com.example.datingapp.firebase.FirebaseAuthController
+import com.example.datingapp.firebase.FirebaseDataController
 import com.example.datingapp.navigation.BottomNav
 import com.example.datingapp.ui.theme.DatingAppTheme
 import com.example.datingapp.user.UserController
@@ -22,7 +23,10 @@ class MainActivity : ComponentActivity() {
     lateinit var userControllerImpl: UserController
 
     @Inject
-    lateinit var firebaseController: FirebaseController
+    lateinit var firebaseDataController: FirebaseDataController
+
+    @Inject
+    lateinit var firebaseAuthController: FirebaseAuthController
 
     @ApplicationContext
     @Inject
@@ -35,7 +39,7 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    BottomNav(userControllerImpl, firebaseController, context)
+                    BottomNav(userControllerImpl, firebaseDataController, context, firebaseAuthController)
                 }
             }
         }

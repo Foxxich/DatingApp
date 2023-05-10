@@ -1,14 +1,14 @@
 package com.example.datingapp.user
 
 import android.net.Uri
-import com.example.datingapp.firebase.FirebaseController
+import com.example.datingapp.firebase.FirebaseDataController
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
 class UserControllerImpl @Inject constructor(
-    private val firebaseControllerImpl: FirebaseController
+    private val firebaseDataControllerImpl: FirebaseDataController
 ) : UserController {
 
     private lateinit var userName: String
@@ -26,7 +26,7 @@ class UserControllerImpl @Inject constructor(
 
     override fun addUserPhoto(userPhoto: Uri) {
         this.userPhoto = userPhoto
-        firebaseControllerImpl.uploadPhoto(userPhoto)
+        firebaseDataControllerImpl.uploadPhoto(userPhoto)
     }
 
     override fun addUserInterests(userInterests: List<Interest>) {
@@ -34,11 +34,11 @@ class UserControllerImpl @Inject constructor(
     }
 
     override fun uploadToDatabase() {
-        var userId = firebaseControllerImpl.getCurrentUserId()
+        var userId = firebaseDataControllerImpl.getCurrentUserId()
         while (userId == null) {
-            userId = firebaseControllerImpl.getCurrentUserId()
+            userId = firebaseDataControllerImpl.getCurrentUserId()
         }
-        firebaseControllerImpl.uploadUserAccount(
+        firebaseDataControllerImpl.uploadUserAccount(
             UserData(
                 userId = userId,
                 userName = this.userName,
@@ -68,20 +68,20 @@ class UserControllerImpl @Inject constructor(
 
     override fun getUserDataFromId(userId: String): UserData {
         runBlocking {
-            chatUserData = firebaseControllerImpl.getUserDataFromIdFirebase(userId)!!
+            chatUserData = firebaseDataControllerImpl.getUserDataFromIdFirebase(userId)!!
         }
         return chatUserData
     }
 
     override fun setUserData() {
         runBlocking {
-            userData = firebaseControllerImpl.getFirebaseUserData()!!
+            userData = firebaseDataControllerImpl.getFirebaseUserData()!!
         }
     }
 
     override fun setUserPhoto() {
         runBlocking {
-            userPhoto = firebaseControllerImpl.getFirebaseUserPhoto()
+            userPhoto = firebaseDataControllerImpl.getFirebaseUserPhoto()
         }
     }
 
@@ -96,7 +96,7 @@ class UserControllerImpl @Inject constructor(
             userData.matchedWith.forEach {
                 notShowUsers.add(it)
             }
-            firebaseControllerImpl.getSpecificUsersDataList(notShowUsers)
+            firebaseDataControllerImpl.getSpecificUsersDataList(notShowUsers)
                 .forEach {
                     notSwipedUsers[it] = it.userId.getPhotoUri()
                 }
@@ -119,7 +119,7 @@ class UserControllerImpl @Inject constructor(
     override fun setMatchedWithUsersData() {
         matchedWithUsers.clear()
         runBlocking {
-            firebaseControllerImpl.getUsersDataList().forEach {
+            firebaseDataControllerImpl.getUsersDataList().forEach {
                 if (!it.matchedWith.contains(userData.userId) &&
                     it.swiped.keys.contains(userData.userId) && it.swiped.getValue(userData.userId)
                 ) {
@@ -130,8 +130,8 @@ class UserControllerImpl @Inject constructor(
                     it.upload()
                 }
             }
-            firebaseControllerImpl.getUsersDataList().filter {
-                it.userId != firebaseControllerImpl.getCurrentUserId() &&
+            firebaseDataControllerImpl.getUsersDataList().filter {
+                it.userId != firebaseDataControllerImpl.getCurrentUserId() &&
                         userData.matchedWith.contains(it.userId)
             }
                 .forEach {
@@ -141,10 +141,10 @@ class UserControllerImpl @Inject constructor(
     }
 
     private suspend fun String.getPhotoUri(): Uri {
-        return firebaseControllerImpl.getFirebaseOtherUserPhoto(this)
+        return firebaseDataControllerImpl.getFirebaseOtherUserPhoto(this)
     }
 
     private fun UserData.upload() {
-        firebaseControllerImpl.updateFirebaseUserData(this)
+        firebaseDataControllerImpl.updateFirebaseUserData(this)
     }
 }

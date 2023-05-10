@@ -26,7 +26,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import com.example.datingapp.firebase.FirebaseController
+import com.example.datingapp.firebase.FirebaseDataController
 import com.example.datingapp.ui.theme.DatingAppTheme
 import com.example.datingapp.ui.theme.backgroundColor
 import com.example.datingapp.utils.InternetCheckService
@@ -38,7 +38,7 @@ import javax.inject.Inject
 class StartActivity : ComponentActivity() {
 
     @Inject
-    lateinit var firebaseController: FirebaseController
+    lateinit var firebaseDataController: FirebaseDataController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -74,7 +74,7 @@ class StartActivity : ComponentActivity() {
                 contentDescription = stringResource(id = R.string.heart_image_description),
                 onClick = {
                     coroutineScope.launch {
-                        if (firebaseController.isCurrentUserSigned()) {
+                        if (firebaseDataController.isCurrentUserSigned()) {
                             val intent =
                                 Intent(applicationContext, MainActivity::class.java)
                             intent.addFlags(FLAG_ACTIVITY_NEW_TASK)

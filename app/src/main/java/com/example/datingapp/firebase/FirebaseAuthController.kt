@@ -1,3 +1,8 @@
 package com.example.datingapp.firebase
 
-interface FirebaseAuthController
+interface FirebaseAuthController {
+
+    fun deleteUser()
+
+    fun logout()
+}

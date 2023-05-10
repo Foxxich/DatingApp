@@ -26,14 +26,16 @@ import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.datingapp.firebase.FirebaseController
+import com.example.datingapp.firebase.FirebaseAuthController
+import com.example.datingapp.firebase.FirebaseDataController
 import com.example.datingapp.user.UserController
 
 @Composable
 fun BottomNav(
     userControllerImpl: UserController,
-    firebaseController: FirebaseController,
-    context: Context
+    firebaseDataController: FirebaseDataController,
+    context: Context,
+    firebaseAuthController: FirebaseAuthController
 ) {
     val navController = rememberNavController()
     Scaffold(
@@ -43,8 +45,9 @@ fun BottomNav(
         BottomNavGraph(
             navController = navController,
             userControllerImpl = userControllerImpl,
-            firebaseController = firebaseController,
-            context = context
+            firebaseDataController = firebaseDataController,
+            context = context,
+            firebaseAuthController = firebaseAuthController
         )
     }
 }
