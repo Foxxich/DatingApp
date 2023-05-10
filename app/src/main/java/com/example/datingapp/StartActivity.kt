@@ -68,7 +68,7 @@ class StartActivity : ComponentActivity() {
             verticalArrangement = Arrangement.Center,
         ) {
             Text(
-                //                            TODO: Mati - add support of getting multiple texts and change style
+                //TODO: Mati - add support of getting multiple texts and change style
                 text = stringResource(id = R.string.start_app_text),
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
@@ -95,23 +95,23 @@ class StartActivity : ComponentActivity() {
             )
         }
     }
-}
 
-@Composable
-fun ClickableImage(image: Painter, contentDescription: String, onClick: () -> Unit) {
-    Image(
-        painter = image,
-        contentDescription = contentDescription,
-        modifier = Modifier
-            .noRippleClickable(onClick = onClick)
-            .fillMaxWidth(),
-        contentScale = ContentScale.FillWidth
-    )
-}
+    @Composable
+    fun ClickableImage(image: Painter, contentDescription: String, onClick: () -> Unit) {
+        Image(
+            painter = image,
+            contentDescription = contentDescription,
+            modifier = Modifier
+                .noRippleClickable(onClick = onClick)
+                .fillMaxWidth(),
+            contentScale = ContentScale.FillWidth
+        )
+    }
 
-fun Modifier.noRippleClickable(onClick: () -> Unit): Modifier = composed {
-    clickable(indication = null,
-        interactionSource = remember { MutableInteractionSource() }) {
-        onClick()
+    private fun Modifier.noRippleClickable(onClick: () -> Unit): Modifier = composed {
+        clickable(indication = null,
+            interactionSource = remember { MutableInteractionSource() }) {
+            onClick()
+        }
     }
 }

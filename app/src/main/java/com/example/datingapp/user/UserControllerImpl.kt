@@ -15,7 +15,6 @@ class UserControllerImpl @Inject constructor(
     override var userPhoto: Uri? = null
     override lateinit var userData: UserData
     override var chatId: String = ""
-    override lateinit var chatUserData: UserData
     override var notSwipedUsers: MutableMap<UserData, Uri> = mutableMapOf()
     override var matchedWithUsers: MutableMap<UserData, Uri> = mutableMapOf()
 
@@ -55,12 +54,7 @@ class UserControllerImpl @Inject constructor(
         userData.upload()
     }
 
-    override fun getUserDataFromId(userId: String): UserData {
-        runBlocking {
-            chatUserData = firebaseDataControllerImpl.getUserData(userId)!!
-        }
-        return chatUserData
-    }
+    override fun getUserDataFromId(userId: String) = firebaseDataControllerImpl.getUserData(userId)!!
 
     override fun setChats() {
         matchedWithUsers.keys.forEach {
@@ -117,7 +111,8 @@ class UserControllerImpl @Inject constructor(
                 val otherUser = firebaseDataControllerImpl.getUserData(it)!!
                 if (!otherUser.matchedWith.contains(userData.userId) &&
                     otherUser.swiped.keys.contains(userData.userId) &&
-                    otherUser.swiped.getValue(userData.userId)) {
+                    otherUser.swiped.getValue(userData.userId)
+                ) {
                     userData.matchedWith.add(otherUser.userId)
                     userData.upload()
 

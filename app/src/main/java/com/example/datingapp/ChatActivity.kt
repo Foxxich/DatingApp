@@ -55,7 +55,7 @@ class ChatActivity : ComponentActivity() {
             userControllerImpl.userData.chats.first { it.userId == userControllerImpl.chatId }
         var messageText by remember { mutableStateOf(TextFieldValue()) }
         var sentMessage by remember { mutableStateOf<String?>(null) }
-        var exampleMessages = mutableListOf<Message>()
+        val exampleMessages = mutableListOf<Message>()
         chat.messagesList.forEach {
             exampleMessages.add(it)
         }

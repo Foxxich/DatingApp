@@ -9,7 +9,6 @@ interface UserController {
     var notSwipedUsers: MutableMap<UserData, Uri>
     var matchedWithUsers: MutableMap<UserData, Uri>
     var chatId: String
-    var chatUserData: UserData
 
     fun setChats()
 

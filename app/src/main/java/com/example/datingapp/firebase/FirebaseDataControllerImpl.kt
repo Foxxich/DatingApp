@@ -5,13 +5,13 @@ import android.util.Log
 import com.example.datingapp.user.UserData
 import com.example.datingapp.utils.CommonSettings.TAG
 import com.example.datingapp.utils.FirebaseException
-import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.firestore.ktx.toObjects
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 
 class FirebaseDataControllerImpl : FirebaseDataController {
@@ -70,11 +70,15 @@ class FirebaseDataControllerImpl : FirebaseDataController {
             }
     }
 
-    override suspend fun getUserData(userId: String): UserData? {
-        return database.collection("users")
-            .document(userId)
-            .get()
-            .await().toObject<UserData>()
+    override fun getUserData(userId: String): UserData? {
+        val data: UserData?
+        runBlocking {
+            data = database.collection("users")
+                .document(userId)
+                .get()
+                .await().toObject<UserData>()
+        }
+        return data
     }
 
     override suspend fun getSpecificUsersDataList(notShowUsers: MutableList<String>): List<UserData> {

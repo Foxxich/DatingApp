@@ -14,7 +14,6 @@ import com.example.datingapp.ui.theme.DatingAppTheme
 import com.example.datingapp.user.UserController
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -42,7 +41,12 @@ class MainActivity : ComponentActivity() {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                 ) {
-                    BottomNav(userController, firebaseDataController, context, firebaseAuthController)
+                    BottomNav(
+                        userController,
+                        firebaseDataController,
+                        context,
+                        firebaseAuthController
+                    )
                 }
             }
         }

@@ -31,7 +31,12 @@ fun BottomNavGraph(
             ChatScreen(context, userControllerImpl)
         }
         composable(route = BottomBarScreen.Profile.route) {
-            ProfileScreen(context, userControllerImpl, firebaseDataController, firebaseAuthController)
+            ProfileScreen(
+                context,
+                userControllerImpl,
+                firebaseDataController,
+                firebaseAuthController
+            )
         }
     }
 }
