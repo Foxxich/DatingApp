@@ -24,8 +24,8 @@ class FirebaseDataControllerImpl : FirebaseDataController {
         return firebaseAuth.signInWithEmailAndPassword(email, password).await()
     }
 
-    override suspend fun isCurrentUserSigned(): Boolean {
-        return firebaseAuth.currentUser != null && database.collection("users_settings")
+    override suspend fun isProfileSetUp(): Boolean {
+        return database.collection("users_settings")
             .document(firebaseAuth.currentUser?.uid ?: throw FirebaseException("UID is null"))
             .get().await().get("isRegistrationFinished") as Boolean
     }

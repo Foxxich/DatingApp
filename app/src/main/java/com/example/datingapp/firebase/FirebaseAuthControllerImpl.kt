@@ -7,6 +7,8 @@ class FirebaseAuthControllerImpl : FirebaseAuthController {
 
     private val firebaseAuth = Firebase.auth
 
+    override suspend fun isCurrentUserSigned() = firebaseAuth.currentUser != null
+
     override fun deleteUser() {
         firebaseAuth.currentUser?.delete()
     }

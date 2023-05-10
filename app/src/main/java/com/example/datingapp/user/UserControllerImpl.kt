@@ -130,13 +130,9 @@ class UserControllerImpl @Inject constructor(
                     it.upload()
                 }
             }
-            firebaseDataControllerImpl.getUsersDataList().filter {
-                it.userId != firebaseDataControllerImpl.getCurrentUserId() &&
-                        userData.matchedWith.contains(it.userId)
+            userData.matchedWith.forEach {
+                matchedWithUsers[firebaseDataControllerImpl.getUserDataFromIdFirebase(it)!!] = it.getPhotoUri()
             }
-                .forEach {
-                    matchedWithUsers[it] = it.userId.getPhotoUri()
-                }
         }
     }
 

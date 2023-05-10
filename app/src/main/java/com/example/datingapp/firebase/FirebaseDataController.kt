@@ -8,7 +8,7 @@ interface FirebaseDataController {
 
     suspend fun isCurrentUserRegistered(email: String, password: String): AuthResult?
 
-    suspend fun isCurrentUserSigned(): Boolean
+    suspend fun isProfileSetUp(): Boolean
 
     fun getCurrentUserId(): String?
 
