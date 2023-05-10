@@ -56,20 +56,22 @@ class UserControllerImpl @Inject constructor(
 
     override fun getUserDataFromId(userId: String): UserData {
         runBlocking {
-            chatUserData = firebaseDataControllerImpl.getUserDataFromIdFirebase(userId)!!
+            chatUserData = firebaseDataControllerImpl.getUserData(userId)!!
         }
         return chatUserData
     }
 
     override fun setUserData() {
         runBlocking {
-            userData = firebaseDataControllerImpl.getFirebaseUserData()!!
+            userData = firebaseDataControllerImpl.getCurrentUserId()
+                ?.let { firebaseDataControllerImpl.getUserData(it) }!!
         }
     }
 
     override fun setUserPhoto() {
         runBlocking {
-            userPhoto = firebaseDataControllerImpl.getFirebaseUserPhoto()
+            userPhoto = firebaseDataControllerImpl.getCurrentUserId()
+                ?.let { firebaseDataControllerImpl.getFirebaseUserPhoto(it) }!!
         }
     }
 
@@ -119,13 +121,13 @@ class UserControllerImpl @Inject constructor(
                 }
             }
             userData.matchedWith.forEach {
-                matchedWithUsers[firebaseDataControllerImpl.getUserDataFromIdFirebase(it)!!] = it.getPhotoUri()
+                matchedWithUsers[firebaseDataControllerImpl.getUserData(it)!!] = it.getPhotoUri()
             }
         }
     }
 
     private suspend fun String.getPhotoUri(): Uri {
-        return firebaseDataControllerImpl.getFirebaseOtherUserPhoto(this)
+        return firebaseDataControllerImpl.getFirebaseUserPhoto(this)
     }
 
     private fun UserData.upload() {

@@ -55,18 +55,7 @@ class FirebaseDataControllerImpl : FirebaseDataController {
         getCurrentUserId()?.let { storageRef.child(it).putFile(imageUri) }
     }
 
-    override suspend fun getFirebaseUserData(): UserData? {
-        return database.collection("users")
-            .document(firebaseAuth.currentUser?.uid ?: throw FirebaseException("UID is null"))
-            .get()
-            .await().toObject<UserData>()
-    }
-
-    override suspend fun getFirebaseUserPhoto(): Uri? {
-        return firebaseAuth.currentUser?.let { storageRef.child(it.uid).downloadUrl.await() }
-    }
-
-    override suspend fun getFirebaseOtherUserPhoto(userId: String): Uri {
+    override suspend fun getFirebaseUserPhoto(userId: String): Uri {
         return storageRef.child(userId).downloadUrl.await()
     }
 
@@ -86,7 +75,7 @@ class FirebaseDataControllerImpl : FirebaseDataController {
             }
     }
 
-    override suspend fun getUserDataFromIdFirebase(userId: String): UserData? {
+    override suspend fun getUserData(userId: String): UserData? {
         return database.collection("users")
             .document(userId)
             .get()

@@ -16,17 +16,13 @@ interface FirebaseDataController {
 
     fun uploadPhoto(imageUri: Uri)
 
-    suspend fun getFirebaseUserData(): UserData?
-
-    suspend fun getFirebaseUserPhoto(): Uri?
-
-    suspend fun getFirebaseOtherUserPhoto(userId: String): Uri
-
     suspend fun getUsersDataList(): List<UserData>
 
     fun updateFirebaseUserData(userData: UserData)
 
-    suspend fun getUserDataFromIdFirebase(userId: String): UserData?
+    suspend fun getUserData(userId: String): UserData?
+
+    suspend fun getFirebaseUserPhoto(userId: String): Uri
 
     suspend fun getSpecificUsersDataList(notShowUsers: MutableList<String>): List<UserData>
 
