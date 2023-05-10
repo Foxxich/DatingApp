@@ -14,8 +14,6 @@ interface FirebaseDataController {
 
     suspend fun createNewUser(email: String, password: String)
 
-    fun uploadUserAccount(userData: UserData)
-
     fun uploadPhoto(imageUri: Uri)
 
     suspend fun getFirebaseUserData(): UserData?
@@ -31,4 +29,6 @@ interface FirebaseDataController {
     suspend fun getUserDataFromIdFirebase(userId: String): UserData?
 
     suspend fun getSpecificUsersDataList(notShowUsers: MutableList<String>): List<UserData>
+
+    fun changeFlag(userId: String)
 }

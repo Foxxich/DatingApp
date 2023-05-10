@@ -25,6 +25,7 @@ class FirebaseDataControllerImpl : FirebaseDataController {
     }
 
     override suspend fun isProfileSetUp(): Boolean {
+        Log.e("XDDD", firebaseAuth.currentUser?.uid.toString())
         return database.collection("users_settings")
             .document(firebaseAuth.currentUser?.uid ?: throw FirebaseException("UID is null"))
             .get().await().get("isRegistrationFinished") as Boolean
@@ -49,28 +50,6 @@ class FirebaseDataControllerImpl : FirebaseDataController {
     }
 
     override fun getCurrentUserId() = firebaseAuth.currentUser?.uid
-
-    override fun uploadUserAccount(userData: UserData) {
-        database.collection("users")
-            .document(firebaseAuth.currentUser?.uid ?: throw FirebaseException("UID is null"))
-            .set(userData)
-            .addOnSuccessListener {
-                Log.e(TAG, "UserData successfully uploaded!")
-            }
-            .addOnFailureListener { e ->
-                Log.e(TAG, "Error adding document", e)
-            }
-
-        database.collection("users_settings")
-            .document(firebaseAuth.currentUser?.uid ?: throw FirebaseException("UID is null"))
-            .set("isRegistrationFinished" to true)
-            .addOnSuccessListener {
-                Log.e(TAG, "UserSettings successfully uploaded!")
-            }
-            .addOnFailureListener { e ->
-                Log.e(TAG, "Error adding UserSettings", e)
-            }
-    }
 
     override fun uploadPhoto(imageUri: Uri) {
         getCurrentUserId()?.let { storageRef.child(it).putFile(imageUri) }
@@ -121,6 +100,18 @@ class FirebaseDataControllerImpl : FirebaseDataController {
             .get()
             .await()
             .toObjects()
+    }
+
+    override fun changeFlag(userId: String) {
+        database.collection("users_settings")
+            .document(userId)
+            .set(mutableMapOf("isRegistrationFinished" to true))
+            .addOnSuccessListener {
+                Log.e(TAG, "UserSettings successfully uploaded!")
+            }
+            .addOnFailureListener { e ->
+                Log.e(TAG, "Error adding UserSettings", e)
+            }
     }
 
 }

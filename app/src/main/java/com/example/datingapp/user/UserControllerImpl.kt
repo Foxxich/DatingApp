@@ -18,33 +18,21 @@ class UserControllerImpl @Inject constructor(
     override lateinit var chatUserData: UserData
     override var notSwipedUsers: MutableMap<UserData, Uri> = mutableMapOf()
     override var matchedWithUsers: MutableMap<UserData, Uri> = mutableMapOf()
-    private var interests = mutableListOf<Interest>()
 
-    override fun addUserName(userName: String) {
-        this.userName = userName
-    }
-
-    override fun addUserPhoto(userPhoto: Uri) {
-        this.userPhoto = userPhoto
-        firebaseDataControllerImpl.uploadPhoto(userPhoto)
-    }
-
-    override fun addUserInterests(userInterests: List<Interest>) {
-        this.interests = userInterests as MutableList<Interest>
-    }
-
-    override fun uploadToDatabase() {
+    override fun uploadToDatabase(userName: String, interests: List<Interest>) {
         var userId = firebaseDataControllerImpl.getCurrentUserId()
         while (userId == null) {
             userId = firebaseDataControllerImpl.getCurrentUserId()
         }
-        firebaseDataControllerImpl.uploadUserAccount(
+        firebaseDataControllerImpl.updateFirebaseUserData(
             UserData(
                 userId = userId,
-                userName = this.userName,
-                interests = this.interests,
+                userName = userName,
+                interests = interests,
             )
         )
+        firebaseDataControllerImpl.changeFlag(userId)
+        userPhoto?.let { firebaseDataControllerImpl.uploadPhoto(it) }
     }
 
     override fun updateChats(textMessage: String): Chat {

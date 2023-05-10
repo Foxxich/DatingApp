@@ -138,9 +138,7 @@ class InterestsActivity : ComponentActivity() {
                     }
 
                     Button(onClick = {
-                        userControllerImpl.addUserName(userName)
-                        userControllerImpl.addUserInterests(chosenInterests)
-                        userControllerImpl.uploadToDatabase()
+                        userControllerImpl.uploadToDatabase(userName, chosenInterests)
                         val intent =
                             Intent(applicationContext, VideoActivity::class.java)
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -157,7 +155,7 @@ class InterestsActivity : ComponentActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result != null) {
                 val imageUri: Uri? = result.data?.data
-                userControllerImpl.addUserPhoto(imageUri!!)
+                userControllerImpl.userPhoto = imageUri!!
             }
         }
 }
