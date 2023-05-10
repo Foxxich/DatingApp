@@ -22,7 +22,6 @@ class FirebaseControllerImpl : FirebaseController {
     private val firebaseAuth = Firebase.auth
     private val database = Firebase.firestore
     private val storageRef = Firebase.storage.reference
-    private val userSettings = mutableMapOf<String, Boolean>()
 
     override suspend fun isCurrentUserRegistered(email: String, password: String): AuthResult? {
         return firebaseAuth.signInWithEmailAndPassword(email, password).await()
@@ -38,12 +37,11 @@ class FirebaseControllerImpl : FirebaseController {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener {
                 Log.i("IS_FIREBASE_USER_CREATE_SUCCESS", it.isSuccessful.toString())
-                userSettings["isRegistrationFinished"] = false
                 database.collection("users_settings")
                     .document(
                         firebaseAuth.currentUser?.uid ?: throw FirebaseException("UID is null")
                     )
-                    .set(userSettings)
+                    .set(mutableMapOf("isRegistrationFinished" to false))
                     .addOnSuccessListener {
                         Log.e(TAG, "UserSettings successfully uploaded!")
                     }
@@ -74,11 +72,9 @@ class FirebaseControllerImpl : FirebaseController {
                 Log.e(TAG, "Error adding document", e)
             }
 
-        userSettings["isRegistrationFinished"] = true
-
         database.collection("users_settings")
             .document(firebaseAuth.currentUser?.uid ?: throw FirebaseException("UID is null"))
-            .set(userSettings)
+            .set("isRegistrationFinished" to true)
             .addOnSuccessListener {
                 Log.e(TAG, "UserSettings successfully uploaded!")
             }
