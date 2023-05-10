@@ -52,10 +52,10 @@ fun ChatScreen(context: Context, userControllerImpl: UserController) {
                     Row(modifier = Modifier
                         .fillMaxWidth()
                         .clickable {
-                            userControllerImpl.chatId = matchedUsers.keys.toMutableList()[it].userId
                             val intent =
                                 Intent(context, ChatActivity::class.java)
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            intent.putExtra("USER_ID", matchedUsers.keys.toMutableList()[it].userId)
                             context.startActivity(intent)
                         }) {
                         Column(

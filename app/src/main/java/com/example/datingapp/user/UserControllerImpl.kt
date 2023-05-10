@@ -1,7 +1,6 @@
 package com.example.datingapp.user
 
 import android.net.Uri
-import android.util.Log
 import com.example.datingapp.firebase.FirebaseDataController
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -14,7 +13,6 @@ class UserControllerImpl @Inject constructor(
 
     override var userPhoto: Uri? = null
     override lateinit var userData: UserData
-    override var chatId: String = ""
     override var notSwipedUsers: MutableMap<UserData, Uri> = mutableMapOf()
     override var matchedWithUsers: MutableMap<UserData, Uri> = mutableMapOf()
 
@@ -31,7 +29,7 @@ class UserControllerImpl @Inject constructor(
         userPhoto?.let { firebaseDataControllerImpl.uploadPhoto(it) }
     }
 
-    override fun updateChats(textMessage: String): Chat {
+    override fun updateChats(textMessage: String, chatId: String): Chat {
         userData.chats.first { it.userId == chatId }.messagesList.add(
             Message(textMessage, "Me")
         )
@@ -90,7 +88,6 @@ class UserControllerImpl @Inject constructor(
             }
             firebaseDataControllerImpl.getSpecificUsersDataList(notShowUsers)
                 .forEach {
-                    Log.e("XDD", it.toString())
                     notSwipedUsers[it] = it.userId.getPhotoUri()
                 }
 

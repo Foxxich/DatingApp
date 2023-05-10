@@ -8,7 +8,6 @@ interface UserController {
     var userData: UserData
     var notSwipedUsers: MutableMap<UserData, Uri>
     var matchedWithUsers: MutableMap<UserData, Uri>
-    var chatId: String
 
     fun setChats()
 
@@ -18,7 +17,7 @@ interface UserController {
 
     fun getUserDataFromId(userId: String): UserData?
 
-    fun updateChats(textMessage: String): Chat
+    fun updateChats(textMessage: String, chatId: String): Chat
 
     fun updateProfile(userData: UserData)
 

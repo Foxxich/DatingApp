@@ -39,8 +39,13 @@ class ChatActivity : ComponentActivity() {
     @Inject
     lateinit var userControllerImpl: UserController
 
+    lateinit var chatId: String
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        val intent = intent
+        chatId = intent.getStringExtra("USER_ID").toString()
         setContent {
             DatingAppTheme {
                 ChatScreen()
@@ -52,7 +57,7 @@ class ChatActivity : ComponentActivity() {
     @Composable
     fun ChatScreen() {
         val chat =
-            userControllerImpl.userData.chats.first { it.userId == userControllerImpl.chatId }
+            userControllerImpl.userData.chats.first { it.userId == chatId }
         var messageText by remember { mutableStateOf(TextFieldValue()) }
         var sentMessage by remember { mutableStateOf<String?>(null) }
         val exampleMessages = mutableListOf<Message>()
@@ -100,7 +105,7 @@ class ChatActivity : ComponentActivity() {
                         onClick = {
                             sentMessage = messageText.text
                             messageText = TextFieldValue()
-                            exampleMessages.add(userControllerImpl.updateChats(textMessage = sentMessage!!).messagesList.last())
+                            exampleMessages.add(userControllerImpl.updateChats(textMessage = sentMessage!!, chatId).messagesList.last())
                         }
                     ) {
                         Text("Send")
