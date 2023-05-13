@@ -6,8 +6,9 @@ interface UserController {
 
     var userPhoto: Uri?
     var userData: UserData
-    var notSwipedUsers: MutableMap<UserData, Uri>
-    var matchedWithUsers: MutableMap<UserData, Uri>
+    var notSwipedUsersUri: MutableMap<UserData, Uri>
+    var matchedWithUsersUri: MutableMap<UserData, Uri>
+    var userCollection: UserCollection
 
     fun setChats()
 

@@ -13,8 +13,9 @@ class UserControllerImpl @Inject constructor(
 
     override var userPhoto: Uri? = null
     override lateinit var userData: UserData
-    override var notSwipedUsers: MutableMap<UserData, Uri> = mutableMapOf()
-    override var matchedWithUsers: MutableMap<UserData, Uri> = mutableMapOf()
+    override var notSwipedUsersUri: MutableMap<UserData, Uri> = mutableMapOf()
+    override var matchedWithUsersUri: MutableMap<UserData, Uri> = mutableMapOf()
+    override lateinit var userCollection: UserCollection
 
     override fun uploadToDatabase(userName: String, interests: List<Interest>) {
         val userId = firebaseDataControllerImpl.getCurrentUserId()!!
@@ -55,7 +56,7 @@ class UserControllerImpl @Inject constructor(
     override fun getUserDataFromId(userId: String) = firebaseDataControllerImpl.getUserData(userId)!!
 
     override fun setChats() {
-        matchedWithUsers.keys.forEach {
+        matchedWithUsersUri.keys.forEach {
             if (!userData.chats.map { chats -> chats.userId }.contains(it.userId)) {
                 userData.chats.add(Chat(userId = it.userId))
                 userData.upload()
@@ -68,8 +69,8 @@ class UserControllerImpl @Inject constructor(
     }
 
     override fun setNecessaryData() {
-        notSwipedUsers.clear()
-        matchedWithUsers.clear()
+        notSwipedUsersUri.clear()
+        matchedWithUsersUri.clear()
 
         runBlocking {
             userData = firebaseDataControllerImpl.getCurrentUserId()
@@ -88,7 +89,7 @@ class UserControllerImpl @Inject constructor(
             }
             firebaseDataControllerImpl.getSpecificUsersDataList(notShowUsers)
                 .forEach {
-                    notSwipedUsers[it] = it.userId.getPhotoUri()
+                    notSwipedUsersUri[it] = it.userId.getPhotoUri()
                 }
 
             //TODO: test it!
@@ -119,7 +120,7 @@ class UserControllerImpl @Inject constructor(
             }
             //2
             userData.matchedWith.forEach {
-                matchedWithUsers[firebaseDataControllerImpl.getUserData(it)!!] = it.getPhotoUri()
+                matchedWithUsersUri[firebaseDataControllerImpl.getUserData(it)!!] = it.getPhotoUri()
             }
         }
     }
