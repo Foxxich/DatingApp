@@ -1,6 +1,7 @@
 package com.example.datingapp.firebase
 
 import android.net.Uri
+import com.example.datingapp.UserDataObserver
 import com.example.datingapp.user.UserData
 
 interface FirebaseDataController {
@@ -24,4 +25,16 @@ interface FirebaseDataController {
     suspend fun getSpecificUsersDataList(notShowUsers: MutableList<String>): List<UserData>
 
     fun changeFlag(userId: String)
+    fun listenToNew()
+
+    var observers: MutableList<UserDataObserver>
+
+    fun addObserver(observer: UserDataObserver) {
+    }
+
+    fun removeObserver(observer: UserDataObserver) {
+    }
+
+    fun updateMyObject(newMyObject: UserData) {
+    }
 }

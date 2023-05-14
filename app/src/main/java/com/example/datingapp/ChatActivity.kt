@@ -27,43 +27,47 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.datingapp.firebase.FirebaseDataController
 import com.example.datingapp.ui.theme.DatingAppTheme
 import com.example.datingapp.user.Message
 import com.example.datingapp.user.UserController
+import com.example.datingapp.user.UserData
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class ChatActivity : ComponentActivity() {
+class ChatActivity : ComponentActivity(), UserDataObserver {
 
     @Inject
     lateinit var userControllerImpl: UserController
 
+    @Inject
+    lateinit var firebaseDataController: FirebaseDataController
+
     lateinit var chatId: String
+
+    private var exampleMessages = mutableListOf<Message>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val intent = intent
+        firebaseDataController.addObserver(userControllerImpl)
+        firebaseDataController.addObserver(this)
         chatId = intent.getStringExtra("USER_ID").toString()
-        setContent {
-            DatingAppTheme {
-                ChatScreen()
-            }
-        }
     }
 
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     @Composable
     fun ChatScreen() {
+        exampleMessages.clear()
         val chat =
             userControllerImpl.userData.chats.first { it.userId == chatId }
         var messageText by remember { mutableStateOf(TextFieldValue()) }
         var sentMessage by remember { mutableStateOf<String?>(null) }
-        val exampleMessages = mutableListOf<Message>()
         chat.messagesList.forEach {
             exampleMessages.add(it)
         }
+        exampleMessages.sortByDescending { it.timestamp.seconds }
         Scaffold {
             Column(
                 modifier = Modifier.padding(16.dp)
@@ -105,13 +109,19 @@ class ChatActivity : ComponentActivity() {
                         onClick = {
                             sentMessage = messageText.text
                             messageText = TextFieldValue()
-                            exampleMessages.add(userControllerImpl.updateChats(textMessage = sentMessage!!, chatId).messagesList.last())
+                            userControllerImpl.updateChats(textMessage = sentMessage!!, chatId)
                         }
                     ) {
                         Text("Send")
                     }
                 }
             }
+        }
+    }
+
+    override fun dataChanged(userData: UserData) {
+        setContent {
+            ChatScreen()
         }
     }
 }

@@ -1,8 +1,9 @@
 package com.example.datingapp.user
 
 import android.net.Uri
+import com.example.datingapp.UserDataObserver
 
-interface UserController {
+interface UserController : UserDataObserver {
 
     var userPhoto: Uri?
     var userData: UserData
@@ -23,4 +24,9 @@ interface UserController {
     fun updateProfile(userData: UserData)
 
     fun uploadToDatabase(userName: String, interests: List<Interest>)
+
+    fun setMyObject(myObject: UserData) {
+    }
+
+    override fun dataChanged(userData: UserData) {}
 }

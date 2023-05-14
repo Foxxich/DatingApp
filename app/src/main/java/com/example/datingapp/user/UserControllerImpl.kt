@@ -1,6 +1,7 @@
 package com.example.datingapp.user
 
 import android.net.Uri
+import com.example.datingapp.UserDataObserver
 import com.example.datingapp.firebase.FirebaseDataController
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -16,6 +17,7 @@ class UserControllerImpl @Inject constructor(
     override var notSwipedUsersUri: MutableMap<UserData, Uri> = mutableMapOf()
     override var matchedWithUsersUri: MutableMap<UserData, Uri> = mutableMapOf()
     override lateinit var userCollection: UserCollection
+    private val observers = mutableListOf<UserDataObserver>()
 
     override fun uploadToDatabase(userName: String, interests: List<Interest>) {
         val userId = firebaseDataControllerImpl.getCurrentUserId()!!
@@ -41,6 +43,7 @@ class UserControllerImpl @Inject constructor(
             Message(textMessage, "You")
         )
         otherUserData.upload()
+
         return userData.chats.first { it.userId == chatId }
     }
 
@@ -53,7 +56,8 @@ class UserControllerImpl @Inject constructor(
         userData.upload()
     }
 
-    override fun getUserDataFromId(userId: String) = firebaseDataControllerImpl.getUserData(userId)!!
+    override fun getUserDataFromId(userId: String) =
+        firebaseDataControllerImpl.getUserData(userId)!!
 
     override fun setChats() {
         matchedWithUsersUri.keys.forEach {
@@ -66,6 +70,17 @@ class UserControllerImpl @Inject constructor(
                 otherUserData.upload()
             }
         }
+    }
+
+    override fun setMyObject(myObject: UserData) {
+        this.userData = myObject
+        for (observer in observers) {
+            observer.dataChanged(myObject)
+        }
+    }
+
+    override fun dataChanged(userData: UserData) {
+        setMyObject(userData)
     }
 
     override fun setNecessaryData() {

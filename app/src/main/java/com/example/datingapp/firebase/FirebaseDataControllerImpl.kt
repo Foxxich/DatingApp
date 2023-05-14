@@ -2,6 +2,7 @@ package com.example.datingapp.firebase
 
 import android.net.Uri
 import android.util.Log
+import com.example.datingapp.UserDataObserver
 import com.example.datingapp.user.UserData
 import com.example.datingapp.utils.CommonSettings.TAG
 import com.example.datingapp.utils.FirebaseException
@@ -100,6 +101,46 @@ class FirebaseDataControllerImpl : FirebaseDataController {
             .addOnFailureListener { e ->
                 Log.e(TAG, "Error adding UserSettings", e)
             }
+    }
+
+    override var observers = mutableListOf<UserDataObserver>()
+
+    override fun addObserver(observer: UserDataObserver) {
+        observers.add(observer)
+        listenToNew()
+    }
+
+    override fun removeObserver(observer: UserDataObserver) {
+        observers.remove(observer)
+    }
+
+    override fun updateMyObject(newMyObject: UserData) {
+        for (observer in observers) {
+            observer.dataChanged(newMyObject)
+        }
+    }
+
+    override fun listenToNew() {
+        getCurrentUserId()?.let {
+            database
+                .collection("users")
+                .document(it).addSnapshotListener { snapshot, e ->
+                    if (e != null) {
+                        Log.w("XDDD", "Listen failed.", e)
+                        return@addSnapshotListener
+                    }
+
+                    if (snapshot != null && snapshot.exists()) {
+                        Log.d("XDDD", "Current data: ${snapshot.data}")
+                        val newMyObject = snapshot.toObject<UserData>()
+                        if (newMyObject != null) {
+                            updateMyObject(newMyObject)
+                        }
+                    } else {
+                        Log.d("XDDD", "Current data: null")
+                    }
+                }
+        }
     }
 
 }
