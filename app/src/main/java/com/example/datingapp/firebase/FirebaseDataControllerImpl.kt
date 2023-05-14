@@ -14,6 +14,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
+import java.lang.Exception
 
 class FirebaseDataControllerImpl : FirebaseDataController {
 
@@ -83,12 +84,22 @@ class FirebaseDataControllerImpl : FirebaseDataController {
     }
 
     override suspend fun getSpecificUsersDataList(notShowUsers: MutableList<String>): List<UserData> {
-        return database
-            .collection("users")
-            .whereNotIn("userId", notShowUsers)
-            .get()
-            .await()
-            .toObjects()
+        val filteredList: MutableList<UserData> = mutableListOf()
+        try {
+            notShowUsers.chunked(9).forEach { _ ->
+                database
+                    .collection("users")
+                    .whereNotIn("userId", notShowUsers)
+                    .get()
+                    .await()
+                    .toObjects<UserData>().forEach {
+                        filteredList.add(it)
+                    }
+            }
+        } catch (e: Exception) {
+            Log.e(TAG, e.toString())
+        }
+        return filteredList
     }
 
     override fun changeFlag(userId: String) {
