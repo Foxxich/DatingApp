@@ -1,4 +1,4 @@
-package com.example.datingapp
+package com.example.datingapp.activities
 
 import android.content.Context
 import android.content.Intent
@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
+import com.example.datingapp.R
 import com.example.datingapp.ui.theme.DatingAppTheme
 import com.google.android.exoplayer2.C
 import com.google.android.exoplayer2.ExoPlayer

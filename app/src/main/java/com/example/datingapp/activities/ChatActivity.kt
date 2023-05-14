@@ -1,4 +1,4 @@
-package com.example.datingapp
+package com.example.datingapp.activities
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -27,6 +27,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.datingapp.UserDataObserver
 import com.example.datingapp.firebase.FirebaseDataController
 import com.example.datingapp.ui.theme.DatingAppTheme
 import com.example.datingapp.user.Message
