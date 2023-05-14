@@ -6,35 +6,28 @@ import com.example.datingapp.user.UserData
 
 interface FirebaseDataController {
 
-    suspend fun isProfileSetUp(): Boolean
+    var observers: MutableList<UserDataObserver>
 
-    fun getCurrentUserId(): String?
+    suspend fun isProfileSetUp(): Boolean
 
     suspend fun createNewUser(email: String, password: String)
 
-    fun uploadPhoto(imageUri: Uri)
+    fun setUserProfileSetUp(userId: String)
 
-    suspend fun getUsersDataList(): List<UserData>
+    fun getCurrentUserId(): String?
 
-    fun updateFirebaseUserData(userData: UserData)
+    fun setFirebasePhoto(imageUri: Uri)
 
-    fun getUserData(userId: String): UserData?
+    fun setFirebaseUserData(userData: UserData)
+
+    fun getFirebaseUserData(userId: String): UserData?
 
     suspend fun getFirebaseUserPhoto(userId: String): Uri
 
-    suspend fun getSpecificUsersDataList(notShowUsers: MutableList<String>): List<UserData>
+    suspend fun getNotInUsersDataList(notShowUsers: MutableList<String>): List<UserData>
 
-    fun changeFlag(userId: String)
-    fun listenToNew()
+    fun addObserver(observer: UserDataObserver)
 
-    var observers: MutableList<UserDataObserver>
+    fun removeObserver(observer: UserDataObserver)
 
-    fun addObserver(observer: UserDataObserver) {
-    }
-
-    fun removeObserver(observer: UserDataObserver) {
-    }
-
-    fun updateMyObject(newMyObject: UserData) {
-    }
 }

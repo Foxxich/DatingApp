@@ -14,13 +14,13 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.ktx.storage
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
-import java.lang.Exception
 
 class FirebaseDataControllerImpl : FirebaseDataController {
 
     private val firebaseAuth = Firebase.auth
     private val database = Firebase.firestore
     private val storageRef = Firebase.storage.reference
+    override var observers = mutableListOf<UserDataObserver>()
 
     override suspend fun isProfileSetUp(): Boolean {
         return database.collection("users_settings")
@@ -48,7 +48,7 @@ class FirebaseDataControllerImpl : FirebaseDataController {
 
     override fun getCurrentUserId() = firebaseAuth.currentUser?.uid
 
-    override fun uploadPhoto(imageUri: Uri) {
+    override fun setFirebasePhoto(imageUri: Uri) {
         getCurrentUserId()?.let { storageRef.child(it).putFile(imageUri) }
     }
 
@@ -56,11 +56,7 @@ class FirebaseDataControllerImpl : FirebaseDataController {
         return storageRef.child(userId).downloadUrl.await()
     }
 
-    override suspend fun getUsersDataList(): List<UserData> {
-        return database.collection("users").get().await().toObjects()
-    }
-
-    override fun updateFirebaseUserData(userData: UserData) {
+    override fun setFirebaseUserData(userData: UserData) {
         database.collection("users")
             .document(userData.userId)
             .set(userData)
@@ -72,7 +68,7 @@ class FirebaseDataControllerImpl : FirebaseDataController {
             }
     }
 
-    override fun getUserData(userId: String): UserData? {
+    override fun getFirebaseUserData(userId: String): UserData? {
         val data: UserData?
         runBlocking {
             data = database.collection("users")
@@ -83,7 +79,7 @@ class FirebaseDataControllerImpl : FirebaseDataController {
         return data
     }
 
-    override suspend fun getSpecificUsersDataList(notShowUsers: MutableList<String>): List<UserData> {
+    override suspend fun getNotInUsersDataList(notShowUsers: MutableList<String>): List<UserData> {
         val filteredList: MutableList<UserData> = mutableListOf()
         try {
             notShowUsers.chunked(9).forEach { _ ->
@@ -102,7 +98,7 @@ class FirebaseDataControllerImpl : FirebaseDataController {
         return filteredList
     }
 
-    override fun changeFlag(userId: String) {
+    override fun setUserProfileSetUp(userId: String) {
         database.collection("users_settings")
             .document(userId)
             .set(mutableMapOf("isRegistrationFinished" to true))
@@ -114,8 +110,6 @@ class FirebaseDataControllerImpl : FirebaseDataController {
             }
     }
 
-    override var observers = mutableListOf<UserDataObserver>()
-
     override fun addObserver(observer: UserDataObserver) {
         observers.add(observer)
         listenToNew()
@@ -125,32 +119,31 @@ class FirebaseDataControllerImpl : FirebaseDataController {
         observers.remove(observer)
     }
 
-    override fun updateMyObject(newMyObject: UserData) {
-        for (observer in observers) {
-            observer.dataChanged(newMyObject)
-        }
-    }
-
-    override fun listenToNew() {
+    private fun listenToNew() {
         getCurrentUserId()?.let {
             database
                 .collection("users")
                 .document(it).addSnapshotListener { snapshot, e ->
                     if (e != null) {
-                        Log.w("XDDD", "Listen failed.", e)
+                        Log.w(TAG, "Listen failed.", e)
                         return@addSnapshotListener
                     }
 
                     if (snapshot != null && snapshot.exists()) {
-                        Log.d("XDDD", "Current data: ${snapshot.data}")
                         val newMyObject = snapshot.toObject<UserData>()
                         if (newMyObject != null) {
                             updateMyObject(newMyObject)
                         }
                     } else {
-                        Log.d("XDDD", "Current data: null")
+                        Log.d(TAG, "Current data: null")
                     }
                 }
+        }
+    }
+
+    private fun updateMyObject(newMyObject: UserData) {
+        for (observer in observers) {
+            observer.dataChanged(newMyObject)
         }
     }
 

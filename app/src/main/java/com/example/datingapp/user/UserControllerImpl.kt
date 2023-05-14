@@ -21,15 +21,15 @@ class UserControllerImpl @Inject constructor(
 
     override fun uploadToDatabase(userName: String, interests: List<Interest>) {
         val userId = firebaseDataControllerImpl.getCurrentUserId()!!
-        firebaseDataControllerImpl.updateFirebaseUserData(
+        firebaseDataControllerImpl.setFirebaseUserData(
             UserData(
                 userId = userId,
                 userName = userName,
                 interests = interests,
             )
         )
-        firebaseDataControllerImpl.changeFlag(userId)
-        userPhoto?.let { firebaseDataControllerImpl.uploadPhoto(it) }
+        firebaseDataControllerImpl.setUserProfileSetUp(userId)
+        userPhoto?.let { firebaseDataControllerImpl.setFirebasePhoto(it) }
     }
 
     override fun updateChats(textMessage: String, chatId: String): Chat {
@@ -48,7 +48,7 @@ class UserControllerImpl @Inject constructor(
     }
 
     override fun updateProfile(userData: UserData) {
-        firebaseDataControllerImpl.updateFirebaseUserData(userData)
+        firebaseDataControllerImpl.setFirebaseUserData(userData)
     }
 
     override fun updateSwipes(userId: String, liked: Boolean) {
@@ -57,7 +57,7 @@ class UserControllerImpl @Inject constructor(
     }
 
     override fun getUserDataFromId(userId: String) =
-        firebaseDataControllerImpl.getUserData(userId)!!
+        firebaseDataControllerImpl.getFirebaseUserData(userId)!!
 
     override fun setChats() {
         matchedWithUsersUri.keys.forEach {
@@ -89,7 +89,7 @@ class UserControllerImpl @Inject constructor(
 
         runBlocking {
             userData = firebaseDataControllerImpl.getCurrentUserId()
-                ?.let { firebaseDataControllerImpl.getUserData(it) }!!
+                ?.let { firebaseDataControllerImpl.getFirebaseUserData(it) }!!
 
             userPhoto = firebaseDataControllerImpl.getCurrentUserId()
                 ?.let { firebaseDataControllerImpl.getFirebaseUserPhoto(it) }!!
@@ -102,7 +102,7 @@ class UserControllerImpl @Inject constructor(
             userData.matchedWith.forEach {
                 notShowUsers.add(it)
             }
-            firebaseDataControllerImpl.getSpecificUsersDataList(notShowUsers)
+            firebaseDataControllerImpl.getNotInUsersDataList(notShowUsers)
                 .forEach {
                     notSwipedUsersUri[it] = it.userId.getPhotoUri()
                 }
@@ -121,7 +121,7 @@ class UserControllerImpl @Inject constructor(
 //                }
 //            }
             userData.swiped.keys.forEach {
-                val otherUser = firebaseDataControllerImpl.getUserData(it)!!
+                val otherUser = firebaseDataControllerImpl.getFirebaseUserData(it)!!
                 if (!otherUser.matchedWith.contains(userData.userId) &&
                     otherUser.swiped.keys.contains(userData.userId) &&
                     otherUser.swiped.getValue(userData.userId)
@@ -135,7 +135,8 @@ class UserControllerImpl @Inject constructor(
             }
             //2
             userData.matchedWith.forEach {
-                matchedWithUsersUri[firebaseDataControllerImpl.getUserData(it)!!] = it.getPhotoUri()
+                matchedWithUsersUri[firebaseDataControllerImpl.getFirebaseUserData(it)!!] =
+                    it.getPhotoUri()
             }
         }
     }
@@ -145,6 +146,6 @@ class UserControllerImpl @Inject constructor(
     }
 
     private fun UserData.upload() {
-        firebaseDataControllerImpl.updateFirebaseUserData(this)
+        firebaseDataControllerImpl.setFirebaseUserData(this)
     }
 }
