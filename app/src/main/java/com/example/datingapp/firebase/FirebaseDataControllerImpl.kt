@@ -5,7 +5,6 @@ import android.util.Log
 import com.example.datingapp.UserDataObserver
 import com.example.datingapp.user.UserData
 import com.example.datingapp.utils.CommonSettings.TAG
-import com.example.datingapp.utils.FirebaseException
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.firestore.ktx.toObject

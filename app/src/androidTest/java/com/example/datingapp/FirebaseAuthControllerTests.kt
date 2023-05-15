@@ -8,7 +8,7 @@ import org.junit.Assert
 import org.junit.Test
 
 @HiltAndroidTest
-class FirebaseControllersTests {
+class FirebaseAuthControllerTests {
 
     private var firebaseAuthController: FirebaseAuthController = FirebaseAuthControllerImpl()
 
