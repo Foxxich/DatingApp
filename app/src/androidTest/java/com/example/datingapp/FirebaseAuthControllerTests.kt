@@ -16,7 +16,7 @@ class FirebaseAuthControllerTests {
     fun userIsRegistered() {
         firebaseAuthController.logout()
         runBlocking {
-            Assert.assertNotNull(firebaseAuthController.isCurrentUserRegistered("test6@gmail.com", "123456"))
+            Assert.assertNotNull(firebaseAuthController.isCurrentUserRegistered("test1@gmail.com", "123456"))
         }
     }
 
