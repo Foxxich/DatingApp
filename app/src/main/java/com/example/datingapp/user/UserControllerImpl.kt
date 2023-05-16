@@ -107,19 +107,6 @@ class UserControllerImpl @Inject constructor(
                     notSwipedUsersUri[it] = it.userId.getPhotoUri()
                 }
 
-            //TODO: test it!
-            //1
-//            firebaseDataControllerImpl.getUsersDataList().forEach {
-//                if (!it.matchedWith.contains(userData.userId) &&
-//                    it.swiped.keys.contains(userData.userId) && it.swiped.getValue(userData.userId)
-//                ) {
-//                    userData.matchedWith.add(it.userId)
-//                    userData.upload()
-//
-//                    it.matchedWith.add(userData.userId)
-//                    it.upload()
-//                }
-//            }
             userData.swiped.keys.forEach {
                 val otherUser = firebaseDataControllerImpl.getFirebaseUserData(it)!!
                 if (!otherUser.matchedWith.contains(userData.userId) &&
@@ -133,7 +120,6 @@ class UserControllerImpl @Inject constructor(
                     otherUser.upload()
                 }
             }
-            //2
             userData.matchedWith.forEach {
                 matchedWithUsersUri[firebaseDataControllerImpl.getFirebaseUserData(it)!!] =
                     it.getPhotoUri()

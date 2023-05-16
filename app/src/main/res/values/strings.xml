@@ -5,7 +5,18 @@
     <string name="title_activity_sign">SignActivity</string>
     <string name="title_activity_start">StartActivity</string>
 
-    <string name="start_app_text">Love time</string>
+    <string-array name="start_app_text_array">
+        <item>Find love. Open the dating app.</item>
+        <item>Swipe. Connect. Discover your match.</item>
+        <item>Tap here for exciting dating opportunities.</item>
+        <item>Meet new people. Start dating now.</item>
+        <item>Your perfect match awaits. Join today.</item>
+        <item>Unlock romance. Open the dating app.</item>
+        <item> Dating made easy. Get started now.</item>
+        <item>Swipe. Match. Begin your love story.</item>
+        <item>Ready for love? Open the app.</item>
+        <item>Discover meaningful connections. Date with confidence.</item>
+    </string-array>
     <string name="heart_image_description">Heart symbol</string>
     <string name="title_activity_interests">Interests Activity</string>
 

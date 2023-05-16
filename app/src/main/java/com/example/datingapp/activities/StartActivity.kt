@@ -30,6 +30,7 @@ import com.example.datingapp.R
 import com.example.datingapp.firebase.FirebaseAuthController
 import com.example.datingapp.firebase.FirebaseDataController
 import com.example.datingapp.ui.theme.DatingAppTheme
+import com.example.datingapp.ui.theme.Typography
 import com.example.datingapp.ui.theme.backgroundColor
 import com.example.datingapp.utils.InternetCheckService
 import dagger.hilt.android.AndroidEntryPoint
@@ -63,16 +64,17 @@ class StartActivity : ComponentActivity() {
     @Composable
     private fun MainContentColumn() {
         val coroutineScope = rememberCoroutineScope()
+        val startAppTexts = resources.getStringArray(R.array.start_app_text_array)
         Column(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
         ) {
             Text(
-                //TODO: Mati - add support of getting multiple texts and change style
-                text = stringResource(id = R.string.start_app_text),
+                text = startAppTexts[(startAppTexts.indices).random()],
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.Center,
+                style = Typography.h1
             )
             ClickableImage(
                 image = painterResource(id = R.drawable.heart_icon),

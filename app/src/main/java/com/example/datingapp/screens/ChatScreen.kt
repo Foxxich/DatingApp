@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
@@ -20,14 +21,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.datingapp.activities.ChatActivity
+import com.example.datingapp.ui.theme.Typography
 import com.example.datingapp.ui.theme.backgroundColor
 import com.example.datingapp.ui.theme.whiteColor
 import com.example.datingapp.user.UserController
+import com.google.firebase.Timestamp
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
@@ -68,7 +72,9 @@ fun ChatScreen(context: Context, userControllerImpl: UserController) {
                         ) {
                             GlideImage(
                                 model = matchedUsers.getValue(matchedUsers.keys.toMutableList()[it]),
-                                contentDescription = "Translated description of what the image contains"
+                                contentDescription = "Translated description of what the image contains",
+                                modifier = Modifier.size(100.dp, 100.dp),
+                                contentScale = ContentScale.FillBounds,
                             )
                         }
                         Column(
@@ -79,13 +85,16 @@ fun ChatScreen(context: Context, userControllerImpl: UserController) {
                             Column {
                                 Text(
                                     text = matchedUsers.keys.toMutableList()[it].userName,
-                                    style = MaterialTheme.typography.h6,
+                                    style = Typography.h5,
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis
                                 )
+                                val list =
+                                    matchedUsers.keys.toMutableList()[it].chats.first { it.userId == userControllerImpl.userData.userId }.messagesList.map { it.timestamp }
+                                list.sorted()
                                 Text(
-                                    text = matchedUsers.keys.toMutableList()[it].userId,
-                                    style = MaterialTheme.typography.body2,
+                                    text = if (list.isNotEmpty()) {  list.first().toString() } else { "" },
+                                    style = Typography.h6,
                                     maxLines = 2,
                                     overflow = TextOverflow.Ellipsis
                                 )
