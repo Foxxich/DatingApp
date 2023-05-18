@@ -32,6 +32,10 @@ import com.example.datingapp.ui.theme.backgroundColor
 import com.example.datingapp.ui.theme.whiteColor
 import com.example.datingapp.user.UserController
 import com.google.firebase.Timestamp
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.util.Locale
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
@@ -92,10 +96,22 @@ fun ChatScreen(context: Context, userControllerImpl: UserController) {
                                 val list =
                                     matchedUsers.keys.toMutableList()[it].chats.first { it.userId == userControllerImpl.userData.userId }.messagesList.map { it.timestamp }
                                 list.sorted()
+                                val dateTime = LocalDateTime.ofInstant(
+                                    Instant.ofEpochSecond(list.first().seconds),
+                                    ZoneId.systemDefault()
+                                )
+
+                                val day = dateTime.dayOfWeek.name.lowercase(Locale.ROOT)
+                                val hour = dateTime.hour.toString().padStart(2, '0')
+                                val minute = dateTime.minute.toString().padStart(2, '0')
                                 Text(
-                                    text = if (list.isNotEmpty()) {  list.first().toString() } else { "" },
+                                    text = if (list.isNotEmpty()) {
+                                        "Last message on $day, at $hour:$minute"
+                                    } else {
+                                        ""
+                                    },
                                     style = Typography.h6,
-                                    maxLines = 2,
+                                    maxLines = 3,
                                     overflow = TextOverflow.Ellipsis
                                 )
                             }

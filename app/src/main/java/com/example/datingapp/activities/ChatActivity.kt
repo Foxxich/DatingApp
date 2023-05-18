@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -23,16 +24,21 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.example.datingapp.UserDataObserver
 import com.example.datingapp.firebase.FirebaseDataController
 import com.example.datingapp.ui.theme.DatingAppTheme
+import com.example.datingapp.ui.theme.Typography
+import com.example.datingapp.ui.theme.additionalColor
+import com.example.datingapp.ui.theme.backgroundColor
+import com.example.datingapp.ui.theme.otherUserChatColor
 import com.example.datingapp.user.Message
 import com.example.datingapp.user.UserController
 import com.example.datingapp.user.UserData
+import com.example.datingapp.user.UserDataObserver
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -47,7 +53,7 @@ class ChatActivity : ComponentActivity(), UserDataObserver {
 
     lateinit var chatId: String
 
-    private var exampleMessages = mutableListOf<Message>()
+    private var messages = mutableListOf<Message>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,23 +66,25 @@ class ChatActivity : ComponentActivity(), UserDataObserver {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     @Composable
     fun ChatScreen() {
-        exampleMessages.clear()
-        val chat =
-            userControllerImpl.userData.chats.first { it.userId == chatId }
+        messages.clear()
         var messageText by remember { mutableStateOf(TextFieldValue()) }
         var sentMessage by remember { mutableStateOf<String?>(null) }
-        chat.messagesList.forEach {
-            exampleMessages.add(it)
-        }
-        exampleMessages.sortByDescending { it.timestamp.seconds }
+        userControllerImpl.userData.chats.first { it.userId == chatId }
+            .messagesList.forEach {
+                messages.add(it)
+            }
+        messages.sortByDescending { it.timestamp.seconds }
         Scaffold {
             Column(
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier
+                    .background(backgroundColor)
             ) {
                 LazyColumn(
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .weight(1f)
+                        .padding(16.dp)
                 ) {
-                    items(exampleMessages) { message ->
+                    items(messages) { message ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -85,8 +93,9 @@ class ChatActivity : ComponentActivity(), UserDataObserver {
                         ) {
                             Box(
                                 modifier = Modifier
-                                    .background(if (message.sender == "Me") Color.Blue else Color.LightGray)
+                                    .background(if (message.sender == "Me") additionalColor else otherUserChatColor)
                                     .padding(8.dp)
+                                    .clip(RoundedCornerShape(10.dp))
                             ) {
                                 Text(
                                     text = message.text,
@@ -97,7 +106,9 @@ class ChatActivity : ComponentActivity(), UserDataObserver {
                     }
                 }
                 Row(
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     OutlinedTextField(
@@ -111,9 +122,14 @@ class ChatActivity : ComponentActivity(), UserDataObserver {
                             sentMessage = messageText.text
                             messageText = TextFieldValue()
                             userControllerImpl.updateChats(textMessage = sentMessage!!, chatId)
-                        }
+                        },
+                        modifier = Modifier
+                            .padding(8.dp)
                     ) {
-                        Text("Send")
+                        Text(
+                            text = "Send",
+                            style = Typography.button
+                        )
                     }
                 }
             }

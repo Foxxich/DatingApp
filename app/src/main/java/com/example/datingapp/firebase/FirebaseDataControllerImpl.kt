@@ -2,8 +2,8 @@ package com.example.datingapp.firebase
 
 import android.net.Uri
 import android.util.Log
-import com.example.datingapp.UserDataObserver
 import com.example.datingapp.user.UserData
+import com.example.datingapp.user.UserDataObserver
 import com.example.datingapp.utils.CommonSettings.TAG
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.firestore.ktx.firestore
@@ -116,6 +116,12 @@ class FirebaseDataControllerImpl : FirebaseDataController {
 
     override fun removeObserver(observer: UserDataObserver) {
         observers.remove(observer)
+    }
+
+    override fun deleteData(userId: String) {
+        database.collection("users")
+            .document(userId)
+            .delete()
     }
 
     private fun listenToNew() {

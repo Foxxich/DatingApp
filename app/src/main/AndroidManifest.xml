@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:name=".HiltApplication"
@@ -33,7 +35,7 @@
             android:label="@string/title_activity_video"
             android:theme="@style/Theme.DatingApp" />
         <activity
-            android:name=".activities.InterestsActivity"
+            android:name=".activities.SetUpActivity"
             android:exported="false"
             android:label="@string/title_activity_interests"
             android:theme="@style/Theme.DatingApp" />

@@ -1,7 +1,6 @@
 package com.example.datingapp.user
 
 import android.net.Uri
-import com.example.datingapp.UserDataObserver
 
 interface UserController : UserDataObserver {
 

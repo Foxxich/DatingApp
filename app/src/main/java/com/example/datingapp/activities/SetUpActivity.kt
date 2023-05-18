@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
@@ -25,6 +26,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -43,7 +45,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class InterestsActivity : ComponentActivity() {
+class SetUpActivity : ComponentActivity() {
 
     @Inject
     lateinit var userControllerImpl: UserController
@@ -72,8 +74,9 @@ class InterestsActivity : ComponentActivity() {
 
     @Composable
     private fun InterestsColumn(mapOfInterests: ArrayList<Interest>) {
-        val chosenInterests by remember { mutableStateOf(mutableListOf<Interest>()) }
+        val chosenInterests = remember { mutableStateListOf<Interest>() }
         var userName by remember { mutableStateOf("") }
+        val imageChosen = remember { mutableStateOf(false) }
         Column(
             modifier = Modifier
                 .padding(10.dp)
@@ -130,6 +133,7 @@ class InterestsActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     Button(onClick = {
+                        imageChosen.value = true
                         val galleryIntent = Intent(Intent.ACTION_PICK)
                         galleryIntent.type = "image/*"
                         imagePickerActivityResult.launch(galleryIntent)
@@ -138,11 +142,16 @@ class InterestsActivity : ComponentActivity() {
                     }
 
                     Button(onClick = {
-                        userControllerImpl.uploadToDatabase(userName, chosenInterests)
-                        val intent =
-                            Intent(applicationContext, VideoActivity::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        applicationContext.startActivity(intent)
+                        if (!imageChosen.value) {
+                            Toast.makeText(context, "You did not choose image!", Toast.LENGTH_SHORT)
+                                .show()
+                        } else {
+                            userControllerImpl.uploadToDatabase(userName, chosenInterests)
+                            val intent =
+                                Intent(applicationContext, VideoActivity::class.java)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            applicationContext.startActivity(intent)
+                        }
                     }) {
                         Text(text = "Finish")
                     }
@@ -153,9 +162,11 @@ class InterestsActivity : ComponentActivity() {
 
     private var imagePickerActivityResult: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result != null) {
+            try {
                 val imageUri: Uri? = result.data?.data
                 userControllerImpl.userPhoto = imageUri!!
+            } catch (e: Exception) {
+                Toast.makeText(context, "You did not choose image!", Toast.LENGTH_SHORT).show()
             }
         }
 }

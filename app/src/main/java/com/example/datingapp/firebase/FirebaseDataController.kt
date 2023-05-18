@@ -1,8 +1,8 @@
 package com.example.datingapp.firebase
 
 import android.net.Uri
-import com.example.datingapp.UserDataObserver
 import com.example.datingapp.user.UserData
+import com.example.datingapp.user.UserDataObserver
 
 interface FirebaseDataController {
 
@@ -29,5 +29,7 @@ interface FirebaseDataController {
     fun addObserver(observer: UserDataObserver)
 
     fun removeObserver(observer: UserDataObserver)
+
+    fun deleteData(userId: String)
 
 }

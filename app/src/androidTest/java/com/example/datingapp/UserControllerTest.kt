@@ -44,5 +44,6 @@ class UserControllerTest {
         val firebaseUserData = userController.getUserDataFromId(testUserData.userId)
         Assert.assertNotNull(firebaseUserData)
         Assert.assertEquals(firebaseUserData, testUserData)
+        firebaseDataController.deleteData(testUserData.userId)
     }
 }

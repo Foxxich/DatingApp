@@ -4,6 +4,7 @@ import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
 import android.os.Bundle
+import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -26,6 +27,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.core.app.NotificationManagerCompat
 import com.example.datingapp.R
 import com.example.datingapp.firebase.FirebaseAuthController
 import com.example.datingapp.firebase.FirebaseDataController
@@ -55,6 +57,15 @@ class StartActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = backgroundColor
                 ) {
+                    val notificationManager = NotificationManagerCompat.from(applicationContext)
+                    val areNotificationsEnabled = notificationManager.areNotificationsEnabled()
+
+                    if (!areNotificationsEnabled) {
+                        // Notifications are not enabled
+                        val intent = Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                            .putExtra(Settings.EXTRA_APP_PACKAGE, applicationContext.packageName)
+                        startActivity(intent)
+                    }
                     MainContentColumn()
                 }
             }
@@ -81,12 +92,20 @@ class StartActivity : ComponentActivity() {
                 contentDescription = stringResource(id = R.string.heart_image_description),
                 onClick = {
                     coroutineScope.launch {
-                        if (firebaseAuthController.isCurrentUserSigned() && firebaseDataController.isProfileSetUp()) {
-                            val intent =
-                                Intent(applicationContext, MainActivity::class.java)
-                            intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
-                            intent.addFlags(FLAG_ACTIVITY_CLEAR_TASK)
-                            applicationContext.startActivity(intent)
+                        if (firebaseAuthController.isCurrentUserSigned()) {
+                            if (firebaseDataController.isProfileSetUp()) {
+                                val intent =
+                                    Intent(applicationContext, MainActivity::class.java)
+                                intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
+                                intent.addFlags(FLAG_ACTIVITY_CLEAR_TASK)
+                                applicationContext.startActivity(intent)
+                            } else {
+                                val intent =
+                                    Intent(applicationContext, SetUpActivity::class.java)
+                                intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
+                                intent.addFlags(FLAG_ACTIVITY_CLEAR_TASK)
+                                applicationContext.startActivity(intent)
+                            }
                         } else {
                             val intent =
                                 Intent(applicationContext, SignActivity::class.java)
