@@ -22,9 +22,13 @@ class FirebaseDataControllerImpl : FirebaseDataController {
     override var observers = mutableListOf<UserDataObserver>()
 
     override suspend fun isProfileSetUp(): Boolean {
-        return database.collection("users_settings")
-            .document(firebaseAuth.currentUser?.uid ?: throw FirebaseException("UID is null"))
-            .get().await().get("isRegistrationFinished") as Boolean
+        try {
+            return database.collection("users_settings")
+                .document(firebaseAuth.currentUser?.uid ?: return false)
+                .get().await().get("isRegistrationFinished") as Boolean
+        } catch (e: Exception) {
+            return false
+        }
     }
 
     override suspend fun createNewUser(email: String, password: String) {

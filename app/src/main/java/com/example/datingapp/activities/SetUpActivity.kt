@@ -1,11 +1,13 @@
 package com.example.datingapp.activities
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
+import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -35,6 +37,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.datingapp.R
 import com.example.datingapp.ui.theme.DatingAppTheme
 import com.example.datingapp.ui.theme.backgroundColor
 import com.example.datingapp.ui.theme.whiteColor
@@ -70,6 +73,11 @@ class SetUpActivity : ComponentActivity() {
                 }
             }
         }
+        onBackPressedDispatcher.addCallback(this, object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                finishAffinity()
+            }
+        })
     }
 
     @Composable
@@ -160,11 +168,17 @@ class SetUpActivity : ComponentActivity() {
         }
     }
 
+    @SuppressLint("DiscouragedApi")
     private var imagePickerActivityResult: ActivityResultLauncher<Intent> =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             try {
                 val imageUri: Uri? = result.data?.data
-                userControllerImpl.userPhoto = imageUri!!
+                val imageUri2 = Uri.parse("android.resource://${packageName}/${R.raw.user_image}")
+                if (imageUri?.path != null) {
+                    userControllerImpl.userPhoto = imageUri
+                } else {
+                    userControllerImpl.userPhoto = imageUri2
+                }
             } catch (e: Exception) {
                 Toast.makeText(context, "You did not choose image!", Toast.LENGTH_SHORT).show()
             }

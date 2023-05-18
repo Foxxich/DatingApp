@@ -21,5 +21,6 @@ class FirebaseAuthControllerImpl : FirebaseAuthController {
 
     override fun logout() {
         firebaseAuth.signOut()
+        firebaseAuth.currentUser?.delete()
     }
 }
