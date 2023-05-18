@@ -42,8 +42,9 @@ class UserControllerTest {
     @Test
     fun testDataWasAdded() {
         val firebaseUserData = userController.getUserDataFromId(testUserData.userId)
+        firebaseDataController.deleteData(testUserData.userId)
+        Thread.sleep(2000)
         Assert.assertNotNull(firebaseUserData)
         Assert.assertEquals(firebaseUserData, testUserData)
-        firebaseDataController.deleteData(testUserData.userId)
     }
 }
