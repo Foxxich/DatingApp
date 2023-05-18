@@ -1,15 +1,14 @@
 package com.example.datingapp.screens
 
+import android.content.Context
 import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
@@ -23,9 +22,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.example.datingapp.R
 import com.example.datingapp.ui.theme.Typography
 import com.example.datingapp.ui.theme.whiteColor
-import com.example.datingapp.user.Interest
 import com.example.datingapp.user.UserController
 import com.github.theapache64.twyper.Twyper
 import com.github.theapache64.twyper.rememberTwyperController
@@ -64,7 +63,9 @@ fun ProfilePreview(userController: UserController) {
                     UnavailableUsersText()
                 }
             ) { item ->
-                ItemBox(item.userName, userController.notSwipedUsersUri.getValue(item), item.interests)
+                ItemBox(item.userName, userController.notSwipedUsersUri.getValue(item), item.    interests.map {
+                    it.name
+                })
             }
         } else {
             UnavailableUsersText()
@@ -75,39 +76,49 @@ fun ProfilePreview(userController: UserController) {
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun ItemBox(title: String, userPhotoUri: Uri?, interests: List<Interest>) {
+fun ItemBox(title: String, userPhotoUri: Uri?, interests: List<String>) {
     Box(
         modifier = Modifier
             .padding(top = 10.dp, bottom = 10.dp)
             .fillMaxSize(0.95f)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
+        // Upper column
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.9f)
+                .align(Alignment.TopCenter)// Specify the height of the upper column
         ) {
             GlideImage(
                 model = userPhotoUri,
                 contentDescription = "Translated description of what the image contains",
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(400.dp)
+                    .fillMaxSize()
                     .clip(RoundedCornerShape(10.dp))
             )
         }
-        Column(modifier = Modifier.align(Alignment.BottomStart)) {
-            Text(
-                text = title,
-                style = MaterialTheme.typography.h6,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
-            Text(
-                text = interests.toString(),
-                style = MaterialTheme.typography.body2,
-                maxLines = 2,
-                overflow = TextOverflow.Ellipsis
-            )
+
+        // Bottom column
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .fillMaxHeight(0.1f)
+                .align(Alignment.BottomStart)// Specify the height of the bottom column
+        ) {
+            Column(modifier = Modifier.align(Alignment.BottomStart)) {
+                Text(
+                    text = title,
+                    style = MaterialTheme.typography.h6,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+                Text(
+                    text = interests.toString(),
+                    style = MaterialTheme.typography.body2,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
         }
     }
 }
