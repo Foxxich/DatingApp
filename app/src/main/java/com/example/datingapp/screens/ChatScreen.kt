@@ -15,7 +15,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -31,7 +30,6 @@ import com.example.datingapp.ui.theme.Typography
 import com.example.datingapp.ui.theme.backgroundColor
 import com.example.datingapp.ui.theme.whiteColor
 import com.example.datingapp.user.UserController
-import com.google.firebase.Timestamp
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId

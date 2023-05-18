@@ -1,6 +1,5 @@
 package com.example.datingapp.screens
 
-import android.content.Context
 import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -22,7 +21,6 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import com.example.datingapp.R
 import com.example.datingapp.ui.theme.Typography
 import com.example.datingapp.ui.theme.whiteColor
 import com.example.datingapp.user.UserController
@@ -63,9 +61,12 @@ fun ProfilePreview(userController: UserController) {
                     UnavailableUsersText()
                 }
             ) { item ->
-                ItemBox(item.userName, userController.notSwipedUsersUri.getValue(item), item.    interests.map {
-                    it.name
-                })
+                ItemBox(
+                    item.userName,
+                    userController.notSwipedUsersUri.getValue(item),
+                    item.interests.map {
+                        it.name
+                    })
             }
         } else {
             UnavailableUsersText()

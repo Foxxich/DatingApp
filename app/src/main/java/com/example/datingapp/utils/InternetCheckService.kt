@@ -14,8 +14,6 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.datingapp.R
 import com.example.datingapp.utils.CommonSettings.TAG
-import dagger.hilt.android.qualifiers.ApplicationContext
-import javax.inject.Inject
 
 const val NOTIFICATION_CHANNEL_ID = "InternetConnectionWarningChannel"
 const val NOTIFICATION_ID = 1
