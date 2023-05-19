@@ -1,6 +1,5 @@
-package com.example.datingapp.utils
+package com.example.datingapp.connection
 
-import android.app.ActivityManager
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.Service
@@ -8,19 +7,18 @@ import android.content.Context
 import android.content.Intent
 import android.net.ConnectivityManager
 import android.net.Network
+import android.net.NetworkCapabilities
 import android.net.NetworkRequest
 import android.os.IBinder
-import android.util.Log
 import androidx.core.app.NotificationCompat
 import com.example.datingapp.R
-import com.example.datingapp.utils.CommonSettings.TAG
+import com.example.datingapp.utils.CommonSettings.showConnectionLost
 
 const val NOTIFICATION_CHANNEL_ID = "InternetConnectionWarningChannel"
 const val NOTIFICATION_ID = 1
 
 
 class InternetCheckService : Service() {
-
 
     private val connectivityManager by lazy {
         getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
@@ -45,6 +43,18 @@ class InternetCheckService : Service() {
     override fun onCreate() {
         super.onCreate()
         createNotificationChannel()
+        if (!isInternetConnected(this.applicationContext)) {
+            showConnectionLost(this.applicationContext)
+        }
+    }
+
+    fun isInternetConnected(context: Context): Boolean {
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val network = connectivityManager.activeNetwork
+        val networkCapabilities = connectivityManager.getNetworkCapabilities(network)
+
+        return networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
@@ -76,40 +86,18 @@ class InternetCheckService : Service() {
         val notificationManager = getSystemService(NotificationManager::class.java)
         val networkCallback = object : ConnectivityManager.NetworkCallback() {
             override fun onAvailable(network: Network) {
-                Log.d(TAG, "onAvailable")
                 notificationManager.cancel(NOTIFICATION_ID)
                 notificationManager.notify(NOTIFICATION_ID, notificationConnection)
             }
 
             override fun onLost(network: Network) {
-                Log.d(TAG, "onLost")
                 notificationManager.cancel(NOTIFICATION_ID)
                 notificationManager.notify(NOTIFICATION_ID, notificationNoConnection)
-                closeApplication(context = this@InternetCheckService.applicationContext)
+                showConnectionLost(this@InternetCheckService.applicationContext)
             }
         }
-
         // Register the network callback
         val networkRequest = NetworkRequest.Builder().build()
         connectivityManager.registerNetworkCallback(networkRequest, networkCallback)
-    }
-
-    fun closeApplication(context: Context) {
-        // Get the activity manager
-        val activityManager = context.getSystemService(Context.ACTIVITY_SERVICE) as ActivityManager
-
-        // Finish all activities associated with the application
-        activityManager.appTasks.forEach { task ->
-            task.finishAndRemoveTask()
-        }
-
-        // Restart the launcher activity or perform any other desired action
-        val intent = context.packageManager.getLaunchIntentForPackage(context.packageName)
-        intent?.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-        intent?.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-        context.startActivity(intent)
-
-        // Stop the service
-        stopSelf()
     }
 }

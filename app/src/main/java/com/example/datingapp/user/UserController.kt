@@ -19,9 +19,7 @@ interface UserController : UserDataObserver {
 
     fun updateProfile(userData: UserData)
 
-    fun uploadToDatabase(userName: String, interests: List<Interest>, basicImageUri: Uri)
-
-    fun setMyObject(myObject: UserData)
+    fun uploadToDatabase(userName: String, interests: List<Interest>, imageUri: Uri)
 
     override fun dataChanged(userData: UserData)
 }

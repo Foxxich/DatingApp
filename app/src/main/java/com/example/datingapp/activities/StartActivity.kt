@@ -29,12 +29,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.core.app.NotificationManagerCompat
 import com.example.datingapp.R
+import com.example.datingapp.connection.InternetCheckService
 import com.example.datingapp.firebase.FirebaseAuthController
 import com.example.datingapp.firebase.FirebaseDataController
 import com.example.datingapp.ui.theme.DatingAppTheme
 import com.example.datingapp.ui.theme.Typography
 import com.example.datingapp.ui.theme.backgroundColor
-import com.example.datingapp.utils.InternetCheckService
+import com.example.datingapp.utils.CommonSettings.showConnectionLost
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -47,6 +48,9 @@ class StartActivity : ComponentActivity() {
 
     @Inject
     lateinit var firebaseAuthController: FirebaseAuthController
+
+    @Inject
+    lateinit var internetCheckService: InternetCheckService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -69,6 +73,9 @@ class StartActivity : ComponentActivity() {
                     MainContentColumn()
                 }
             }
+        }
+        if (!internetCheckService.isInternetConnected(applicationContext)) {
+            showConnectionLost(applicationContext)
         }
     }
 

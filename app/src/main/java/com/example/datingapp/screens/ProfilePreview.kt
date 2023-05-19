@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -21,6 +20,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.example.datingapp.ui.theme.Shapes
 import com.example.datingapp.ui.theme.Typography
 import com.example.datingapp.ui.theme.whiteColor
 import com.example.datingapp.user.UserController
@@ -34,12 +34,13 @@ fun ProfilePreview(userController: UserController) {
             .fillMaxHeight(0.9f)
             .fillMaxWidth()
             .padding(10.dp)
-            .clip(RoundedCornerShape(10.dp))
+            .clip(Shapes.large)
             .background(color = whiteColor),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        val notSwipedUsersList = remember { userController.userDataCollection.notSwipedUsersUri.keys.toMutableList() }
+        val notSwipedUsersList =
+            remember { userController.userDataCollection.notSwipedUsersUri.keys.toMutableList() }
         if (notSwipedUsersList.size > 0) {
             val profileController = rememberTwyperController()
             Twyper(
@@ -95,7 +96,7 @@ fun ItemBox(title: String, userPhotoUri: Uri?, interests: List<String>) {
                 contentDescription = "Translated description of what the image contains",
                 modifier = Modifier
                     .fillMaxSize()
-                    .clip(RoundedCornerShape(10.dp))
+                    .clip(Shapes.large)
             )
         }
 

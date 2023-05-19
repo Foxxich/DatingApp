@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.material3.Button
 import androidx.compose.runtime.Composable
@@ -25,6 +24,7 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.example.datingapp.activities.StartActivity
 import com.example.datingapp.firebase.FirebaseAuthController
 import com.example.datingapp.firebase.FirebaseDataController
+import com.example.datingapp.ui.theme.Shapes
 import com.example.datingapp.ui.theme.Typography
 import com.example.datingapp.ui.theme.backgroundColor
 import com.example.datingapp.ui.theme.whiteColor
@@ -38,18 +38,18 @@ fun ProfileScreen(
     firebaseDataController: FirebaseDataController,
     firebaseAuthController: FirebaseAuthController
 ) {
+    val userDataCollection = userControllerImpl.userDataCollection
     Column(
         modifier = Modifier
             .fillMaxSize()
             .background(backgroundColor)
     ) {
-
         Column(
             modifier = Modifier
                 .fillMaxHeight(0.9f)
                 .fillMaxWidth()
                 .padding(10.dp)
-                .clip(RoundedCornerShape(10.dp))
+                .clip(Shapes.large)
                 .background(color = whiteColor),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -59,7 +59,6 @@ fun ProfileScreen(
                     .padding(top = 10.dp, bottom = 10.dp)
                     .fillMaxSize(0.95f)
             ) {
-                // Upper column
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -67,15 +66,14 @@ fun ProfileScreen(
                         .align(Alignment.TopCenter)// Specify the height of the upper column
                 ) {
                     GlideImage(
-                        model = userControllerImpl.userDataCollection.userPhoto,
+                        model = userDataCollection.userPhoto,
                         contentDescription = "Translated description of what the image contains",
                         modifier = Modifier
                             .fillMaxSize()
-                            .clip(RoundedCornerShape(10.dp))
+                            .clip(Shapes.large)
                     )
                 }
 
-                // Bottom column
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -106,7 +104,7 @@ fun ProfileScreen(
                             onClick = {
                                 firebaseAuthController.deleteUser()
                                 firebaseAuthController.logout()
-                                firebaseDataController.deleteData(userControllerImpl.userDataCollection.userData.userId)
+                                firebaseDataController.deleteData(userDataCollection.userData.userId)
                                 val intent = Intent(context, StartActivity::class.java)
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                 context.startActivity(intent)
@@ -118,7 +116,6 @@ fun ProfileScreen(
                             Text(
                                 text = "Delete account",
                                 style = Typography.button,
-
                             )
                         }
                     }
@@ -126,5 +123,4 @@ fun ProfileScreen(
             }
         }
     }
-
 }

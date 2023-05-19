@@ -11,31 +11,31 @@ import androidx.compose.ui.unit.sp
 val Typography = Typography(
     h1 = TextStyle(
         fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.ExtraLight,
+        fontWeight = FontWeight.Normal,
         fontSize = 22.sp,
         color = additionalColor
     ),
     h2 = TextStyle(
         fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.ExtraLight,
+        fontWeight = FontWeight.Normal,
         fontSize = 21.sp,
         color = additionalColor
     ),
     h3 = TextStyle(
         fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.ExtraLight,
+        fontWeight = FontWeight.Normal,
         fontSize = 20.sp,
         color = additionalColor
     ),
     h4 = TextStyle(
         fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.ExtraLight,
+        fontWeight = FontWeight.Normal,
         fontSize = 19.sp,
         color = additionalColor
     ),
     h5 = TextStyle(
         fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.SemiBold,
+        fontWeight = FontWeight.Normal,
         fontSize = 18.sp,
         color = additionalColor
     ),
@@ -53,7 +53,7 @@ val Typography = Typography(
     ),
     button = TextStyle(
         fontFamily = FontFamily.SansSerif,
-        fontWeight = FontWeight.ExtraLight,
+        fontWeight = FontWeight.Normal,
         fontSize = 18.sp,
         color = Color.White
     ),

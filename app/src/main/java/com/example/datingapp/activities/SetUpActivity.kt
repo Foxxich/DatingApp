@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
@@ -39,11 +38,13 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.datingapp.R
+import com.example.datingapp.connection.InternetCheckService
 import com.example.datingapp.ui.theme.DatingAppTheme
 import com.example.datingapp.ui.theme.backgroundColor
 import com.example.datingapp.ui.theme.whiteColor
 import com.example.datingapp.user.Interest
 import com.example.datingapp.user.UserController
+import com.example.datingapp.utils.CommonSettings
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -53,6 +54,9 @@ class SetUpActivity : ComponentActivity() {
 
     @Inject
     lateinit var userControllerImpl: UserController
+
+    @Inject
+    lateinit var internetCheckService: InternetCheckService
 
     @ApplicationContext
     @Inject
@@ -81,6 +85,9 @@ class SetUpActivity : ComponentActivity() {
                 finishAffinity()
             }
         })
+        if (!internetCheckService.isInternetConnected(applicationContext)) {
+            CommonSettings.showConnectionLost(applicationContext)
+        }
     }
 
     @Composable
@@ -154,12 +161,15 @@ class SetUpActivity : ComponentActivity() {
                     }
 
                     Button(onClick = {
-                        Log.e("XDD", mainImage.path.toString())
                         if (!imageChosen.value) {
                             Toast.makeText(context, "You did not choose image!", Toast.LENGTH_SHORT)
                                 .show()
                         } else {
-                            userControllerImpl.uploadToDatabase(userName, chosenInterests, mainImage)
+                            userControllerImpl.uploadToDatabase(
+                                userName,
+                                chosenInterests,
+                                mainImage
+                            )
                             val intent =
                                 Intent(applicationContext, VideoActivity::class.java)
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)

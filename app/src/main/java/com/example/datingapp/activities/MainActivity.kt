@@ -8,11 +8,13 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import com.example.datingapp.connection.InternetCheckService
 import com.example.datingapp.firebase.FirebaseAuthController
 import com.example.datingapp.firebase.FirebaseDataController
 import com.example.datingapp.navigation.BottomNav
 import com.example.datingapp.ui.theme.DatingAppTheme
 import com.example.datingapp.user.UserController
+import com.example.datingapp.utils.CommonSettings
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -25,6 +27,9 @@ class MainActivity : ComponentActivity() {
 
     @Inject
     lateinit var firebaseDataController: FirebaseDataController
+
+    @Inject
+    lateinit var internetCheckService: InternetCheckService
 
     @Inject
     lateinit var firebaseAuthController: FirebaseAuthController
@@ -55,6 +60,9 @@ class MainActivity : ComponentActivity() {
                     )
                 }
             }
+        }
+        if (!internetCheckService.isInternetConnected(applicationContext)) {
+            CommonSettings.showConnectionLost(applicationContext)
         }
     }
 

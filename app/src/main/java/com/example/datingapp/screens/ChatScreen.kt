@@ -2,6 +2,7 @@ package com.example.datingapp.screens
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -13,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -26,14 +26,11 @@ import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.datingapp.activities.ChatActivity
+import com.example.datingapp.ui.theme.Shapes
 import com.example.datingapp.ui.theme.Typography
 import com.example.datingapp.ui.theme.backgroundColor
 import com.example.datingapp.ui.theme.whiteColor
 import com.example.datingapp.user.UserController
-import java.time.Instant
-import java.time.LocalDateTime
-import java.time.ZoneId
-import java.util.Locale
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
@@ -49,11 +46,12 @@ fun ChatScreen(context: Context, userControllerImpl: UserController) {
             LazyColumn(
                 modifier = Modifier
                     .padding(10.dp)
-                    .clip(RoundedCornerShape(10.dp))
+                    .clip(Shapes.large)
                     .fillMaxHeight(0.9f)
                     .fillMaxWidth()
                     .background(whiteColor)
             ) {
+                Log.e("XDD", matchedUsers.size.toString())
                 items(matchedUsers.size) {
                     Row(modifier = Modifier
                         .fillMaxWidth()
@@ -91,27 +89,28 @@ fun ChatScreen(context: Context, userControllerImpl: UserController) {
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis
                                 )
-                                val list =
-                                    matchedUsers.keys.toMutableList()[it].chats.first { it.userId == userControllerImpl.userDataCollection.userData.userId }.messagesList.map { it.timestamp }
-                                list.sorted()
-                                val dateTime = LocalDateTime.ofInstant(
-                                    Instant.ofEpochSecond(list.first().seconds),
-                                    ZoneId.systemDefault()
-                                )
-
-                                val day = dateTime.dayOfWeek.name.lowercase(Locale.ROOT)
-                                val hour = dateTime.hour.toString().padStart(2, '0')
-                                val minute = dateTime.minute.toString().padStart(2, '0')
-                                Text(
-                                    text = if (list.isNotEmpty()) {
-                                        "Last message on $day, at $hour:$minute"
-                                    } else {
-                                        ""
-                                    },
-                                    style = Typography.h6,
-                                    maxLines = 3,
-                                    overflow = TextOverflow.Ellipsis
-                                )
+//                                val list =
+//                                    matchedUsers.keys.toMutableList()[it].chats.first { it.userId == userControllerImpl.userDataCollection.userData.userId }.messagesList.map { it.timestamp }
+//                                list.sorted()
+//                                var timeActive = ""
+//                                val dateTime = LocalDateTime.ofInstant(
+//                                    Instant.ofEpochSecond(list.first().seconds),
+//                                    ZoneId.systemDefault()
+//                                )
+//
+//                                val day = dateTime.dayOfWeek.name.lowercase(Locale.ROOT)
+//                                val hour = dateTime.hour.toString().padStart(2, '0')
+//                                val minute = dateTime.minute.toString().padStart(2, '0')
+//                                Text(
+//                                    text = if (list.isNotEmpty()) {
+//                                        "Last message on $day, at $hour:$minute"
+//                                    } else {
+//                                        ""
+//                                    },
+//                                    style = Typography.h6,
+//                                    maxLines = 3,
+//                                    overflow = TextOverflow.Ellipsis
+//                                )
                             }
                         }
                     }

@@ -16,7 +16,7 @@ class UserControllerImpl @Inject constructor(
     override lateinit var userDataCollection: UserDataCollection
     private val observers = mutableListOf<UserDataObserver>()
 
-    override fun uploadToDatabase(userName: String, interests: List<Interest>, basicImageUri: Uri) {
+    override fun uploadToDatabase(userName: String, interests: List<Interest>, imageUri: Uri) {
         val userId = firebaseDataControllerImpl.getCurrentUserId()!!
         val userData = UserData(
             userId = userId,
@@ -28,7 +28,7 @@ class UserControllerImpl @Inject constructor(
         )
         userDataCollection = UserDataCollection(
             userData = userData,
-            userPhoto = basicImageUri
+            userPhoto = imageUri
         )
         firebaseDataControllerImpl.setUserProfileSetUp(userId)
         userDataCollection.userPhoto?.let { firebaseDataControllerImpl.setFirebasePhoto(it) }
@@ -63,7 +63,8 @@ class UserControllerImpl @Inject constructor(
 
     override fun setChats() {
         userDataCollection.matchedWithUsersUri.keys.forEach {
-            if (!userDataCollection.userData.chats.map { chats -> chats.userId }.contains(it.userId)) {
+            if (!userDataCollection.userData.chats.map { chats -> chats.userId }
+                    .contains(it.userId)) {
                 userDataCollection.userData.chats.add(Chat(userId = it.userId))
                 userDataCollection.userData.upload()
 
@@ -74,19 +75,16 @@ class UserControllerImpl @Inject constructor(
         }
     }
 
-    override fun setMyObject(myObject: UserData) {
-        this.userDataCollection.userData = myObject
-        for (observer in observers) {
-            observer.dataChanged(myObject)
-        }
-    }
-
     override fun dataChanged(userData: UserData) {
-        setMyObject(userData)
+        this.userDataCollection.userData = userData
+        for (observer in observers) {
+            observer.dataChanged(userData)
+        }
     }
 
     override fun setNecessaryData() {
         runBlocking {
+
             userDataCollection = UserDataCollection(
                 userData = firebaseDataControllerImpl.getCurrentUserId()
                     ?.let { firebaseDataControllerImpl.getFirebaseUserData(it) }!!,
@@ -124,7 +122,9 @@ class UserControllerImpl @Inject constructor(
                 }
             }
             userDataCollection.userData.matchedWith.forEach {
-                userDataCollection.matchedWithUsersUri[firebaseDataControllerImpl.getFirebaseUserData(it)!!] =
+                userDataCollection.matchedWithUsersUri[firebaseDataControllerImpl.getFirebaseUserData(
+                    it
+                )!!] =
                     it.getPhotoUri()
             }
         }

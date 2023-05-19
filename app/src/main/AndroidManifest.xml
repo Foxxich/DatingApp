@@ -22,12 +22,17 @@
         android:theme="@style/Theme.DatingApp"
         tools:targetApi="tiramisu">
         <activity
+            android:name=".activities.ConnectionLostActivity"
+            android:exported="false"
+            android:label="@string/title_activity_warning"
+            android:theme="@style/Theme.DatingApp" />
+        <activity
             android:name=".activities.ChatActivity"
             android:exported="false"
             android:label="@string/title_activity_messages"
             android:theme="@style/Theme.DatingApp" />
 
-        <service android:name=".utils.InternetCheckService" />
+        <service android:name=".connection.InternetCheckService" />
 
         <activity
             android:name=".activities.VideoActivity"

@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
@@ -34,16 +33,17 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
+import com.example.datingapp.connection.InternetCheckService
 import com.example.datingapp.firebase.FirebaseAuthController
 import com.example.datingapp.firebase.FirebaseDataController
 import com.example.datingapp.ui.theme.DatingAppTheme
 import com.example.datingapp.ui.theme.Typography
 import com.example.datingapp.ui.theme.backgroundColor
 import com.example.datingapp.user.UserController
+import com.example.datingapp.utils.CommonSettings
 import dagger.hilt.android.AndroidEntryPoint
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.launch
@@ -64,6 +64,9 @@ class SignActivity : ComponentActivity() {
     lateinit var firebaseAuthController: FirebaseAuthController
 
     @Inject
+    lateinit var internetCheckService: InternetCheckService
+
+    @Inject
     lateinit var userController: UserController
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -80,6 +83,9 @@ class SignActivity : ComponentActivity() {
                     }
                 }
             }
+        }
+        if (!internetCheckService.isInternetConnected(applicationContext)) {
+            CommonSettings.showConnectionLost(applicationContext)
         }
     }
 
@@ -142,7 +148,9 @@ class SignActivity : ComponentActivity() {
                 onClick = {
                     firebaseAuthController.logout()
                     coroutineScope.launch {
-                        if (Patterns.EMAIL_ADDRESS.matcher(email).matches() && password.length >= 6) {
+                        if (Patterns.EMAIL_ADDRESS.matcher(email)
+                                .matches() && password.length >= 6
+                        ) {
                             try {
                                 if (
                                     firebaseAuthController.isCurrentUserRegistered(
@@ -154,7 +162,10 @@ class SignActivity : ComponentActivity() {
                                 }
                             } catch (e: Exception) {
                                 Log.i("FIREBASE_AUTHENTICATION", "Success, user do not exist")
-                                firebaseDataController.createNewUser(email = email, password = password)
+                                firebaseDataController.createNewUser(
+                                    email = email,
+                                    password = password
+                                )
                                 val intent = Intent(context, SetUpActivity::class.java)
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -202,7 +213,9 @@ class SignActivity : ComponentActivity() {
             Button(
                 onClick = {
                     coroutineScope.launch {
-                        if (Patterns.EMAIL_ADDRESS.matcher(email).matches() && password.length >= 6) {
+                        if (Patterns.EMAIL_ADDRESS.matcher(email)
+                                .matches() && password.length >= 6
+                        ) {
                             try {
                                 if (firebaseAuthController.isCurrentUserRegistered(
                                         email = email,

@@ -9,7 +9,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
 import androidx.compose.material3.MaterialTheme
@@ -28,6 +27,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.datingapp.firebase.FirebaseAuthController
 import com.example.datingapp.firebase.FirebaseDataController
+import com.example.datingapp.ui.theme.Shapes
 import com.example.datingapp.user.UserController
 
 @Composable
@@ -99,7 +99,7 @@ fun AddItem(
     Box(
         modifier = Modifier
             .height(40.dp)
-            .clip(CircleShape)
+            .clip(Shapes.large)
             .background(background)
             .clickable(onClick = {
                 navController.navigate(screen.route) {
