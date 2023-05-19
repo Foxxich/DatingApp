@@ -86,14 +86,16 @@ fun ProfileScreen(
                 ) {
                     Column(modifier = Modifier.align(Alignment.BottomStart)) {
                         Row {
-                            Text(text = "Name " + userDataCollection.userData.userName,
+                            Text(
+                                text = "Name " + userDataCollection.userData.userName,
                                 style = MaterialTheme.typography.h6,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
                             )
                         }
                         Row(modifier = Modifier.padding(bottom = 5.dp)) {
-                            Text(text = "Interests: " + userDataCollection.userData.interests.toString(),
+                            Text(
+                                text = "Interests: " + userDataCollection.userData.interests.toString(),
                                 style = MaterialTheme.typography.body1,
                                 maxLines = 2,
                                 overflow = TextOverflow.Ellipsis
@@ -106,7 +108,9 @@ fun ProfileScreen(
                             color = backgroundColor
                         )
                         Row(
-                            modifier = Modifier.fillMaxWidth().padding(top = 5.dp),
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 5.dp),
                             horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {

@@ -155,5 +155,4 @@ class FirebaseDataControllerImpl : FirebaseDataController {
             observer.dataChanged(newMyObject)
         }
     }
-
 }
