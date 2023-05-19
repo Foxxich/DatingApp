@@ -2,7 +2,6 @@ package com.example.datingapp.screens
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -11,12 +10,14 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -51,10 +52,10 @@ fun ChatScreen(context: Context, userControllerImpl: UserController) {
                     .fillMaxWidth()
                     .background(whiteColor)
             ) {
-                Log.e("XDD", matchedUsers.size.toString())
                 items(matchedUsers.size) {
                     Row(modifier = Modifier
                         .fillMaxWidth()
+                        .padding(16.dp)
                         .clickable {
                             val intent =
                                 Intent(context, ChatActivity::class.java)
@@ -65,59 +66,40 @@ fun ChatScreen(context: Context, userControllerImpl: UserController) {
                             )
                             context.startActivity(intent)
                         }) {
-                        Column(
+                        Box(
                             modifier = Modifier
                                 .weight(1f)
-                                .padding(16.dp)
+                                .fillMaxHeight()
                         ) {
                             GlideImage(
                                 model = matchedUsers.getValue(matchedUsers.keys.toMutableList()[it]),
                                 contentDescription = "Translated description of what the image contains",
-                                modifier = Modifier.size(100.dp, 100.dp),
+                                modifier = Modifier
+                                    .size(100.dp, 100.dp)
+                                    .align(Alignment.Center),
                                 contentScale = ContentScale.FillBounds,
                             )
                         }
-                        Column(
+                        Box(
                             modifier = Modifier
-                                .weight(1f)
-                                .padding(16.dp)
+                                .weight(1.5f)
+                                .fillMaxHeight()
                         ) {
                             Column {
                                 Text(
                                     text = matchedUsers.keys.toMutableList()[it].userName,
                                     style = Typography.h5,
                                     maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis
+                                    overflow = TextOverflow.Ellipsis,
                                 )
-//                                val list =
-//                                    matchedUsers.keys.toMutableList()[it].chats.first { it.userId == userControllerImpl.userDataCollection.userData.userId }.messagesList.map { it.timestamp }
-//                                list.sorted()
-//                                var timeActive = ""
-//                                val dateTime = LocalDateTime.ofInstant(
-//                                    Instant.ofEpochSecond(list.first().seconds),
-//                                    ZoneId.systemDefault()
-//                                )
-//
-//                                val day = dateTime.dayOfWeek.name.lowercase(Locale.ROOT)
-//                                val hour = dateTime.hour.toString().padStart(2, '0')
-//                                val minute = dateTime.minute.toString().padStart(2, '0')
-//                                Text(
-//                                    text = if (list.isNotEmpty()) {
-//                                        "Last message on $day, at $hour:$minute"
-//                                    } else {
-//                                        ""
-//                                    },
-//                                    style = Typography.h6,
-//                                    maxLines = 3,
-//                                    overflow = TextOverflow.Ellipsis
-//                                )
                             }
                         }
                     }
                     Divider(
-                        color = Color.LightGray,
-                        thickness = 1.dp,
-                        modifier = Modifier.padding(vertical = 8.dp, horizontal = 16.dp)
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(3.dp),
+                        color = backgroundColor
                     )
                 }
             }

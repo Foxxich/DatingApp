@@ -31,11 +31,11 @@ import com.github.theapache64.twyper.rememberTwyperController
 fun ProfilePreview(userController: UserController) {
     Column(
         modifier = Modifier
-            .fillMaxHeight(0.9f)
-            .fillMaxWidth()
             .padding(10.dp)
             .clip(Shapes.large)
-            .background(color = whiteColor),
+            .fillMaxHeight(0.9f)
+            .fillMaxWidth()
+            .background(whiteColor),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
@@ -116,7 +116,7 @@ fun ItemBox(title: String, userPhotoUri: Uri?, interests: List<String>) {
                 )
                 Text(
                     text = interests.toString(),
-                    style = MaterialTheme.typography.body2,
+                    style = MaterialTheme.typography.body1,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis
                 )

@@ -35,6 +35,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.datingapp.connection.InternetCheckService
 import com.example.datingapp.firebase.FirebaseAuthController
@@ -102,13 +103,25 @@ class SignActivity : ComponentActivity() {
                 .padding(16.dp),
             verticalArrangement = Arrangement.Center
         ) {
-            Text(text = "Authentication")
+            Text(
+                text = "Authentication",
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                style = Typography.h1
+            )
 
             OutlinedTextField(
                 value = email,
                 onValueChange = { email = it },
-                label = { Text("Email") },
-                modifier = Modifier.padding(16.dp)
+                label = {
+                    Text(
+                        text = "Email",
+                        style = Typography.body1
+                    )
+                },
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
             )
 
             val passwordVisibilityState = remember { mutableStateOf(false) }
@@ -116,7 +129,12 @@ class SignActivity : ComponentActivity() {
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
-                label = { Text("Password") },
+                label = {
+                    Text(
+                        text = "Password",
+                        style = Typography.body1
+                    )
+                },
                 visualTransformation = if (passwordVisibilityState.value) {
                     VisualTransformation.None
                 } else {
@@ -138,7 +156,9 @@ class SignActivity : ComponentActivity() {
                         )
                     }
                 },
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth()
             )
 
             Spacer1(modifier = Modifier.height(16.dp))

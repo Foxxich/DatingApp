@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -32,15 +33,20 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.datingapp.R
 import com.example.datingapp.connection.InternetCheckService
 import com.example.datingapp.ui.theme.DatingAppTheme
+import com.example.datingapp.ui.theme.Shapes
+import com.example.datingapp.ui.theme.Typography
+import com.example.datingapp.ui.theme.additionalColor
 import com.example.datingapp.ui.theme.backgroundColor
+import com.example.datingapp.ui.theme.otherUserChatColor
 import com.example.datingapp.ui.theme.whiteColor
 import com.example.datingapp.user.Interest
 import com.example.datingapp.user.UserController
@@ -62,7 +68,7 @@ class SetUpActivity : ComponentActivity() {
     @Inject
     lateinit var context: Context
 
-    lateinit var mainImage: Uri
+    private lateinit var mainImage: Uri
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,10 +102,16 @@ class SetUpActivity : ComponentActivity() {
         val chosenInterests = remember { mutableStateListOf<Interest>() }
         var userName by remember { mutableStateOf("") }
         val imageChosen = remember { mutableStateOf(false) }
+        val clickableInterests = remember { mutableStateOf(true) }
         Column(
             modifier = Modifier
+                .fillMaxHeight(0.9f)
+                .fillMaxWidth()
                 .padding(10.dp)
-                .background(whiteColor)
+                .clip(Shapes.large)
+                .background(color = whiteColor),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
         ) {
             var i = 0
             Column(modifier = Modifier.padding(16.dp)) {
@@ -113,13 +125,20 @@ class SetUpActivity : ComponentActivity() {
                                 var clicked by remember { mutableStateOf(false) }
                                 OutlinedButton(
                                     onClick = {
-                                        chosenInterests.add(mapOfInterests[j])
-                                        clicked = true
+                                        if (clickableInterests.value) {
+                                            clicked = if (!clicked) {
+                                                chosenInterests.add(mapOfInterests[j])
+                                                true
+                                            } else {
+                                                chosenInterests.remove(mapOfInterests[j])
+                                                false
+                                            }
+                                        }
                                     },
                                     border = BorderStroke(
-                                        2.dp,
-                                        if (clicked) Color.Red else Color.Blue
-                                    )
+                                        1.dp,
+                                        if (clicked) additionalColor else otherUserChatColor
+                                    ),
                                 ) {
                                     Text(
                                         text = mapOfInterests[j].name, maxLines = 1,
@@ -136,20 +155,32 @@ class SetUpActivity : ComponentActivity() {
             }
 
             Column(modifier = Modifier.padding(16.dp)) {
-
-                OutlinedTextField(
-                    value = userName,
-                    modifier = Modifier.fillMaxWidth(),
-                    onValueChange = {
-                        userName = it
-                    },
-                    label = { Text("UserName") },
-                    isError = userName.isEmpty()
-                )
+                Row(
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    OutlinedTextField(
+                        value = userName,
+                        onValueChange = { userName = it },
+                        label = {
+                            Text(
+                                text = "UserName",
+                                style = Typography.body1
+                            )
+                        },
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth(),
+                    )
+                }
 
                 Row(
                     horizontalArrangement = Arrangement.SpaceEvenly,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
                 ) {
                     Button(onClick = {
                         imageChosen.value = true
@@ -157,29 +188,31 @@ class SetUpActivity : ComponentActivity() {
                         galleryIntent.type = "image/*"
                         imagePickerActivityResult.launch(galleryIntent)
                     }) {
-                        Text(text = "Choose photo")
+                        Text(text = "Choose photo", style = Typography.button)
                     }
 
                     Button(onClick = {
                         if (!imageChosen.value) {
-                            Toast.makeText(context, "You did not choose image!", Toast.LENGTH_SHORT)
-                                .show()
-                        } else {
-                            userControllerImpl.uploadToDatabase(
-                                userName,
-                                chosenInterests,
-                                mainImage
-                            )
-                            val intent =
-                                Intent(applicationContext, VideoActivity::class.java)
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            applicationContext.startActivity(intent)
+                            toastImageNotChosen()
                         }
+                        userControllerImpl.uploadToDatabase(
+                            userName,
+                            chosenInterests,
+                            mainImage
+                        )
+                        val intent =
+                            Intent(applicationContext, VideoActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        applicationContext.startActivity(intent)
                     }) {
-                        Text(text = "Finish")
+                        Text(text = "Finish", style = Typography.button)
                     }
                 }
             }
+        }
+        if (chosenInterests.size >= 5) {
+            clickableInterests.value = false
+            Toast.makeText(context, "You can choose only 5 interests", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -192,7 +225,12 @@ class SetUpActivity : ComponentActivity() {
                     this.mainImage = imageUri
                 }
             } catch (e: Exception) {
-                Toast.makeText(context, "You did not choose image!", Toast.LENGTH_SHORT).show()
+                toastImageNotChosen()
             }
         }
+
+    private fun toastImageNotChosen() {
+        Toast.makeText(context, "There will be standard image!", Toast.LENGTH_SHORT)
+            .show()
+    }
 }
