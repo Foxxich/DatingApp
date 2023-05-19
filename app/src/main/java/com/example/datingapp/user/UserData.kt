@@ -1,5 +1,7 @@
 package com.example.datingapp.user
 
+import com.example.datingapp.chat.Chat
+
 data class UserData(
     val userId: String = "",
     val userName: String = "",

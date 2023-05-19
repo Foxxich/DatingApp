@@ -1,4 +1,4 @@
-package com.example.datingapp.user
+package com.example.datingapp.chat
 
 import com.google.firebase.Timestamp
 

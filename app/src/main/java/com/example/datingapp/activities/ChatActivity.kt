@@ -35,7 +35,7 @@ import com.example.datingapp.ui.theme.Typography
 import com.example.datingapp.ui.theme.additionalColor
 import com.example.datingapp.ui.theme.backgroundColor
 import com.example.datingapp.ui.theme.otherUserChatColor
-import com.example.datingapp.user.Message
+import com.example.datingapp.chat.Message
 import com.example.datingapp.user.UserController
 import com.example.datingapp.user.UserData
 import com.example.datingapp.user.UserDataObserver
@@ -69,7 +69,7 @@ class ChatActivity : ComponentActivity(), UserDataObserver {
         messages.clear()
         var messageText by remember { mutableStateOf(TextFieldValue()) }
         var sentMessage by remember { mutableStateOf<String?>(null) }
-        userControllerImpl.userData.chats.first { it.userId == chatId }
+        userControllerImpl.userDataCollection.userData.chats.first { it.userId == chatId }
             .messagesList.forEach {
                 messages.add(it)
             }

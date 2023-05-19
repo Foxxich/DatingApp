@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.material3.Button
@@ -66,7 +67,7 @@ fun ProfileScreen(
                         .align(Alignment.TopCenter)// Specify the height of the upper column
                 ) {
                     GlideImage(
-                        model = userControllerImpl.userPhoto,
+                        model = userControllerImpl.userDataCollection.userPhoto,
                         contentDescription = "Translated description of what the image contains",
                         modifier = Modifier
                             .fillMaxSize()
@@ -83,7 +84,8 @@ fun ProfileScreen(
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.Center
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
                         Button(
                             onClick = {
@@ -94,7 +96,6 @@ fun ProfileScreen(
                             },
                             modifier = Modifier
                                 .weight(1f)
-                                .padding(8.dp)
                         ) {
                             Text(
                                 text = "Logout",
@@ -105,18 +106,19 @@ fun ProfileScreen(
                             onClick = {
                                 firebaseAuthController.deleteUser()
                                 firebaseAuthController.logout()
-                                firebaseDataController.deleteData(userControllerImpl.userData.userId)
+                                firebaseDataController.deleteData(userControllerImpl.userDataCollection.userData.userId)
                                 val intent = Intent(context, StartActivity::class.java)
                                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                                 context.startActivity(intent)
                             },
                             modifier = Modifier
                                 .weight(1f)
-                                .padding(8.dp)
+                                .wrapContentWidth()
                         ) {
                             Text(
                                 text = "Delete account",
-                                style = Typography.button
+                                style = Typography.button,
+
                             )
                         }
                     }

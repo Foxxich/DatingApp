@@ -1,14 +1,11 @@
 package com.example.datingapp.user
 
 import android.net.Uri
+import com.example.datingapp.chat.Chat
 
 interface UserController : UserDataObserver {
 
-    var userPhoto: Uri?
-    var userData: UserData
-    var notSwipedUsersUri: MutableMap<UserData, Uri>
-    var matchedWithUsersUri: MutableMap<UserData, Uri>
-    var userCollection: UserCollection
+    var userDataCollection: UserDataCollection
 
     fun setChats()
 
@@ -22,10 +19,9 @@ interface UserController : UserDataObserver {
 
     fun updateProfile(userData: UserData)
 
-    fun uploadToDatabase(userName: String, interests: List<Interest>)
+    fun uploadToDatabase(userName: String, interests: List<Interest>, basicImageUri: Uri)
 
-    fun setMyObject(myObject: UserData) {
-    }
+    fun setMyObject(myObject: UserData)
 
-    override fun dataChanged(userData: UserData) {}
+    override fun dataChanged(userData: UserData)
 }

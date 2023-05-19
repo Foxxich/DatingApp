@@ -39,7 +39,7 @@ fun ProfilePreview(userController: UserController) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        val notSwipedUsersList = remember { userController.notSwipedUsersUri.keys.toMutableList() }
+        val notSwipedUsersList = remember { userController.userDataCollection.notSwipedUsersUri.keys.toMutableList() }
         if (notSwipedUsersList.size > 0) {
             val profileController = rememberTwyperController()
             Twyper(
@@ -49,11 +49,11 @@ fun ProfilePreview(userController: UserController) {
                     println("Item removed: $item -> $direction")
                     if (direction.toString() == "RIGHT") {
                         userController.updateSwipes(item.userId, true)
-                        userController.notSwipedUsersUri.remove(item)
+                        userController.userDataCollection.notSwipedUsersUri.remove(item)
                         notSwipedUsersList.remove(item)
                     } else {
                         userController.updateSwipes(item.userId, false)
-                        userController.notSwipedUsersUri.remove(item)
+                        userController.userDataCollection.notSwipedUsersUri.remove(item)
                         notSwipedUsersList.remove(item)
                     }
                 },
@@ -63,7 +63,7 @@ fun ProfilePreview(userController: UserController) {
             ) { item ->
                 ItemBox(
                     item.userName,
-                    userController.notSwipedUsersUri.getValue(item),
+                    userController.userDataCollection.notSwipedUsersUri.getValue(item),
                     item.interests.map {
                         it.name
                     })

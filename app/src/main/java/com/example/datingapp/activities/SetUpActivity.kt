@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
@@ -57,6 +58,8 @@ class SetUpActivity : ComponentActivity() {
     @Inject
     lateinit var context: Context
 
+    lateinit var mainImage: Uri
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -82,6 +85,7 @@ class SetUpActivity : ComponentActivity() {
 
     @Composable
     private fun InterestsColumn(mapOfInterests: ArrayList<Interest>) {
+        mainImage = Uri.parse("android.resource://${packageName}/${R.raw.user_image}")
         val chosenInterests = remember { mutableStateListOf<Interest>() }
         var userName by remember { mutableStateOf("") }
         val imageChosen = remember { mutableStateOf(false) }
@@ -150,11 +154,12 @@ class SetUpActivity : ComponentActivity() {
                     }
 
                     Button(onClick = {
+                        Log.e("XDD", mainImage.path.toString())
                         if (!imageChosen.value) {
                             Toast.makeText(context, "You did not choose image!", Toast.LENGTH_SHORT)
                                 .show()
                         } else {
-                            userControllerImpl.uploadToDatabase(userName, chosenInterests)
+                            userControllerImpl.uploadToDatabase(userName, chosenInterests, mainImage)
                             val intent =
                                 Intent(applicationContext, VideoActivity::class.java)
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -173,11 +178,8 @@ class SetUpActivity : ComponentActivity() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             try {
                 val imageUri: Uri? = result.data?.data
-                val imageUri2 = Uri.parse("android.resource://${packageName}/${R.raw.user_image}")
                 if (imageUri?.path != null) {
-                    userControllerImpl.userPhoto = imageUri
-                } else {
-                    userControllerImpl.userPhoto = imageUri2
+                    this.mainImage = imageUri
                 }
             } catch (e: Exception) {
                 Toast.makeText(context, "You did not choose image!", Toast.LENGTH_SHORT).show()

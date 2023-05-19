@@ -1,4 +1,4 @@
-package com.example.datingapp.user
+package com.example.datingapp.chat
 
 data class Chat(
     val userId: String = "",

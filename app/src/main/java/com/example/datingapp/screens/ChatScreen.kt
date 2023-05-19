@@ -39,7 +39,7 @@ import java.util.Locale
 @Composable
 fun ChatScreen(context: Context, userControllerImpl: UserController) {
     userControllerImpl.setChats()
-    val matchedUsers = userControllerImpl.matchedWithUsersUri
+    val matchedUsers = userControllerImpl.userDataCollection.matchedWithUsersUri
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -92,7 +92,7 @@ fun ChatScreen(context: Context, userControllerImpl: UserController) {
                                     overflow = TextOverflow.Ellipsis
                                 )
                                 val list =
-                                    matchedUsers.keys.toMutableList()[it].chats.first { it.userId == userControllerImpl.userData.userId }.messagesList.map { it.timestamp }
+                                    matchedUsers.keys.toMutableList()[it].chats.first { it.userId == userControllerImpl.userDataCollection.userData.userId }.messagesList.map { it.timestamp }
                                 list.sorted()
                                 val dateTime = LocalDateTime.ofInstant(
                                     Instant.ofEpochSecond(list.first().seconds),

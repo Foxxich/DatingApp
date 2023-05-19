@@ -37,7 +37,7 @@ class FirebaseDataControllerImpl : FirebaseDataController {
                 Log.i("IS_FIREBASE_USER_CREATE_SUCCESS", it.isSuccessful.toString())
                 database.collection("users_settings")
                     .document(
-                        firebaseAuth.currentUser?.uid ?: throw FirebaseException("UID is null")
+                        it.result.user!!.uid
                     )
                     .set(mutableMapOf("isRegistrationFinished" to false))
                     .addOnSuccessListener {

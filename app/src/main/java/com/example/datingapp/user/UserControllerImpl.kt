@@ -1,6 +1,8 @@
 package com.example.datingapp.user
 
 import android.net.Uri
+import com.example.datingapp.chat.Chat
+import com.example.datingapp.chat.Message
 import com.example.datingapp.firebase.FirebaseDataController
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -11,39 +13,40 @@ class UserControllerImpl @Inject constructor(
     private val firebaseDataControllerImpl: FirebaseDataController
 ) : UserController {
 
-    override var userPhoto: Uri? = null
-    override lateinit var userData: UserData
-    override var notSwipedUsersUri: MutableMap<UserData, Uri> = mutableMapOf()
-    override var matchedWithUsersUri: MutableMap<UserData, Uri> = mutableMapOf()
-    override lateinit var userCollection: UserCollection
+    override lateinit var userDataCollection: UserDataCollection
     private val observers = mutableListOf<UserDataObserver>()
 
-    override fun uploadToDatabase(userName: String, interests: List<Interest>) {
+    override fun uploadToDatabase(userName: String, interests: List<Interest>, basicImageUri: Uri) {
         val userId = firebaseDataControllerImpl.getCurrentUserId()!!
+        val userData = UserData(
+            userId = userId,
+            userName = userName,
+            interests = interests,
+        )
         firebaseDataControllerImpl.setFirebaseUserData(
-            UserData(
-                userId = userId,
-                userName = userName,
-                interests = interests,
-            )
+            userData
+        )
+        userDataCollection = UserDataCollection(
+            userData = userData,
+            userPhoto = basicImageUri
         )
         firebaseDataControllerImpl.setUserProfileSetUp(userId)
-        userPhoto?.let { firebaseDataControllerImpl.setFirebasePhoto(it) }
+        userDataCollection.userPhoto?.let { firebaseDataControllerImpl.setFirebasePhoto(it) }
     }
 
     override fun updateChats(textMessage: String, chatId: String): Chat {
-        userData.chats.first { it.userId == chatId }.messagesList.add(
+        userDataCollection.userData.chats.first { it.userId == chatId }.messagesList.add(
             Message(textMessage, "Me")
         )
-        userData.upload()
+        userDataCollection.userData.upload()
 
         val otherUserData = getUserDataFromId(chatId)
-        otherUserData.chats.first { it.userId == userData.userId }.messagesList.add(
+        otherUserData.chats.first { it.userId == userDataCollection.userData.userId }.messagesList.add(
             Message(textMessage, "You")
         )
         otherUserData.upload()
 
-        return userData.chats.first { it.userId == chatId }
+        return userDataCollection.userData.chats.first { it.userId == chatId }
     }
 
     override fun updateProfile(userData: UserData) {
@@ -51,28 +54,28 @@ class UserControllerImpl @Inject constructor(
     }
 
     override fun updateSwipes(userId: String, liked: Boolean) {
-        userData.swiped[userId] = liked
-        userData.upload()
+        userDataCollection.userData.swiped[userId] = liked
+        userDataCollection.userData.upload()
     }
 
     override fun getUserDataFromId(userId: String) =
         firebaseDataControllerImpl.getFirebaseUserData(userId)!!
 
     override fun setChats() {
-        matchedWithUsersUri.keys.forEach {
-            if (!userData.chats.map { chats -> chats.userId }.contains(it.userId)) {
-                userData.chats.add(Chat(userId = it.userId))
-                userData.upload()
+        userDataCollection.matchedWithUsersUri.keys.forEach {
+            if (!userDataCollection.userData.chats.map { chats -> chats.userId }.contains(it.userId)) {
+                userDataCollection.userData.chats.add(Chat(userId = it.userId))
+                userDataCollection.userData.upload()
 
                 val otherUserData = getUserDataFromId(it.userId)
-                otherUserData.chats.add(Chat(userId = userData.userId))
+                otherUserData.chats.add(Chat(userId = userDataCollection.userData.userId))
                 otherUserData.upload()
             }
         }
     }
 
     override fun setMyObject(myObject: UserData) {
-        this.userData = myObject
+        this.userDataCollection.userData = myObject
         for (observer in observers) {
             observer.dataChanged(myObject)
         }
@@ -83,44 +86,45 @@ class UserControllerImpl @Inject constructor(
     }
 
     override fun setNecessaryData() {
-        notSwipedUsersUri.clear()
-        matchedWithUsersUri.clear()
-
         runBlocking {
-            userData = firebaseDataControllerImpl.getCurrentUserId()
-                ?.let { firebaseDataControllerImpl.getFirebaseUserData(it) }!!
+            userDataCollection = UserDataCollection(
+                userData = firebaseDataControllerImpl.getCurrentUserId()
+                    ?.let { firebaseDataControllerImpl.getFirebaseUserData(it) }!!,
+                userPhoto = firebaseDataControllerImpl.getCurrentUserId()
+                    ?.let { firebaseDataControllerImpl.getFirebaseUserPhoto(it) }
+            )
 
-            userPhoto = firebaseDataControllerImpl.getCurrentUserId()
-                ?.let { firebaseDataControllerImpl.getFirebaseUserPhoto(it) }!!
+            userDataCollection.notSwipedUsersUri.clear()
+            userDataCollection.matchedWithUsersUri.clear()
 
             val notShowUsers = mutableListOf<String>()
-            notShowUsers.add(userData.userId)
-            userData.swiped.keys.forEach {
+            notShowUsers.add(userDataCollection.userData.userId)
+            userDataCollection.userData.swiped.keys.forEach {
                 notShowUsers.add(it)
             }
-            userData.matchedWith.forEach {
+            userDataCollection.userData.matchedWith.forEach {
                 notShowUsers.add(it)
             }
             firebaseDataControllerImpl.getNotInUsersDataList(notShowUsers)
                 .forEach {
-                    notSwipedUsersUri[it] = it.userId.getPhotoUri()
+                    userDataCollection.notSwipedUsersUri[it] = it.userId.getPhotoUri()
                 }
 
-            userData.swiped.keys.forEach {
+            userDataCollection.userData.swiped.keys.forEach {
                 val otherUser = firebaseDataControllerImpl.getFirebaseUserData(it)!!
-                if (!otherUser.matchedWith.contains(userData.userId) &&
-                    otherUser.swiped.keys.contains(userData.userId) &&
-                    otherUser.swiped.getValue(userData.userId)
+                if (!otherUser.matchedWith.contains(userDataCollection.userData.userId) &&
+                    otherUser.swiped.keys.contains(userDataCollection.userData.userId) &&
+                    otherUser.swiped.getValue(userDataCollection.userData.userId)
                 ) {
-                    userData.matchedWith.add(otherUser.userId)
-                    userData.upload()
+                    userDataCollection.userData.matchedWith.add(otherUser.userId)
+                    userDataCollection.userData.upload()
 
-                    otherUser.matchedWith.add(userData.userId)
+                    otherUser.matchedWith.add(userDataCollection.userData.userId)
                     otherUser.upload()
                 }
             }
-            userData.matchedWith.forEach {
-                matchedWithUsersUri[firebaseDataControllerImpl.getFirebaseUserData(it)!!] =
+            userDataCollection.userData.matchedWith.forEach {
+                userDataCollection.matchedWithUsersUri[firebaseDataControllerImpl.getFirebaseUserData(it)!!] =
                     it.getPhotoUri()
             }
         }
