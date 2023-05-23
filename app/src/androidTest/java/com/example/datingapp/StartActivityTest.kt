@@ -28,7 +28,6 @@ class StartActivityTest {
         InstrumentationRegistry.getInstrumentation().addMonitor(activityMonitor)
         composeTestRule.onNodeWithContentDescription(context.getString(R.string.heart_image_description)).performClick()
         Thread.sleep(2000)
-        println("XDD " + activityMonitor.lastActivity)
         assertEquals(activityMonitor.lastActivity::class, SignActivity::class)
         InstrumentationRegistry.getInstrumentation().removeMonitor(activityMonitor)
     }
