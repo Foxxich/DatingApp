@@ -115,7 +115,7 @@ fun ItemBox(title: String, userPhotoUri: Uri?, interests: List<String>) {
                     overflow = TextOverflow.Ellipsis
                 )
                 Text(
-                    text = interests.toString(),
+                    text = interests.toString().replace("[", "").replace("]", ""),
                     style = MaterialTheme.typography.body1,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis

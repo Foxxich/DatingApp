@@ -31,6 +31,10 @@ import com.example.datingapp.ui.theme.Typography
 import com.example.datingapp.ui.theme.backgroundColor
 import com.example.datingapp.ui.theme.whiteColor
 import com.example.datingapp.user.UserController
+import java.time.Instant
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.util.Locale
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
@@ -91,15 +95,38 @@ fun ChatScreen(context: Context, userControllerImpl: UserController) {
                                     maxLines = 1,
                                     overflow = TextOverflow.Ellipsis,
                                 )
+
+                                if (matchedUsers.keys.toMutableList()[it].chats.first { it.userId == userControllerImpl.userDataCollection.userData.userId }.messagesList.map { it.timestamp }.isNotEmpty()) {
+                                    val dateTime = LocalDateTime.ofInstant(
+                                        Instant.ofEpochSecond(matchedUsers.keys.toMutableList()[it].chats.first { it.userId == userControllerImpl.userDataCollection.userData.userId }.messagesList.map { it.timestamp }.first().seconds),
+                                        ZoneId.systemDefault()
+                                    )
+                                    val day = dateTime.dayOfWeek.name.lowercase(Locale.ROOT)
+                                    val hour = dateTime.hour.toString().padStart(2, '0')
+                                    val minute = dateTime.minute.toString().padStart(2, '0')
+
+                                    Text(
+                                        text = "Last message on $day, at $hour:$minute",
+                                        style = Typography.body1,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                    )
+                                }
                             }
                         }
                     }
-                    Divider(
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(3.dp),
-                        color = backgroundColor
-                    )
+                            .padding(5.dp)
+                    ) {
+                        Divider(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(3.dp),
+                            color = backgroundColor
+                        )
+                    }
                 }
             }
         }

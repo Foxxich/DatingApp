@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.material3.Button
@@ -25,6 +24,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
+import com.example.datingapp.activities.SetUpActivity
 import com.example.datingapp.activities.StartActivity
 import com.example.datingapp.firebase.FirebaseAuthController
 import com.example.datingapp.firebase.FirebaseDataController
@@ -66,7 +66,7 @@ fun ProfileScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight(0.8f)
+                        .fillMaxHeight(0.7f)
                         .align(Alignment.TopCenter)// Specify the height of the upper column
                 ) {
                     GlideImage(
@@ -81,13 +81,13 @@ fun ProfileScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .fillMaxHeight(0.2f)
+                        .fillMaxHeight(0.3f)
                         .align(Alignment.BottomStart)// Specify the height of the bottom column
                 ) {
                     Column(modifier = Modifier.align(Alignment.BottomStart)) {
                         Row {
                             Text(
-                                text = "Name " + userDataCollection.userData.userName,
+                                text = "Name: " + userDataCollection.userData.userName,
                                 style = MaterialTheme.typography.h6,
                                 maxLines = 1,
                                 overflow = TextOverflow.Ellipsis
@@ -95,7 +95,7 @@ fun ProfileScreen(
                         }
                         Row(modifier = Modifier.padding(bottom = 5.dp)) {
                             Text(
-                                text = "Interests: " + userDataCollection.userData.interests.toString(),
+                                text = "Interests: " + userDataCollection.userData.interests.toString().replace("[", "").replace("]", ""),
                                 style = MaterialTheme.typography.body1,
                                 maxLines = 2,
                                 overflow = TextOverflow.Ellipsis
@@ -107,6 +107,52 @@ fun ProfileScreen(
                                 .height(3.dp),
                             color = backgroundColor
                         )
+
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 5.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Button(
+                                onClick = {
+                                    val intent =
+                                        Intent(context, SetUpActivity::class.java)
+                                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                    intent.putExtra(
+                                        "IS_NEW_USER",
+                                        false
+                                    )
+                                    context.startActivity(intent)
+                                },
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .fillMaxWidth()
+                                    .padding(end = 5.dp)
+                            ) {
+                                Text(
+                                    text = "Change details",
+                                    style = Typography.button
+                                )
+                            }
+                            Button(
+                                onClick = {
+                                    userDataCollection.userData.swiped.clear()
+                                    userControllerImpl.updateProfile(userDataCollection.userData)
+                                },
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .fillMaxWidth()
+                                    .padding(start = 5.dp)
+                            ) {
+                                Text(
+                                    text = "Clear data",
+                                    style = Typography.button,
+                                )
+                            }
+                        }
+
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -123,6 +169,8 @@ fun ProfileScreen(
                                 },
                                 modifier = Modifier
                                     .weight(1f)
+                                    .fillMaxWidth()
+                                    .padding(end = 5.dp)
                             ) {
                                 Text(
                                     text = "Logout",
@@ -140,7 +188,8 @@ fun ProfileScreen(
                                 },
                                 modifier = Modifier
                                     .weight(1f)
-                                    .wrapContentWidth()
+                                    .fillMaxWidth()
+                                    .padding(start = 5.dp)
                             ) {
                                 Text(
                                     text = "Delete account",
