@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -54,7 +55,7 @@ class ChatActivity : ComponentActivity(), UserDataObserver {
     @Inject
     lateinit var internetCheckService: InternetCheckService
 
-    lateinit var chatId: String
+    private lateinit var chatId: String
 
     private var messages = mutableListOf<Message>()
 
@@ -100,7 +101,7 @@ class ChatActivity : ComponentActivity(), UserDataObserver {
                         ) {
                             Box(
                                 modifier = Modifier
-                                    .background(if (message.sender == "Me") additionalColor else otherUserChatColor)
+                                    .background(color = if (message.sender == "Me") additionalColor else otherUserChatColor, shape = RoundedCornerShape(8.dp))
                                     .padding(8.dp)
                                     .clip(Shapes.large)
                             ) {

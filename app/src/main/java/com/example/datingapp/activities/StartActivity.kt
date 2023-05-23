@@ -3,6 +3,7 @@ package com.example.datingapp.activities
 import android.content.Intent
 import android.content.Intent.FLAG_ACTIVITY_CLEAR_TASK
 import android.content.Intent.FLAG_ACTIVITY_NEW_TASK
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.provider.Settings
 import androidx.activity.ComponentActivity
@@ -53,6 +54,8 @@ class StartActivity : ComponentActivity() {
     @Inject
     lateinit var internetCheckService: InternetCheckService
 
+    private lateinit var mediaPlayer: MediaPlayer
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         startForegroundService(Intent(applicationContext, InternetCheckService::class.java))
@@ -74,6 +77,8 @@ class StartActivity : ComponentActivity() {
                     MainContentColumn()
                 }
             }
+            mediaPlayer = MediaPlayer.create(this, R.raw.open_sound)
+            mediaPlayer.start()
         }
         if (!internetCheckService.isInternetConnected(applicationContext)) {
             showConnectionLost(applicationContext)

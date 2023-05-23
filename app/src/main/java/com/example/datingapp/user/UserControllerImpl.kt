@@ -34,6 +34,16 @@ class UserControllerImpl @Inject constructor(
         userDataCollection.userPhoto?.let { firebaseDataControllerImpl.setFirebasePhoto(it) }
     }
 
+    override fun uploadToDatabase(userDataCollection: UserDataCollection) {
+        val userId = firebaseDataControllerImpl.getCurrentUserId()!!
+        val userData = userDataCollection.userData
+        firebaseDataControllerImpl.setFirebaseUserData(
+            userData
+        )
+        firebaseDataControllerImpl.setUserProfileSetUp(userId)
+        userDataCollection.userPhoto?.let { firebaseDataControllerImpl.setFirebasePhoto(it) }
+    }
+
     override fun updateChats(textMessage: String, chatId: String): Chat {
         userDataCollection.userData.chats.first { it.userId == chatId }.messagesList.add(
             Message(textMessage, "Me")

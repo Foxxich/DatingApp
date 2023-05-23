@@ -21,5 +21,7 @@ interface UserController : UserDataObserver {
 
     fun uploadToDatabase(userName: String, interests: List<Interest>, imageUri: Uri)
 
+    fun uploadToDatabase(userDataCollection: UserDataCollection)
+
     override fun dataChanged(userData: UserData)
 }

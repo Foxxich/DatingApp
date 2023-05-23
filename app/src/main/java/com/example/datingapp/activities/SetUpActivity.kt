@@ -69,9 +69,11 @@ class SetUpActivity : ComponentActivity() {
     lateinit var context: Context
 
     private lateinit var mainImage: Uri
+    private var isNewUser = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        isNewUser = intent.getBooleanExtra("IS_NEW_USER", true)
         setContent {
             val mapOfInterests = arrayListOf<Interest>()
             Interest.values().forEach {
@@ -79,8 +81,8 @@ class SetUpActivity : ComponentActivity() {
             }
             DatingAppTheme {
                 Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = backgroundColor
+                        modifier = Modifier.fillMaxSize(),
+                        color = backgroundColor
                 ) {
                     InterestsColumn(mapOfInterests)
                 }
@@ -103,46 +105,52 @@ class SetUpActivity : ComponentActivity() {
         var userName by remember { mutableStateOf("") }
         val imageChosen = remember { mutableStateOf(false) }
         val clickableInterests = remember { mutableStateOf(true) }
+
+        if (!isNewUser) {
+            val existingUserDataCollection = userControllerImpl.userDataCollection
+            mainImage = existingUserDataCollection.userPhoto!!
+        }
+
         Column(
-            modifier = Modifier
-                .fillMaxHeight(0.9f)
-                .fillMaxWidth()
-                .padding(10.dp)
-                .clip(Shapes.large)
-                .background(color = whiteColor),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center,
+                modifier = Modifier
+                        .fillMaxHeight(0.9f)
+                        .fillMaxWidth()
+                        .padding(10.dp)
+                        .clip(Shapes.large)
+                        .background(color = whiteColor),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center,
         ) {
             var i = 0
             Column(modifier = Modifier.padding(16.dp)) {
                 while (i < mapOfInterests.size) {
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         for (j in i until i + 3) {
                             if (j < mapOfInterests.size) {
                                 var clicked by remember { mutableStateOf(false) }
                                 OutlinedButton(
-                                    onClick = {
-                                        if (clickableInterests.value) {
-                                            clicked = if (!clicked) {
-                                                chosenInterests.add(mapOfInterests[j])
-                                                true
-                                            } else {
-                                                chosenInterests.remove(mapOfInterests[j])
-                                                false
+                                        onClick = {
+                                            if (clickableInterests.value) {
+                                                clicked = if (!clicked) {
+                                                    chosenInterests.add(mapOfInterests[j])
+                                                    true
+                                                } else {
+                                                    chosenInterests.remove(mapOfInterests[j])
+                                                    false
+                                                }
                                             }
-                                        }
-                                    },
-                                    border = BorderStroke(
-                                        1.dp,
-                                        if (clicked) additionalColor else otherUserChatColor
-                                    ),
+                                        },
+                                        border = BorderStroke(
+                                                1.dp,
+                                                if (clicked) additionalColor else otherUserChatColor
+                                        ),
                                 ) {
                                     Text(
-                                        text = mapOfInterests[j].name, maxLines = 1,
-                                        overflow = TextOverflow.Clip, fontSize = 12.sp
+                                            text = mapOfInterests[j].name, maxLines = 1,
+                                            overflow = TextOverflow.Clip, fontSize = 12.sp
                                     )
                                 }
                             } else {
@@ -156,31 +164,31 @@ class SetUpActivity : ComponentActivity() {
 
             Column(modifier = Modifier.padding(16.dp)) {
                 Row(
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp)
                 ) {
                     OutlinedTextField(
-                        value = userName,
-                        onValueChange = { userName = it },
-                        label = {
-                            Text(
-                                text = "UserName",
-                                style = Typography.body1
-                            )
-                        },
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .fillMaxWidth(),
+                            value = userName,
+                            onValueChange = { userName = it },
+                            label = {
+                                Text(
+                                        text = "UserName",
+                                        style = Typography.body1
+                                )
+                            },
+                            modifier = Modifier
+                                    .padding(16.dp)
+                                    .fillMaxWidth(),
                     )
                 }
 
                 Row(
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp)
                 ) {
                     Button(onClick = {
                         imageChosen.value = true
@@ -195,15 +203,31 @@ class SetUpActivity : ComponentActivity() {
                         if (!imageChosen.value) {
                             toastImageNotChosen()
                         }
-                        userControllerImpl.uploadToDatabase(
-                            userName,
-                            chosenInterests,
-                            mainImage
-                        )
-                        val intent =
-                            Intent(applicationContext, VideoActivity::class.java)
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                        applicationContext.startActivity(intent)
+                        if (isNewUser) {
+                            userControllerImpl.uploadToDatabase(
+                                userName,
+                                chosenInterests,
+                                mainImage
+                            )
+                        } else {
+                            userControllerImpl.userDataCollection.userData.userName = userName
+                            userControllerImpl.userDataCollection.userData.interests = chosenInterests
+                            userControllerImpl.userDataCollection.userPhoto = mainImage
+                            userControllerImpl.uploadToDatabase(
+                                userControllerImpl.userDataCollection
+                            )
+                        }
+                        if (isNewUser) {
+                            val intent =
+                                    Intent(applicationContext, VideoActivity::class.java)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            applicationContext.startActivity(intent)
+                        } else {
+                            val intent =
+                                    Intent(applicationContext, MainActivity::class.java)
+                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            applicationContext.startActivity(intent)
+                        }
                     }) {
                         Text(text = "Finish", style = Typography.button)
                     }
@@ -218,19 +242,19 @@ class SetUpActivity : ComponentActivity() {
 
     @SuppressLint("DiscouragedApi")
     private var imagePickerActivityResult: ActivityResultLauncher<Intent> =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            try {
-                val imageUri: Uri? = result.data?.data
-                if (imageUri?.path != null) {
-                    this.mainImage = imageUri
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+                try {
+                    val imageUri: Uri? = result.data?.data
+                    if (imageUri?.path != null) {
+                        this.mainImage = imageUri
+                    }
+                } catch (e: Exception) {
+                    toastImageNotChosen()
                 }
-            } catch (e: Exception) {
-                toastImageNotChosen()
             }
-        }
 
     private fun toastImageNotChosen() {
         Toast.makeText(context, "There will be standard image!", Toast.LENGTH_SHORT)
-            .show()
+                .show()
     }
 }
