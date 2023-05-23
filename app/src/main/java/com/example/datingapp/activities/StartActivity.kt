@@ -9,6 +9,10 @@ import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.compose.setContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -19,8 +23,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
@@ -105,34 +112,49 @@ class StartActivity : ComponentActivity() {
                 textAlign = TextAlign.Center,
                 style = Typography.h1
             )
-            ClickableImage(
-                image = painterResource(id = R.drawable.heart_icon),
-                contentDescription = stringResource(id = R.string.heart_image_description),
-                onClick = {
-                    coroutineScope.launch {
-                        if (firebaseAuthController.isCurrentUserSigned()) {
-                            if (firebaseDataController.isProfileSetUp()) {
-                                val intent =
-                                    Intent(applicationContext, MainActivity::class.java)
-                                intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
-                                intent.addFlags(FLAG_ACTIVITY_CLEAR_TASK)
-                                applicationContext.startActivity(intent)
+            var visible by remember { mutableStateOf(true) }
+            AnimatedVisibility(
+                visible = visible,
+                enter = fadeIn(
+                    // Overwrites the initial value of alpha to 0.4f for fade in, 0 by default
+                    initialAlpha = 0.4f
+                ),
+                exit = fadeOut(
+                    // Overwrites the default animation with tween
+                    animationSpec = tween(durationMillis = 250)
+                )
+            ) {
+                ClickableImage(
+                    image = painterResource(id = R.drawable.heart_icon),
+                    contentDescription = stringResource(id = R.string.heart_image_description),
+                    onClick = {
+                        visible = false
+                        Thread.sleep(1000L)
+                        coroutineScope.launch {
+                            if (firebaseAuthController.isCurrentUserSigned()) {
+                                if (firebaseDataController.isProfileSetUp()) {
+                                    val intent =
+                                        Intent(applicationContext, MainActivity::class.java)
+                                    intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
+                                    intent.addFlags(FLAG_ACTIVITY_CLEAR_TASK)
+                                    applicationContext.startActivity(intent)
+                                } else {
+                                    val intent =
+                                        Intent(applicationContext, SetUpActivity::class.java)
+                                    intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
+                                    intent.addFlags(FLAG_ACTIVITY_CLEAR_TASK)
+                                    applicationContext.startActivity(intent)
+                                }
                             } else {
                                 val intent =
-                                    Intent(applicationContext, SetUpActivity::class.java)
+                                    Intent(applicationContext, SignActivity::class.java)
                                 intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
-                                intent.addFlags(FLAG_ACTIVITY_CLEAR_TASK)
                                 applicationContext.startActivity(intent)
                             }
-                        } else {
-                            val intent =
-                                Intent(applicationContext, SignActivity::class.java)
-                            intent.addFlags(FLAG_ACTIVITY_NEW_TASK)
-                            applicationContext.startActivity(intent)
                         }
                     }
-                }
-            )
+                )
+            }
         }
     }
 
