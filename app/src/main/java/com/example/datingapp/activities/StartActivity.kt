@@ -129,7 +129,6 @@ class StartActivity : ComponentActivity() {
                     contentDescription = stringResource(id = R.string.heart_image_description),
                     onClick = {
                         visible = false
-                        Thread.sleep(1000L)
                         coroutineScope.launch {
                             if (firebaseAuthController.isCurrentUserSigned()) {
                                 if (firebaseDataController.isProfileSetUp()) {

@@ -180,24 +180,20 @@ class SignActivity : ComponentActivity() {
                                                 .matches() && password.length >= 6
                                 ) {
                                     try {
-                                        if (
-                                                firebaseAuthController.isCurrentUserRegistered(
-                                                        email = email,
-                                                        password = password
-                                                )?.user != null
-                                        ) {
+                                        if (firebaseAuthController.emailExists(email)) {
                                             showDialog = true
-                                        }
-                                    } catch (e: Exception) {
-                                        Log.i("FIREBASE_AUTHENTICATION", "Success, user do not exist")
-                                        firebaseDataController.createNewUser(
+                                        } else {
+                                            firebaseDataController.createNewUser(
                                                 email = email,
                                                 password = password
-                                        )
-                                        val intent = Intent(context, SetUpActivity::class.java)
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                                        context.startActivity(intent)
+                                            )
+                                            val intent = Intent(context, SetUpActivity::class.java)
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                                            context.startActivity(intent)
+                                        }
+                                    } catch (e: Exception) {
+                                        Log.i("FIREBASE_AUTHENTICATION", "Error")
                                     }
                                 } else {
                                     showParametersDialog = true
@@ -236,7 +232,7 @@ class SignActivity : ComponentActivity() {
                                             showDialog = true
                                         }
                                     } catch (e: Exception) {
-                                        showDialog = true
+                                        showParametersDialog = true
                                         Log.e("FIREBASE_AUTHENTICATION", "Exception was thrown")
                                     }
                                 } else {

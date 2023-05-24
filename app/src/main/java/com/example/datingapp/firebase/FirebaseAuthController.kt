@@ -11,4 +11,6 @@ interface FirebaseAuthController {
     fun deleteUser()
 
     fun logout()
+
+    suspend fun emailExists(email: String): Boolean
 }

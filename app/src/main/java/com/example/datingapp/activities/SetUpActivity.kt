@@ -144,7 +144,7 @@ class SetUpActivity : ComponentActivity() {
                                             }
                                         },
                                         border = BorderStroke(
-                                                1.dp,
+                                                4.dp,
                                                 if (clicked) additionalColor else otherUserChatColor
                                         ),
                                 ) {
