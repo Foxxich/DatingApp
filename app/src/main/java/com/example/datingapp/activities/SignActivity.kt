@@ -255,7 +255,7 @@ class SignActivity : ComponentActivity() {
             if (showDialog) {
                 AlertDialog(
                         onDismissRequest = { showDialog = false },
-                        title = { Text("User already exists") },
+                        title = { Text("The mentioned email exists. Try other one") },
                         text = { Text("Do you want to try more") },
                         confirmButton = {
                             Button(
@@ -285,7 +285,7 @@ class SignActivity : ComponentActivity() {
                 AlertDialog(
                         onDismissRequest = { showParametersDialog = false },
                         title = { Text("Incorrect email or password") },
-                        text = { Text("Email contains @ and password length is at least 6 symbols") },
+                        text = { Text("Email should be valid and password length is at least 6 symbols") },
                         confirmButton = {
                             Button(
                                     onClick = {
