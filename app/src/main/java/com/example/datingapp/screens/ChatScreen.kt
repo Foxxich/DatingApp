@@ -55,77 +55,81 @@ fun ChatScreen(context: Context, userControllerImpl: UserController) {
                     .fillMaxWidth()
                     .background(whiteColor)
             ) {
-                items(matchedUsers.size) {
-                    Row(modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp)
-                        .clickable {
-                            val intent =
-                                Intent(context, ChatActivity::class.java)
-                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                            intent.putExtra(
-                                "USER_ID",
-                                matchedUsers.keys.toMutableList()[it].userId
-                            )
-                            context.startActivity(intent)
-                        }) {
-                        Box(
-                            modifier = Modifier
-                                .weight(1f)
-                                .fillMaxHeight()
-                        ) {
-                            GlideImage(
-                                model = matchedUsers.getValue(matchedUsers.keys.toMutableList()[it]),
-                                contentDescription = "Translated description of what the image contains",
-                                modifier = Modifier
-                                    .size(100.dp, 100.dp)
-                                    .align(Alignment.Center),
-                                contentScale = ContentScale.FillBounds,
-                            )
-                        }
-                        Box(
-                            modifier = Modifier
-                                .weight(1.5f)
-                                .fillMaxHeight()
-                        ) {
-                            Column {
-                                Text(
-                                    text = matchedUsers.keys.toMutableList()[it].userName,
-                                    style = Typography.h5,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
+                if (matchedUsers.isNotEmpty()) {
+                    items(matchedUsers.size) {
+                        Row(modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                            .clickable {
+                                val intent =
+                                    Intent(context, ChatActivity::class.java)
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                intent.putExtra(
+                                    "USER_ID",
+                                    matchedUsers.keys.toMutableList()[it].userId
                                 )
-
-                                if (matchedUsers.keys.toMutableList()[it].chats.first { it.userId == userControllerImpl.userDataCollection.userData.userId }.messagesList.map { it.timestamp }.isNotEmpty()) {
-                                    val dateTime = LocalDateTime.ofInstant(
-                                        Instant.ofEpochSecond(matchedUsers.keys.toMutableList()[it].chats.first { it.userId == userControllerImpl.userDataCollection.userData.userId }.messagesList.map { it.timestamp }.first().seconds),
-                                        ZoneId.systemDefault()
-                                    )
-                                    val day = dateTime.dayOfWeek.name.lowercase(Locale.ROOT)
-                                    val hour = dateTime.hour.toString().padStart(2, '0')
-                                    val minute = dateTime.minute.toString().padStart(2, '0')
-
+                                context.startActivity(intent)
+                            }) {
+                            Box(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .fillMaxHeight()
+                            ) {
+                                GlideImage(
+                                    model = matchedUsers.getValue(matchedUsers.keys.toMutableList()[it]),
+                                    contentDescription = "Translated description of what the image contains",
+                                    modifier = Modifier
+                                        .size(100.dp, 100.dp)
+                                        .align(Alignment.Center),
+                                    contentScale = ContentScale.FillBounds,
+                                )
+                            }
+                            Box(
+                                modifier = Modifier
+                                    .weight(1.5f)
+                                    .fillMaxHeight()
+                            ) {
+                                Column {
                                     Text(
-                                        text = "Last message on $day, at $hour:$minute",
-                                        style = Typography.body1,
+                                        text = matchedUsers.keys.toMutableList()[it].userName,
+                                        style = Typography.h5,
                                         maxLines = 1,
                                         overflow = TextOverflow.Ellipsis,
                                     )
+
+                                    if (matchedUsers.keys.toMutableList()[it].chats.first { it.userId == userControllerImpl.userDataCollection.userData.userId }.messagesList.map { it.timestamp }
+                                            .isNotEmpty()) {
+                                        val dateTime = LocalDateTime.ofInstant(
+                                            Instant.ofEpochSecond(matchedUsers.keys.toMutableList()[it].chats.first { it.userId == userControllerImpl.userDataCollection.userData.userId }.messagesList.map { it.timestamp }
+                                                .first().seconds),
+                                            ZoneId.systemDefault()
+                                        )
+                                        val day = dateTime.dayOfWeek.name.lowercase(Locale.ROOT)
+                                        val hour = dateTime.hour.toString().padStart(2, '0')
+                                        val minute = dateTime.minute.toString().padStart(2, '0')
+
+                                        Text(
+                                            text = "Last message on $day, at $hour:$minute",
+                                            style = Typography.body1,
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis,
+                                        )
+                                    }
                                 }
                             }
                         }
-                    }
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(5.dp)
-                    ) {
-                        Divider(
+                        Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(3.dp),
-                            color = backgroundColor
-                        )
+                                .padding(5.dp)
+                        ) {
+                            Divider(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .height(3.dp),
+                                color = backgroundColor
+                            )
+                        }
                     }
                 }
             }
