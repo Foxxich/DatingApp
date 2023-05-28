@@ -75,9 +75,9 @@ class SignActivity : ComponentActivity() {
             DatingAppTheme {
                 Surface(modifier = Modifier.fillMaxSize(), color = backgroundColor) {
                     Column(
-                            modifier = Modifier.fillMaxSize(),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.Center,
+                        modifier = Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center,
                     ) {
                         Sign()
                     }
@@ -97,68 +97,68 @@ class SignActivity : ComponentActivity() {
         val coroutineScope = rememberCoroutineScope()
 
         Column(
-                modifier = Modifier
-                        .fillMaxSize()
-                        .padding(16.dp),
-                verticalArrangement = Arrangement.Center
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.Center
         ) {
             Text(
-                    text = "Authentication",
-                    modifier = Modifier.fillMaxWidth(),
-                    textAlign = TextAlign.Center,
-                    style = Typography.h1
+                text = "Authentication",
+                modifier = Modifier.fillMaxWidth(),
+                textAlign = TextAlign.Center,
+                style = Typography.h1
             )
 
             OutlinedTextField(
-                    value = email,
-                    onValueChange = { email = it },
-                    keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
-                    label = {
-                        Text(
-                                text = "Email",
-                                style = Typography.body1
-                        )
-                    },
-                    modifier = Modifier
-                            .padding(16.dp)
-                            .fillMaxWidth(),
+                value = email,
+                onValueChange = { email = it },
+                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email),
+                label = {
+                    Text(
+                        text = "Email",
+                        style = Typography.body1
+                    )
+                },
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth(),
             )
 
             val passwordVisibilityState = remember { mutableStateOf(false) }
 
             OutlinedTextField(
-                    value = password,
-                    onValueChange = { password = it },
-                    label = {
-                        Text(
-                                text = "Password",
-                                style = Typography.body1
-                        )
-                    },
-                    visualTransformation = if (passwordVisibilityState.value) {
-                        VisualTransformation.None
-                    } else {
-                        PasswordVisualTransformation()
-                    },
-                    trailingIcon = {
-                        IconButton(
-                                onClick = { passwordVisibilityState.value = !passwordVisibilityState.value }
-                        ) {
-                            val visibilityIcon = if (passwordVisibilityState.value) {
-                                Icons.Filled.Visibility
-                            } else {
-                                Icons.Filled.VisibilityOff
-                            }
-                            Icon(
-                                    imageVector = visibilityIcon,
-                                    contentDescription = "Toggle Password Visibility",
-                                    modifier = Modifier.size(24.dp)
-                            )
+                value = password,
+                onValueChange = { password = it },
+                label = {
+                    Text(
+                        text = "Password",
+                        style = Typography.body1
+                    )
+                },
+                visualTransformation = if (passwordVisibilityState.value) {
+                    VisualTransformation.None
+                } else {
+                    PasswordVisualTransformation()
+                },
+                trailingIcon = {
+                    IconButton(
+                        onClick = { passwordVisibilityState.value = !passwordVisibilityState.value }
+                    ) {
+                        val visibilityIcon = if (passwordVisibilityState.value) {
+                            Icons.Filled.Visibility
+                        } else {
+                            Icons.Filled.VisibilityOff
                         }
-                    },
-                    modifier = Modifier
-                            .padding(16.dp)
-                            .fillMaxWidth()
+                        Icon(
+                            imageVector = visibilityIcon,
+                            contentDescription = "Toggle Password Visibility",
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+                },
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxWidth()
             )
 
             Spacer1(modifier = Modifier.height(16.dp))
@@ -166,147 +166,147 @@ class SignActivity : ComponentActivity() {
             var showParametersDialog by remember { mutableStateOf(false) }
 
             Row(
-                    modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(top = 5.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 5.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 Button(
-                        onClick = {
-                            firebaseAuthController.logout()
-                            coroutineScope.launch {
-                                if (Patterns.EMAIL_ADDRESS.matcher(email)
-                                                .matches() && password.length >= 6
-                                ) {
-                                    try {
-                                        if (firebaseAuthController.emailExists(email)) {
-                                            showDialog = true
-                                        } else {
-                                            firebaseDataController.createNewUser(
-                                                email = email,
-                                                password = password
-                                            )
-                                            val intent = Intent(context, SetUpActivity::class.java)
-                                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                                            context.startActivity(intent)
-                                        }
-                                    } catch (e: Exception) {
-                                        Log.i("FIREBASE_AUTHENTICATION", "Error")
+                    onClick = {
+                        firebaseAuthController.logout()
+                        coroutineScope.launch {
+                            if (Patterns.EMAIL_ADDRESS.matcher(email)
+                                    .matches() && password.length >= 6
+                            ) {
+                                try {
+                                    if (firebaseAuthController.emailExists(email)) {
+                                        showDialog = true
+                                    } else {
+                                        firebaseDataController.createNewUser(
+                                            email = email,
+                                            password = password
+                                        )
+                                        val intent = Intent(context, SetUpActivity::class.java)
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                                        context.startActivity(intent)
                                     }
-                                } else {
-                                    showParametersDialog = true
+                                } catch (e: Exception) {
+                                    Log.i("FIREBASE_AUTHENTICATION", "Error")
                                 }
+                            } else {
+                                showParametersDialog = true
                             }
-                        },
-                        modifier = Modifier
-                                .weight(1f)
-                                .fillMaxWidth()
-                                .padding(end = 5.dp)
+                        }
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                        .padding(end = 5.dp)
                 ) {
                     androidx.compose.material.Text(
-                            text = "Register",
-                            style = Typography.button
+                        text = "Register",
+                        style = Typography.button
                     )
                 }
                 Button(
-                        onClick = {
-                            coroutineScope.launch {
-                                if (Patterns.EMAIL_ADDRESS.matcher(email)
-                                                .matches() && password.length >= 6
-                                ) {
-                                    try {
-                                        if (firebaseAuthController.isCurrentUserRegistered(
-                                                        email = email,
-                                                        password = password
-                                                )?.user != null
-                                        ) {
-                                            Log.e("FIREBASE_AUTHENTICATION", "Success")
-                                            val intent = Intent(context, MainActivity::class.java)
-                                            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                                            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                                            context.startActivity(intent)
-                                        } else {
-                                            Log.e("FIREBASE_AUTHENTICATION", "Fail")
-                                            showDialog = true
-                                        }
-                                    } catch (e: Exception) {
-                                        showParametersDialog = true
-                                        Log.e("FIREBASE_AUTHENTICATION", "Exception was thrown")
+                    onClick = {
+                        coroutineScope.launch {
+                            if (Patterns.EMAIL_ADDRESS.matcher(email)
+                                    .matches() && password.length >= 6
+                            ) {
+                                try {
+                                    if (firebaseAuthController.isCurrentUserRegistered(
+                                            email = email,
+                                            password = password
+                                        )?.user != null
+                                    ) {
+                                        Log.e("FIREBASE_AUTHENTICATION", "Success")
+                                        val intent = Intent(context, MainActivity::class.java)
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                                        context.startActivity(intent)
+                                    } else {
+                                        Log.e("FIREBASE_AUTHENTICATION", "Fail")
+                                        showDialog = true
                                     }
-                                } else {
+                                } catch (e: Exception) {
                                     showParametersDialog = true
+                                    Log.e("FIREBASE_AUTHENTICATION", "Exception was thrown")
                                 }
+                            } else {
+                                showParametersDialog = true
                             }
-                        },
-                        modifier = Modifier
-                                .weight(1f)
-                                .fillMaxWidth()
-                                .padding(start = 5.dp)
+                        }
+                    },
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                        .padding(start = 5.dp)
                 ) {
                     androidx.compose.material.Text(
-                            text = "Login",
-                            style = Typography.button,
+                        text = "Login",
+                        style = Typography.button,
                     )
                 }
             }
 
             if (showDialog) {
                 AlertDialog(
-                        onDismissRequest = { showDialog = false },
-                        title = { Text("The mentioned email exists. Try other one") },
-                        text = { Text("Do you want to try more") },
-                        confirmButton = {
-                            Button(
-                                    onClick = {
-                                        showDialog = false
-                                        password = ""
-                                        email = ""
-                                    },
-                                    colors = ButtonDefaults.buttonColors()
-                            ) {
-                                Text("Try more")
-                            }
-                        },
-                        dismissButton = {
-                            Button(
-                                    onClick = {
-                                        finishAffinity()
-                                    }
-                            ) {
-                                Text("Close app")
-                            }
+                    onDismissRequest = { showDialog = false },
+                    title = { Text("The mentioned email exists. Try other one") },
+                    text = { Text("Do you want to try more") },
+                    confirmButton = {
+                        Button(
+                            onClick = {
+                                showDialog = false
+                                password = ""
+                                email = ""
+                            },
+                            colors = ButtonDefaults.buttonColors()
+                        ) {
+                            Text("Try more")
                         }
+                    },
+                    dismissButton = {
+                        Button(
+                            onClick = {
+                                finishAffinity()
+                            }
+                        ) {
+                            Text("Close app")
+                        }
+                    }
                 )
             }
 
             if (showParametersDialog) {
                 AlertDialog(
-                        onDismissRequest = { showParametersDialog = false },
-                        title = { Text("Incorrect email or password") },
-                        text = { Text("Email should be valid and password length is at least 6 symbols") },
-                        confirmButton = {
-                            Button(
-                                    onClick = {
-                                        showParametersDialog = false
-                                        password = ""
-                                        email = ""
-                                    },
-                                    colors = ButtonDefaults.buttonColors()
-                            ) {
-                                Text("Try more")
-                            }
-                        },
-                        dismissButton = {
-                            Button(
-                                    onClick = {
-                                        finishAffinity()
-                                    }
-                            ) {
-                                Text("Close app")
-                            }
+                    onDismissRequest = { showParametersDialog = false },
+                    title = { Text("Incorrect email or password") },
+                    text = { Text("Email should be valid and password length is at least 6 symbols") },
+                    confirmButton = {
+                        Button(
+                            onClick = {
+                                showParametersDialog = false
+                                password = ""
+                                email = ""
+                            },
+                            colors = ButtonDefaults.buttonColors()
+                        ) {
+                            Text("Try more")
                         }
+                    },
+                    dismissButton = {
+                        Button(
+                            onClick = {
+                                finishAffinity()
+                            }
+                        ) {
+                            Text("Close app")
+                        }
+                    }
                 )
             }
         }

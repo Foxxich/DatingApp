@@ -101,7 +101,10 @@ class ChatActivity : ComponentActivity(), UserDataObserver {
                         ) {
                             Box(
                                 modifier = Modifier
-                                    .background(color = if (message.sender == "Me") additionalColor else otherUserChatColor, shape = RoundedCornerShape(8.dp))
+                                    .background(
+                                        color = if (message.sender == "Me") additionalColor else otherUserChatColor,
+                                        shape = RoundedCornerShape(8.dp)
+                                    )
                                     .padding(8.dp)
                                     .clip(Shapes.large)
                             ) {

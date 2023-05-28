@@ -81,8 +81,8 @@ class SetUpActivity : ComponentActivity() {
             }
             DatingAppTheme {
                 Surface(
-                        modifier = Modifier.fillMaxSize(),
-                        color = backgroundColor
+                    modifier = Modifier.fillMaxSize(),
+                    color = backgroundColor
                 ) {
                     InterestsColumn(mapOfInterests)
                 }
@@ -112,45 +112,45 @@ class SetUpActivity : ComponentActivity() {
         }
 
         Column(
-                modifier = Modifier
-                        .fillMaxHeight(0.9f)
-                        .fillMaxWidth()
-                        .padding(10.dp)
-                        .clip(Shapes.large)
-                        .background(color = whiteColor),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxHeight(0.9f)
+                .fillMaxWidth()
+                .padding(10.dp)
+                .clip(Shapes.large)
+                .background(color = whiteColor),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
         ) {
             var i = 0
             Column(modifier = Modifier.padding(16.dp)) {
                 while (i < mapOfInterests.size) {
                     Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         for (j in i until i + 3) {
                             if (j < mapOfInterests.size) {
                                 var clicked by remember { mutableStateOf(false) }
                                 OutlinedButton(
-                                        onClick = {
-                                            if (clickableInterests.value) {
-                                                clicked = if (!clicked) {
-                                                    chosenInterests.add(mapOfInterests[j])
-                                                    true
-                                                } else {
-                                                    chosenInterests.remove(mapOfInterests[j])
-                                                    false
-                                                }
+                                    onClick = {
+                                        if (clickableInterests.value) {
+                                            clicked = if (!clicked) {
+                                                chosenInterests.add(mapOfInterests[j])
+                                                true
+                                            } else {
+                                                chosenInterests.remove(mapOfInterests[j])
+                                                false
                                             }
-                                        },
-                                        border = BorderStroke(
-                                                4.dp,
-                                                if (clicked) additionalColor else otherUserChatColor
-                                        ),
+                                        }
+                                    },
+                                    border = BorderStroke(
+                                        4.dp,
+                                        if (clicked) additionalColor else otherUserChatColor
+                                    ),
                                 ) {
                                     Text(
-                                            text = mapOfInterests[j].name, maxLines = 1,
-                                            overflow = TextOverflow.Clip, fontSize = 12.sp
+                                        text = mapOfInterests[j].name, maxLines = 1,
+                                        overflow = TextOverflow.Clip, fontSize = 12.sp
                                     )
                                 }
                             } else {
@@ -164,31 +164,31 @@ class SetUpActivity : ComponentActivity() {
 
             Column(modifier = Modifier.padding(16.dp)) {
                 Row(
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-                        modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp)
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
                 ) {
                     OutlinedTextField(
-                            value = userName,
-                            onValueChange = { userName = it },
-                            label = {
-                                Text(
-                                        text = "UserName",
-                                        style = Typography.body1
-                                )
-                            },
-                            modifier = Modifier
-                                    .padding(16.dp)
-                                    .fillMaxWidth(),
+                        value = userName,
+                        onValueChange = { userName = it },
+                        label = {
+                            Text(
+                                text = "UserName",
+                                style = Typography.body1
+                            )
+                        },
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .fillMaxWidth(),
                     )
                 }
 
                 Row(
-                        horizontalArrangement = Arrangement.SpaceEvenly,
-                        modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp)
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
                 ) {
                     Button(onClick = {
                         imageChosen.value = true
@@ -211,7 +211,8 @@ class SetUpActivity : ComponentActivity() {
                             )
                         } else {
                             userControllerImpl.userDataCollection.userData.userName = userName
-                            userControllerImpl.userDataCollection.userData.interests = chosenInterests
+                            userControllerImpl.userDataCollection.userData.interests =
+                                chosenInterests
                             userControllerImpl.userDataCollection.userPhoto = mainImage
                             userControllerImpl.uploadToDatabase(
                                 userControllerImpl.userDataCollection
@@ -219,12 +220,12 @@ class SetUpActivity : ComponentActivity() {
                         }
                         if (isNewUser) {
                             val intent =
-                                    Intent(applicationContext, VideoActivity::class.java)
+                                Intent(applicationContext, VideoActivity::class.java)
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                             applicationContext.startActivity(intent)
                         } else {
                             val intent =
-                                    Intent(applicationContext, MainActivity::class.java)
+                                Intent(applicationContext, MainActivity::class.java)
                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                             applicationContext.startActivity(intent)
                         }
@@ -242,19 +243,19 @@ class SetUpActivity : ComponentActivity() {
 
     @SuppressLint("DiscouragedApi")
     private var imagePickerActivityResult: ActivityResultLauncher<Intent> =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                try {
-                    val imageUri: Uri? = result.data?.data
-                    if (imageUri?.path != null) {
-                        this.mainImage = imageUri
-                    }
-                } catch (e: Exception) {
-                    toastImageNotChosen()
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            try {
+                val imageUri: Uri? = result.data?.data
+                if (imageUri?.path != null) {
+                    this.mainImage = imageUri
                 }
+            } catch (e: Exception) {
+                toastImageNotChosen()
             }
+        }
 
     private fun toastImageNotChosen() {
         Toast.makeText(context, "There will be standard image!", Toast.LENGTH_SHORT)
-                .show()
+            .show()
     }
 }

@@ -95,7 +95,8 @@ fun ProfileScreen(
                         }
                         Row(modifier = Modifier.padding(bottom = 5.dp)) {
                             Text(
-                                text = "Interests: " + userDataCollection.userData.interests.toString().replace("[", "").replace("]", ""),
+                                text = "Interests: " + userDataCollection.userData.interests.toString()
+                                    .replace("[", "").replace("]", ""),
                                 style = MaterialTheme.typography.body1,
                                 maxLines = 2,
                                 overflow = TextOverflow.Ellipsis

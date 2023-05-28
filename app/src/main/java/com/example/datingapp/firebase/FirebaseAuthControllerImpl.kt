@@ -1,6 +1,5 @@
 package com.example.datingapp.firebase
 
-import android.util.Log
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
