@@ -13,7 +13,6 @@ import com.example.datingapp.user.UserData
 import com.example.datingapp.user.UserDataCollection
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.runBlocking
-import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -77,11 +76,9 @@ class UserControllerTest {
 
     @Test
     fun swipesWereAdded() {
-        Assert.assertNotNull(userController.getUserDataFromId(testUserData.userId)!!.swiped["user1"])
-    }
-
-    @After
-    fun deleteData() {
+        val swipe = userController.getUserDataFromId(testUserData.userId)!!.swiped["user1"]
         firebaseDataController.deleteData(testUserData.userId)
+        Assert.assertNotNull(swipe)
+
     }
 }
