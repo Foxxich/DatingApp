@@ -46,6 +46,7 @@ class UserControllerTest {
         val context: Context = getApplicationContext()
         userController.uploadToDatabase(UserDataCollection(userData = testUserData, userPhoto = Uri.parse("android.resource://${context.packageName}/${R.raw.user_image}")) )
         firebaseUserData = userController.getUserDataFromId(testUserData.userId)!!
+        firebaseDataController.deleteData(testUserData.userId)
         runBlocking {
             firebaseUri = firebaseDataController.getFirebaseUserPhoto(testUserData.userId)
         }
@@ -66,19 +67,16 @@ class UserControllerTest {
 
     @Test
     fun chatsWereAdded() {
-        Assert.assertNotNull(userController.getUserDataFromId(testUserData.userId)!!.chats)
+        Assert.assertNotNull(firebaseUserData.chats)
     }
 
     @Test
     fun chatsWereUpdated() {
-        Assert.assertNotNull(userController.getUserDataFromId(testUserData.userId)!!.chats.filter { it.userId == "user1" })
+        Assert.assertNotNull(firebaseUserData.chats.filter { it.userId == "user1" })
     }
 
     @Test
     fun swipesWereAdded() {
-        val swipe = userController.getUserDataFromId(testUserData.userId)!!.swiped["user1"]
-        firebaseDataController.deleteData(testUserData.userId)
-        Assert.assertNotNull(swipe)
-
+        Assert.assertNotNull(firebaseUserData.swiped["user1"])
     }
 }
