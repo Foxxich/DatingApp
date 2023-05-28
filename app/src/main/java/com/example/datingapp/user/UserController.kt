@@ -17,8 +17,6 @@ interface UserController : UserDataObserver {
 
     fun updateChats(textMessage: String, chatId: String): Chat
 
-    fun updateProfile(userData: UserData)
-
     fun uploadToDatabase(userName: String, interests: List<Interest>, imageUri: Uri)
 
     fun uploadToDatabase(userDataCollection: UserDataCollection)

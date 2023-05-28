@@ -140,7 +140,7 @@ fun ProfileScreen(
                             Button(
                                 onClick = {
                                     userDataCollection.userData.swiped.clear()
-                                    userControllerImpl.updateProfile(userDataCollection.userData)
+                                    userControllerImpl.uploadToDatabase(userDataCollection)
                                 },
                                 modifier = Modifier
                                     .weight(1f)

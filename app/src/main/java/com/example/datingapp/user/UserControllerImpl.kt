@@ -35,7 +35,7 @@ class UserControllerImpl @Inject constructor(
     }
 
     override fun uploadToDatabase(userDataCollection: UserDataCollection) {
-        val userId = firebaseDataControllerImpl.getCurrentUserId()!!
+        val userId = userDataCollection.userData.userId
         val userData = userDataCollection.userData
         firebaseDataControllerImpl.setFirebaseUserData(
             userData
@@ -57,10 +57,6 @@ class UserControllerImpl @Inject constructor(
         otherUserData.upload()
 
         return userDataCollection.userData.chats.first { it.userId == chatId }
-    }
-
-    override fun updateProfile(userData: UserData) {
-        firebaseDataControllerImpl.setFirebaseUserData(userData)
     }
 
     override fun updateSwipes(userId: String, liked: Boolean) {
