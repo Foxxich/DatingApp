@@ -9,7 +9,7 @@ import org.junit.Assert
 import org.junit.Test
 
 @HiltAndroidTest
-class FirebaseAuthControllerTests {
+class FirebaseAuthControllerTest {
 
     private var firebaseAuthController: FirebaseAuthController = FirebaseAuthControllerImpl()
 
@@ -17,7 +17,12 @@ class FirebaseAuthControllerTests {
     fun userIsRegistered() {
         firebaseAuthController.logout()
         runBlocking {
-            Assert.assertNotNull(firebaseAuthController.isCurrentUserRegistered("test1@gmail.com", "123456")?.user)
+            Assert.assertNotNull(
+                firebaseAuthController.isCurrentUserRegistered(
+                    correctEmail,
+                    correctPassword
+                )?.user
+            )
         }
     }
 
@@ -27,8 +32,8 @@ class FirebaseAuthControllerTests {
         Assert.assertThrows(FirebaseAuthInvalidCredentialsException::class.java) {
             runBlocking {
                 firebaseAuthController.isCurrentUserRegistered(
-                    "test1@gmail.com",
-                    "111111"
+                    correctEmail,
+                    incorrectPassword
                 )?.user
             }
         }
@@ -38,7 +43,7 @@ class FirebaseAuthControllerTests {
     fun emailExists() {
         firebaseAuthController.logout()
         runBlocking {
-            Assert.assertEquals(firebaseAuthController.emailExists("test1@gmail.com"), true)
+            Assert.assertEquals(firebaseAuthController.emailExists(correctEmail), true)
         }
     }
 
@@ -46,7 +51,7 @@ class FirebaseAuthControllerTests {
     fun emailNotExists() {
         firebaseAuthController.logout()
         runBlocking {
-            Assert.assertEquals(firebaseAuthController.emailExists("random@gmail.com"), false)
+            Assert.assertEquals(firebaseAuthController.emailExists(incorrectEmail), false)
         }
     }
 
@@ -56,5 +61,12 @@ class FirebaseAuthControllerTests {
         runBlocking {
             Assert.assertEquals(firebaseAuthController.isCurrentUserSigned(), false)
         }
+    }
+
+    companion object {
+        const val correctEmail = "test1@gmail.com"
+        const val correctPassword = "123456"
+        const val incorrectEmail = "random@gmail.com"
+        const val incorrectPassword = "xdxdxd"
     }
 }

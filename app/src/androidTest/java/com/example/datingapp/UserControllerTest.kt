@@ -23,13 +23,6 @@ class UserControllerTest {
 
     private var firebaseDataController: FirebaseDataController = FirebaseDataControllerImpl()
     private var userController: UserController = UserControllerImpl(firebaseDataController)
-    private var testUserData = UserData(
-        userId = "testId",
-        userName = "testName",
-        quantityUserMatchedWith = 0
-    )
-    private lateinit var firebaseUserData: UserData
-    private lateinit var firebaseUri: Uri
 
     @Before
     fun prepareTestData() {
@@ -44,7 +37,12 @@ class UserControllerTest {
         testUserData.chats.add(Chat("user1", mutableListOf(Message("text1text1", "Me"))))
 
         val context: Context = getApplicationContext()
-        userController.uploadToDatabase(UserDataCollection(userData = testUserData, userPhoto = Uri.parse("android.resource://${context.packageName}/${R.raw.user_image}")) )
+        userController.uploadToDatabase(
+            UserDataCollection(
+                userData = testUserData,
+                userPhoto = Uri.parse("android.resource://${context.packageName}/${R.raw.user_image}")
+            )
+        )
         firebaseUserData = userController.getUserDataFromId(testUserData.userId)!!
         firebaseDataController.deleteData(testUserData.userId)
         runBlocking {
@@ -61,7 +59,10 @@ class UserControllerTest {
     @Test
     fun dataIsEqual() {
         val context: Context = getApplicationContext()
-        Assert.assertEquals(firebaseUri.userInfo, Uri.parse("android.resource://${context.packageName}/${R.raw.user_image}").userInfo)
+        Assert.assertEquals(
+            firebaseUri.userInfo,
+            Uri.parse("android.resource://${context.packageName}/${R.raw.user_image}").userInfo
+        )
         Assert.assertEquals(firebaseUserData, testUserData)
     }
 
@@ -78,5 +79,15 @@ class UserControllerTest {
     @Test
     fun swipesWereAdded() {
         Assert.assertNotNull(firebaseUserData.swiped["user1"])
+    }
+
+    companion object {
+        private var testUserData = UserData(
+            userId = "testId",
+            userName = "testName",
+            quantityUserMatchedWith = 0
+        )
+        private lateinit var firebaseUserData: UserData
+        private lateinit var firebaseUri: Uri
     }
 }
