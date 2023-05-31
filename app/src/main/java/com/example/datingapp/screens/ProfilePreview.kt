@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -31,6 +32,7 @@ import com.github.theapache64.twyper.rememberTwyperController
 fun ProfilePreview(userController: UserController) {
     Column(
         modifier = Modifier
+            .testTag("profile_tag")
             .padding(10.dp)
             .clip(Shapes.large)
             .fillMaxHeight(0.9f)

@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
@@ -117,7 +118,8 @@ fun AddItem(
             Icon(
                 imageVector = screen.icon,
                 contentDescription = "icon",
-                tint = contentColor
+                tint = contentColor,
+                modifier = Modifier.testTag(screen.route)
             )
         }
     }
