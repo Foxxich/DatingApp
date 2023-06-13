@@ -360,6 +360,7 @@
                 <map>
                   <entry key="Duration" value="90" />
                   <entry key="Pixel_4_XL_API_31" value="120" />
+                  <entry key="Pixel_XL_API_31" value="120" />
                   <entry key="R58R32GYTFE" value="120" />
                   <entry key="Tests" value="360" />
                   <entry key="samsung" value="120" />
@@ -519,6 +520,7 @@
               <option name="preferredColumnWidths">
                 <map>
                   <entry key="Duration" value="90" />
+                  <entry key="Pixel_XL_API_31" value="120" />
                   <entry key="R58R32GYTFE" value="120" />
                   <entry key="Tests" value="360" />
                   <entry key="samsung&#10; SM-A525F" value="120" />

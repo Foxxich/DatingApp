@@ -19,7 +19,7 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
-/*
+/**
  * The class used to test backend functionality of the user controller
  */
 @HiltAndroidTest
@@ -31,7 +31,7 @@ class UserControllerTest {
     private lateinit var firebaseUri: Uri
     private val testUserData = UserParameters.TEST_USER_DATA
 
-    /*
+    /**
      * Function used to set the basic data of the user
      */
     @Before
@@ -60,7 +60,7 @@ class UserControllerTest {
         }
     }
 
-    /*
+    /**
      * Function which checks the data is not nullable
      */
     @Test
@@ -69,7 +69,7 @@ class UserControllerTest {
         Assert.assertNotNull(firebaseUri)
     }
 
-    /*
+    /**
      * Function which checks the data is same as the testData
      */
     @Test
@@ -82,7 +82,7 @@ class UserControllerTest {
         Assert.assertEquals(firebaseUserData, testUserData)
     }
 
-    /*
+    /**
      * Function which checks is the data from firebase contains specific chats
      */
     @Test

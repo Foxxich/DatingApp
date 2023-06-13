@@ -27,7 +27,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 
 
-/*
+/**
  * The class used to test UI and logic functionalities of the MainActivity
  */
 @RunWith(AndroidJUnit4::class)
@@ -43,7 +43,7 @@ class MainActivityTest {
         }
     }
 
-    /*
+    /**
      * The aim of the test is to open every single screen and check if the data was loaded
      * correctly, without any missing information
      */
@@ -55,7 +55,7 @@ class MainActivityTest {
         firebaseAuthController.logout()
     }
 
-    /*
+    /**
      * Additional function to perform the common moves between different screens
      */
     private fun clickAndCheckExistence(screenTag: String, screenElementTag: String) {
@@ -64,7 +64,7 @@ class MainActivityTest {
         Thread.sleep(3000)
     }
 
-    /*
+    /**
      * The aim is to open the chat and to show the new messages on the bottom of the screen
      */
     @Test
@@ -72,14 +72,18 @@ class MainActivityTest {
         openChat(Sorting.DESCENDING)
     }
 
-    /*
+    /**
      * The aim is to open the chat and to show the new messages on the start of the screen
-    */
+     */
     @Test
     fun openAscendingChat() {
         openChat(Sorting.ASCENDING)
     }
 
+    /**
+     * Function to open chat and check if the the correct sorting was used
+     * to show the messages
+     */
     private fun openChat(sorting: Sorting) {
         // Choose the way how messages will be sorted and shown
         composeTestRule.activity.userController.sorting = sorting
@@ -99,38 +103,41 @@ class MainActivityTest {
         Utils.remove(activityMonitor)
     }
 
-    /*
+    /**
      * The aim is to do swipe on left, check if the data was updated and the fields was
      * equal to false (it means the profile was disliked)
-    */
+     */
     @Test
     fun swipeLeft() {
         swipe(-1200f)
         swipe(-1200f)
-        val userData = firebaseDataController.getFirebaseUserData(CORRECT_UID)!!
-        val size = userData.getSize()
-        val liked = userData.getLiked()
-        userData.removeFromFirebase()
-        Assert.assertEquals(3, size)
-        Assert.assertEquals(false, liked)
+        swipeDataAssertion(3, false)
     }
 
-    /*
+    /**
      * The aim is to do swipe on left, check if the data was updated and the fields was
      * equal to true (it means the profile was liked)
-    */
+     */
     @Test
     fun swipeRight() {
         swipe(800f)
+        swipeDataAssertion(2, true)
+    }
+
+    /**
+     * Function with assertion logic of checking up the correctness
+     * of the userData from firebase
+     */
+    private fun swipeDataAssertion(expected_size: Int, expected_like: Boolean) {
         val userData = firebaseDataController.getFirebaseUserData(CORRECT_UID)!!
         val size = userData.getSize()
         val liked = userData.getLiked()
         userData.removeFromFirebase()
-        Assert.assertEquals(2, size)
-        Assert.assertEquals(true, liked)
+        Assert.assertEquals(expected_size, size)
+        Assert.assertEquals(expected_like, liked)
     }
 
-    /*
+    /**
      * Does physical swipe
      */
     private fun swipe(x: Float) {
@@ -145,18 +152,18 @@ class MainActivityTest {
         Thread.sleep(4000L)
     }
 
-    /*
+    /**
      * Gets the size of list containing the swipes
      */
     private fun UserData.getSize() = this.swiped.size
 
-    /*
+    /**
      * Gets the number of likes from the swipes
-    */
+     */
     private fun UserData.getLiked() =
         this.swiped.filterNot { it.key == CHAT_UID }.map { it.value }.first()
 
-    /*
+    /**
      * Removes the test data from firebase
      */
     private fun UserData.removeFromFirebase() {

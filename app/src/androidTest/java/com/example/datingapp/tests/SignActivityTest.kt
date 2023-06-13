@@ -17,7 +17,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-/*
+/**
  * The class used to test UI and logic functionalities of the SignActivity
  */
 @RunWith(AndroidJUnit4::class)
@@ -26,7 +26,7 @@ class SignActivityTest {
     @get:Rule
     val composeTestRule = createAndroidComposeRule<SignActivity>()
 
-    /*
+    /**
      * Function used to check if the there are input fields for email and password
      */
     @Test
@@ -36,7 +36,7 @@ class SignActivityTest {
         composeTestRule.onNodeWithTag("password_tag").assertExists()
     }
 
-    /*
+    /**
      * Function used to check if the application will allow logging to user
      * with correct email and password which exist in database
      */
@@ -51,5 +51,4 @@ class SignActivityTest {
         Assert.assertEquals(activityMonitor.lastActivity::class, MainActivity::class)
         Utils.remove(activityMonitor)
     }
-
 }

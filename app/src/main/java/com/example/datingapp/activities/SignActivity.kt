@@ -235,8 +235,8 @@ class SignActivity : ComponentActivity() {
                                         showDialog = true
                                     }
                                 } catch (e: Exception) {
-                                    showParametersDialog = true
                                     Log.e("FIREBASE_AUTHENTICATION", "Exception was thrown")
+                                    showParametersDialog = true
                                 }
                             } else {
                                 showParametersDialog = true

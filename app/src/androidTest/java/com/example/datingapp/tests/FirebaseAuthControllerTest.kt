@@ -12,7 +12,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Assert
 import org.junit.Test
 
-/*
+/**
  * The class used to test backend functionality of firebase authentication
  */
 @HiltAndroidTest
@@ -20,7 +20,7 @@ class FirebaseAuthControllerTest {
 
     private var firebaseAuthController: FirebaseAuthController = FirebaseAuthControllerImpl()
 
-    /*
+    /**
      * Function testing the case when user is registered
      */
     @Test
@@ -36,10 +36,10 @@ class FirebaseAuthControllerTest {
         }
     }
 
-    /*
+    /**
      * Function testing the case when user is not registered, the result of the
      * execution should be thrown FirebaseAuthInvalidCredentialsException
-    */
+     */
     @Test
     fun userIsNotRegistered() {
         firebaseAuthController.logout()
@@ -53,9 +53,9 @@ class FirebaseAuthControllerTest {
         }
     }
 
-    /*
+    /**
      * Function testing the case when user email exists in firebase list of accounts
-    */
+     */
     @Test
     fun emailExists() {
         firebaseAuthController.logout()
@@ -64,9 +64,9 @@ class FirebaseAuthControllerTest {
         }
     }
 
-    /*
+    /**
      * Function testing the case when user email does not exist in firebase list of accounts
-    */
+     */
     @Test
     fun emailNotExists() {
         firebaseAuthController.logout()
@@ -75,9 +75,9 @@ class FirebaseAuthControllerTest {
         }
     }
 
-    /*
+    /**
      * Function testing the case when user is not signed to the application
-    */
+     */
     @Test
     fun userIsNotSigned() {
         firebaseAuthController.logout()

@@ -20,7 +20,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-/*
+/**
  * The class used to test UI and logic functionalities of the StartActivity
  */
 @RunWith(AndroidJUnit4::class)
@@ -31,7 +31,7 @@ class StartActivityTest {
     private val context: Context = InstrumentationRegistry.getInstrumentation().targetContext
     private val firebaseAuthController: FirebaseAuthController = FirebaseAuthControllerImpl()
 
-    /*
+    /**
      * Function use to show the correctness of UI schema for the new user
      */
     @Test
@@ -41,12 +41,12 @@ class StartActivityTest {
         Utils.add(activityMonitor)
         composeTestRule.onNodeWithContentDescription(context.getString(R.string.heart_image_description))
             .performClick()
-        Thread.sleep(2000)
+        Thread.sleep(2000L)
         assertEquals(activityMonitor.lastActivity::class, SignActivity::class)
         Utils.remove(activityMonitor)
     }
 
-    /*
+    /**
      * Function use to show the correctness of UI schema for the existing user
      */
     @Test
@@ -59,7 +59,7 @@ class StartActivityTest {
         Utils.add(activityMonitor)
         composeTestRule.onNodeWithContentDescription(context.getString(R.string.heart_image_description))
             .performClick()
-        Thread.sleep(2000)
+        Thread.sleep(2000L)
         assertEquals(activityMonitor.lastActivity::class, SetUpActivity::class)
         Utils.remove(activityMonitor)
         firebaseAuthController.logout()
