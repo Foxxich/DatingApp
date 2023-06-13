@@ -100,6 +100,7 @@ fun AddItem(
     Box(
         modifier = Modifier
             .height(40.dp)
+            .testTag(screen.route)
             .clip(Shapes.large)
             .background(background)
             .clickable(onClick = {
@@ -119,7 +120,6 @@ fun AddItem(
                 imageVector = screen.icon,
                 contentDescription = "icon",
                 tint = contentColor,
-                modifier = Modifier.testTag(screen.route)
             )
         }
     }

@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -47,6 +48,7 @@ fun ProfileScreen(
         modifier = Modifier
             .fillMaxSize()
             .background(backgroundColor)
+            .testTag("profile_screen_tag")
     ) {
         Column(
             modifier = Modifier

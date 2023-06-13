@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -44,6 +45,7 @@ fun ChatScreen(context: Context, userControllerImpl: UserController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .testTag("chat_screen_tag")
             .background(backgroundColor)
     ) {
         Box(modifier = Modifier.padding(bottom = 1.dp)) {
@@ -59,6 +61,7 @@ fun ChatScreen(context: Context, userControllerImpl: UserController) {
                     items(matchedUsers.size) {
                         Row(modifier = Modifier
                             .fillMaxWidth()
+                            .testTag("open_chat_tag")
                             .padding(16.dp)
                             .clickable {
                                 val intent =

@@ -2,10 +2,12 @@ package com.example.datingapp.user
 
 import android.net.Uri
 import com.example.datingapp.chat.Chat
+import com.example.datingapp.chat.Sorting
 
 interface UserController : UserDataObserver {
 
     var userDataCollection: UserDataCollection
+    var sorting: Sorting
 
     fun setChats()
 

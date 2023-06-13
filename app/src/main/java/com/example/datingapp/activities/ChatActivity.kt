@@ -13,12 +13,14 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -26,9 +28,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import com.example.datingapp.chat.Message
+import com.example.datingapp.chat.Sorting
 import com.example.datingapp.connection.InternetCheckService
 import com.example.datingapp.firebase.FirebaseDataController
 import com.example.datingapp.ui.theme.Shapes
@@ -55,8 +59,8 @@ class ChatActivity : ComponentActivity(), UserDataObserver {
     @Inject
     lateinit var internetCheckService: InternetCheckService
 
-    private lateinit var chatId: String
-
+    lateinit var chatId: String
+    lateinit var sorting: String
     private var messages = mutableListOf<Message>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -65,7 +69,6 @@ class ChatActivity : ComponentActivity(), UserDataObserver {
         firebaseDataController.addObserver(userControllerImpl)
         firebaseDataController.addObserver(this)
         chatId = intent.getStringExtra("USER_ID").toString()
-
         if (!internetCheckService.isInternetConnected(applicationContext)) {
             CommonSettings.showConnectionLost(applicationContext)
         }
@@ -75,19 +78,29 @@ class ChatActivity : ComponentActivity(), UserDataObserver {
     @Composable
     fun ChatScreen() {
         messages.clear()
+        sorting = userControllerImpl.sorting.name
         var messageText by remember { mutableStateOf(TextFieldValue()) }
         var sentMessage by remember { mutableStateOf<String?>(null) }
         userControllerImpl.userDataCollection.userData.chats.first { it.userId == chatId }
             .messagesList.forEach {
                 messages.add(it)
             }
-        messages.sortByDescending { it.timestamp.seconds }
+        if (sorting == Sorting.DESCENDING.name) {
+            messages.sortByDescending { it.timestamp.seconds }
+        }
+        val lazyListState = rememberLazyListState()
+        LaunchedEffect(Unit) {
+            if (messages.isNotEmpty() && sorting == Sorting.ASCENDING.name) {
+                lazyListState.scrollToItem(messages.size - 1)
+            }
+        }
         Scaffold {
             Column(
                 modifier = Modifier
                     .background(backgroundColor)
             ) {
                 LazyColumn(
+                    state = lazyListState,
                     modifier = Modifier
                         .weight(1f)
                         .padding(16.dp)
@@ -119,6 +132,7 @@ class ChatActivity : ComponentActivity(), UserDataObserver {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .testTag("down_row_tag")
                         .padding(16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {

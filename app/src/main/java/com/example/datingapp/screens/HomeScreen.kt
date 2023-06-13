@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import com.example.datingapp.ui.theme.backgroundColor
 import com.example.datingapp.user.UserController
 
@@ -15,6 +16,7 @@ fun HomeScreen(userControllerImpl: UserController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .testTag("home_screen_tag")
             .background(backgroundColor)
     ) {
         ProfilePreview(userControllerImpl)

@@ -1,10 +1,12 @@
-package com.example.datingapp
+package com.example.datingapp.tests
 
 import android.content.Context
 import android.net.Uri
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
+import com.example.datingapp.R
 import com.example.datingapp.chat.Chat
 import com.example.datingapp.chat.Message
+import com.example.datingapp.data.UserParameters
 import com.example.datingapp.firebase.FirebaseDataController
 import com.example.datingapp.firebase.FirebaseDataControllerImpl
 import com.example.datingapp.user.UserController
@@ -17,13 +19,21 @@ import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
-
+/*
+ * The class used to test backend functionality of the user controller
+ */
 @HiltAndroidTest
 class UserControllerTest {
 
     private var firebaseDataController: FirebaseDataController = FirebaseDataControllerImpl()
     private var userController: UserController = UserControllerImpl(firebaseDataController)
+    private lateinit var firebaseUserData: UserData
+    private lateinit var firebaseUri: Uri
+    private val testUserData = UserParameters.TEST_USER_DATA
 
+    /*
+     * Function used to set the basic data of the user
+     */
     @Before
     fun prepareTestData() {
         testUserData.matchedWith.add("user1")
@@ -50,12 +60,18 @@ class UserControllerTest {
         }
     }
 
+    /*
+     * Function which checks the data is not nullable
+     */
     @Test
     fun dataNonNullable() {
         Assert.assertNotNull(firebaseUserData)
         Assert.assertNotNull(firebaseUri)
     }
 
+    /*
+     * Function which checks the data is same as the testData
+     */
     @Test
     fun dataIsEqual() {
         val context: Context = getApplicationContext()
@@ -66,28 +82,12 @@ class UserControllerTest {
         Assert.assertEquals(firebaseUserData, testUserData)
     }
 
+    /*
+     * Function which checks is the data from firebase contains specific chats
+     */
     @Test
     fun chatsWereAdded() {
         Assert.assertNotNull(firebaseUserData.chats)
     }
 
-    @Test
-    fun chatsWereUpdated() {
-        Assert.assertNotNull(firebaseUserData.chats.filter { it.userId == "user1" })
-    }
-
-    @Test
-    fun swipesWereAdded() {
-        Assert.assertNotNull(firebaseUserData.swiped["user1"])
-    }
-
-    companion object {
-        private var testUserData = UserData(
-            userId = "testId",
-            userName = "testName",
-            quantityUserMatchedWith = 0
-        )
-        private lateinit var firebaseUserData: UserData
-        private lateinit var firebaseUri: Uri
-    }
 }

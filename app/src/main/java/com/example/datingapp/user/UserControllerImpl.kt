@@ -3,6 +3,7 @@ package com.example.datingapp.user
 import android.net.Uri
 import com.example.datingapp.chat.Chat
 import com.example.datingapp.chat.Message
+import com.example.datingapp.chat.Sorting
 import com.example.datingapp.firebase.FirebaseDataController
 import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
@@ -14,6 +15,7 @@ class UserControllerImpl @Inject constructor(
 ) : UserController {
 
     override lateinit var userDataCollection: UserDataCollection
+    override var sorting: Sorting = Sorting.DESCENDING
     private val observers = mutableListOf<UserDataObserver>()
 
     override fun uploadToDatabase(userName: String, interests: List<Interest>, imageUri: Uri) {

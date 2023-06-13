@@ -8,6 +8,6 @@ data class UserData(
     val quantityUserMatchedWith: Int = 0,
     val matchedWith: MutableList<String> = mutableListOf(),
     val chats: MutableList<Chat> = mutableListOf(),
-    val swiped: MutableMap<String, Boolean> = mutableMapOf(),
+    var swiped: MutableMap<String, Boolean> = mutableMapOf(),
     var interests: List<Interest> = emptyList(),
 )

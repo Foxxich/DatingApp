@@ -46,6 +46,7 @@ fun ProfilePreview(userController: UserController) {
         if (notSwipedUsersList.size > 0) {
             val profileController = rememberTwyperController()
             Twyper(
+                modifier = Modifier.testTag("twyper_tag"),
                 items = notSwipedUsersList,
                 twyperController = profileController,
                 onItemRemoved = { item, direction ->
